@@ -9,6 +9,7 @@ class BottomNavigationDot extends StatefulWidget {
   final Color backgroundColor;
   final double paddingBottomCircle;
   final int milliseconds;
+
   const BottomNavigationDot(
       {@required this.items,
       this.activeColor,
@@ -18,6 +19,7 @@ class BottomNavigationDot extends StatefulWidget {
       @required this.milliseconds,
       Key key})
       : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _BottomNavigationDotState();
 }
@@ -27,6 +29,7 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
   double _numPositionBase, _numDifferenceBase, _positionLeftIndicatorDot;
   int _indexSelected = 0;
   Color _color, _activeColor;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(_afterPage);
@@ -37,8 +40,13 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
   Widget build(BuildContext context) => Container(
         child: Material(
             child: Container(
-          color: widget.backgroundColor,
-          padding: EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(color: widget.backgroundColor, boxShadow: [
+            BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.1),
+                blurRadius: 10,
+                offset: Offset(0, 3))
+          ]),
+          padding: EdgeInsets.only(top: 15, bottom: 12),
           child: Stack(
             key: _key,
             children: <Widget>[
@@ -60,11 +68,12 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
           ),
         )),
       );
+
   List<_NavigationIconButton> _createNavigationIconButtonList(
       Map<int, BottomNavigationDotItem> mapItem) {
     List<_NavigationIconButton> children = List<_NavigationIconButton>();
     mapItem.forEach((index, item) => children.add(_NavigationIconButton(
-            item.icon,
+            (index == _indexSelected) ? item.activeIcon : item.icon,
             (index == _indexSelected) ? _activeColor : _color,
             item.onTap, () {
           _changeOptionBottomBar(index);
@@ -97,8 +106,10 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
 
 class BottomNavigationDotItem {
   final IconData icon;
+  final IconData activeIcon;
   final NavigationIconButtonTapCallback onTap;
-  const BottomNavigationDotItem({@required this.icon, this.onTap})
+  const BottomNavigationDotItem(
+      {@required this.icon, this.activeIcon, this.onTap})
       : assert(icon != null);
 }
 
@@ -109,10 +120,12 @@ class _NavigationIconButton extends StatefulWidget {
   final Color _colorIcon;
   final NavigationIconButtonTapCallback _onTapInternalButton;
   final NavigationIconButtonTapCallback _onTapExternalButton;
+
   const _NavigationIconButton(this._icon, this._colorIcon,
       this._onTapInternalButton, this._onTapExternalButton,
       {Key key})
       : super(key: key);
+
   @override
   _NavigationIconButtonState createState() => _NavigationIconButtonState();
 }
@@ -122,6 +135,7 @@ class _NavigationIconButtonState extends State<_NavigationIconButton>
   AnimationController _controller;
   Animation _sAnimation;
   double _opacityIcon = 1;
+
   @override
   void initState() {
     super.initState();
