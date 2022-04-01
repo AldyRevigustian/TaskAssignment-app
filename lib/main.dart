@@ -1,6 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_planner_app/screens/home_page.dart';
+import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter/services.dart';
 import 'widget/bottom_nav.dart';
@@ -8,7 +9,8 @@ import 'widget/bottom_nav.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Color(0xFFE5E5E5), // navigation bar color
-    statusBarColor: LightColors.mainBlue, // status bar color
+    statusBarColor: Colors.transparent, // status bar color
+    // statusBarColor: LightColors.mainBlue, // status bar color
     // statusBarColor: Colors.red, // status bar color
   ));
 
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
             // displayColor: LightColors.kDarkBlue,
             fontFamily: 'Montserrat'),
       ),
-      home: HomePage(),
+      // home: HomePage(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
