@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 
-class CardExpand extends StatelessWidget {
+class CardExpand extends StatefulWidget {
   const CardExpand({
     Key key,
-    @required this.cardA,
+    @required this.card,
   }) : super(key: key);
 
-  final GlobalKey<ExpansionTileCardState> cardA;
+  final GlobalKey<ExpansionTileCardState> card;
 
+  @override
+  State<CardExpand> createState() => _CardExpandState();
+}
+
+class _CardExpandState extends State<CardExpand> {
   formatSize(String formatSize) {
     if (formatSize.length > 15) {
       return 13.00;
@@ -35,7 +40,7 @@ class CardExpand extends StatelessWidget {
         // shadowColor: Color.fromRGBO(0, 0, 0, ),
         baseColor: Colors.white,
         expandedColor: Colors.white,
-        key: cardA,
+        key: widget.card,
         leading: Icon(
           FluentIcons.checkmark_circle_32_regular,
           color: LightColors.lightGreen,
@@ -145,7 +150,7 @@ class CardExpand extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  cardA.currentState?.expand();
+                  widget.card.currentState?.expand();
                 },
                 child: Column(
                   children: <Widget>[
@@ -170,7 +175,7 @@ class CardExpand extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  cardA.currentState?.collapse();
+                  widget.card.currentState?.collapse();
                 },
                 child: Column(
                   children: <Widget>[

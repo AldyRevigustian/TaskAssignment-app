@@ -1,7 +1,10 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_task_planner_app/main.dart';
+import 'package:flutter_task_planner_app/screens/home_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
 import 'package:svg_icon/svg_icon.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,9 +39,9 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // SizedBox(
-                    //   height: 50,
-                    // ),
+                    SizedBox(
+                      height: 50,
+                    ),
                     Center(
                       child: Image.asset(
                         "assets/images/SII.png",
@@ -46,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 100,
+                      height: 50,
                     ),
                     Text(
                       "Welcome,",
@@ -65,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 40,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -103,7 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                                             width: 0,
                                             alignment: Alignment(-0.10, 0.0),
                                             child: Icon(
-                                              FluentIcons.person_16_regular,
+                                              FluentIcons.person_24_regular,
+                                              size: 30,
                                               color: LightColors.lightGrey,
                                             ),
                                           ),
@@ -197,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                                             alignment: Alignment(-0.10, 0.0),
                                             child: Icon(
                                               FluentIcons
-                                                  .lock_closed_16_regular,
+                                                  .lock_closed_24_regular,
+                                              size: 30,
                                               color: LightColors.lightGrey,
                                             ),
                                           ),
@@ -232,16 +237,25 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           SizedBox(
-                            height: 50,
+                            height: 40,
                           ),
                           Center(
                             child: Container(
                                 height: 45.0,
                                 width: width,
                                 decoration: BoxDecoration(
+                                    color: LightColors.mainBlue,
                                     borderRadius: BorderRadius.circular(8)),
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            MenuBottomBarPage(),
+                                      ),
+                                    );
+                                  },
                                   child: Text(
                                     'Login',
                                     style: TextStyle(
@@ -263,12 +277,13 @@ class _LoginPageState extends State<LoginPage> {
                       height: 32,
                     ),
                     Container(
-                      color: Colors.red,
-                      height: 200,
-                      // decoration: BoxDecoration(
-                      //     image: DecorationImage(
-                      //         image:
-                      //             AssetImage("assets/images/background.png"))),
+                      height: 250,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(
+                                "assets/images/background.png",
+                              ),
+                              fit: BoxFit.cover)),
                     )
                   ]),
             ),

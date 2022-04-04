@@ -7,12 +7,13 @@ import 'package:flutter/services.dart';
 import 'widget/bottom_nav.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Color(0xFFE5E5E5), // navigation bar color
-    statusBarColor: Colors.transparent, // status bar color
-    // statusBarColor: LightColors.mainBlue, // status bar color
-    // statusBarColor: Colors.red, // status bar color
-  ));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   systemNavigationBarColor: Colors.transparent, // navigation bar color
+  //   // systemNavigationBarColor: Color(0xFFE5E5E5), // navigation bar color
+  //   statusBarColor: Colors.transparent, // status bar color
+  //   // statusBarColor: LightColors.mainBlue, // status bar color
+  //   // statusBarColor: Colors.red, // status bar color
+  // ));
 
   return runApp(MyApp());
 }
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
     MaterialColor colorCustom = MaterialColor(0xFF2FA0BF, color);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Task Assignment',
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => ,
+      // },
       theme: ThemeData(
         primarySwatch: colorCustom,
         textTheme: Theme.of(context).textTheme.apply(
@@ -50,61 +55,3 @@ Map<int, Color> color = {
   800: Color.fromRGBO(47, 160, 191, .9),
   900: Color.fromRGBO(47, 160, 191, 1),
 };
-
-class HomePage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => HomeState();
-}
-
-class HomeState extends State<HomePage> {
-  String currentPage = 'main';
-  final Map<String, Widget> pageView = <String, Widget>{
-    "main": MainPage(),
-    // "main": MainPage(),
-    "java": Scaffold(
-        appBar: AppBar(title: Text('Java')),
-        body: Center(child: Text('Java Tutorial'))),
-    "php": Scaffold(
-        appBar: AppBar(title: Text('PHP')),
-        body: Center(child: Text('PHP Tutorial'))),
-  };
-  changePage(String pageName) {
-    setState(() {
-      currentPage = pageName;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: this.pageView[currentPage],
-      bottomNavigationBar: new BottomNavigationDot(
-        paddingBottomCircle: 10,
-        color: LightColors.oldBlue,
-        backgroundColor: Colors.white,
-        activeColor: LightColors.oldBlue,
-        items: [
-          new BottomNavigationDotItem(
-              activeIcon: FluentIcons.home_16_filled,
-              icon: FluentIcons.home_16_regular,
-              onTap: () {
-                changePage("main");
-              }),
-          new BottomNavigationDotItem(
-              activeIcon: FluentIcons.history_16_filled,
-              icon: FluentIcons.history_16_regular,
-              onTap: () {
-                changePage("java");
-              }),
-          new BottomNavigationDotItem(
-              activeIcon: FluentIcons.sign_out_20_filled,
-              icon: FluentIcons.sign_out_20_regular,
-              onTap: () {
-                changePage("php");
-              }),
-        ],
-        milliseconds: 200,
-      ),
-    );
-  }
-}

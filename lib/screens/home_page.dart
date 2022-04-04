@@ -1,7 +1,6 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_task_planner_app/screens/calendar_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:svg_icon/svg_icon.dart';
@@ -15,7 +14,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
-
+  final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
+  final GlobalKey<ExpansionTileCardState> cardC = new GlobalKey();
+  final GlobalKey<ExpansionTileCardState> cardD = new GlobalKey();
+  static const String routeName = "/homePage";
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -30,18 +32,18 @@ class _MainPageState extends State<MainPage> {
 
             return;
           },
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Container(
-                    height: height,
-                    width: 1,
-                    color: LightColors.mainBlue,
-                  ),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 40),
+                child: Container(
+                  height: height,
+                  width: 1,
+                  color: LightColors.mainBlue,
                 ),
-                Column(
+              ),
+              SingleChildScrollView(
+                child: Column(
                   children: [
                     Container(
                       height: height / 3.3,
@@ -203,17 +205,53 @@ class _MainPageState extends State<MainPage> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                CardExpand(cardA: cardA),
+                                CardExpand(card: cardA),
                               ],
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CardExpand(card: cardB),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CardExpand(card: cardC),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CardExpand(card: cardD),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 10,
+                          )
                         ],
                       ),
                     )
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
