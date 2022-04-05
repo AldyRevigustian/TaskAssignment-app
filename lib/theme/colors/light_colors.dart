@@ -19,4 +19,6 @@ class LightColors {
   static const Color lightGreen = Color(0xFFA8DE8F);
   static const Color lightBlack = Color(0xFF6F6F6F);
   static const Color lightGrey = Color(0xFFA6A6A6);
+  static const Color lightYellow = Color(0xFFDED18F);
+  static const Color lightRed = Color(0xFFDE8F8F);
 }

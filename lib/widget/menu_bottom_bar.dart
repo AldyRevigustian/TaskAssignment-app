@@ -4,8 +4,11 @@ import 'package:flutter_task_planner_app/screens/home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/bottom_nav.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuBottomBarPage extends StatefulWidget {
+  static const routeName = '/home';
+
   @override
   State<StatefulWidget> createState() => MenuBottomBarState();
 }
@@ -24,6 +27,14 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
     setState(() {
       currentPage = pageName;
     });
+  }
+
+  removeValuesSharedpref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Remove String
+    prefs.remove("username");
+    //Remove bool
+    prefs.remove("password");
   }
 
   @override
@@ -49,17 +60,15 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
                 changePage("java");
               }),
           new BottomNavigationDotItem(
-              activeIcon: FluentIcons.sign_out_20_filled,
-              icon: FluentIcons.sign_out_20_regular,
-              onTap: () {
-                // changePage("logOut");
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => LoginPage(),
-                  ),
-                );
-              }),
+            activeIcon: FluentIcons.sign_out_20_filled,
+            icon: FluentIcons.sign_out_20_regular,
+            onTap: () {
+              removeValuesSharedpref();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (Route<dynamic> route) => false);
+            },
+          ),
         ],
         milliseconds: 200,
       ),

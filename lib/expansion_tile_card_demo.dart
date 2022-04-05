@@ -4,10 +4,15 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 
 class CardExpand extends StatefulWidget {
-  const CardExpand({
-    Key key,
-    @required this.card,
-  }) : super(key: key);
+  final String status;
+  final String title;
+
+  const CardExpand(
+      {Key key,
+      @required this.card,
+      @required this.status,
+      @required this.title})
+      : super(key: key);
 
   final GlobalKey<ExpansionTileCardState> card;
 
@@ -20,13 +25,33 @@ class _CardExpandState extends State<CardExpand> {
     if (formatSize.length > 15) {
       return 13.00;
     } else {
-      return 15.00;
+      return 13.00;
+    }
+  }
+
+  iconStatus(String status) {
+    if (status == "done") {
+      return FluentIcons.checkmark_circle_32_regular;
+    } else if (status == "progress") {
+      return FluentIcons.error_circle_24_regular;
+    } else {
+      return FluentIcons.dismiss_circle_24_regular;
+    }
+  }
+
+  colorStatus(String colorStatus) {
+    if (colorStatus == "done") {
+      return LightColors.lightGreen;
+    } else if (colorStatus == "progress") {
+      return LightColors.lightYellow;
+    } else {
+      return LightColors.lightRed;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String title = "Menyapu Lantai";
+    // String title = "Menyapu Lantai";
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -42,17 +67,18 @@ class _CardExpandState extends State<CardExpand> {
         expandedColor: Colors.white,
         key: widget.card,
         leading: Icon(
-          FluentIcons.checkmark_circle_32_regular,
-          color: LightColors.lightGreen,
+          // FluentIcons.checkmark_circle_32_regular,
+          iconStatus(widget.status),
+          color: colorStatus(widget.status),
           size: 40,
         ),
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(
               fontFamily: "Lato",
               fontWeight: FontWeight.bold,
               color: LightColors.lightBlack,
-              fontSize: formatSize(title)),
+              fontSize: formatSize(widget.title)),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 3),
@@ -141,6 +167,17 @@ class _CardExpandState extends State<CardExpand> {
                   ),
                 )),
           ),
+          // Align(
+          //   alignment: Alignment.bottomLeft,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(left: 20, top: 10),
+          //     child: Container(
+          //       height: 100,
+          //       width: 100,
+          //       color: Colors.red,
+          //     ),
+          //   ),
+          // ),
           ButtonBar(
             alignment: MainAxisAlignment.spaceAround,
             buttonHeight: 20.0,
@@ -156,7 +193,7 @@ class _CardExpandState extends State<CardExpand> {
                   children: <Widget>[
                     Icon(
                       FluentIcons.dismiss_circle_20_regular,
-                      color: LightColors.lightBlack,
+                      color: Color.fromRGBO(160, 160, 160, 0.7),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -165,7 +202,7 @@ class _CardExpandState extends State<CardExpand> {
                       'Dissmiss',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: LightColors.lightBlack,
+                          color: Color.fromRGBO(160, 160, 160, 1),
                           fontSize: 10),
                     ),
                   ],
@@ -181,7 +218,7 @@ class _CardExpandState extends State<CardExpand> {
                   children: <Widget>[
                     Icon(
                       FluentIcons.camera_20_regular,
-                      color: LightColors.lightBlack,
+                      color: Color.fromRGBO(160, 160, 160, 0.7),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -190,7 +227,7 @@ class _CardExpandState extends State<CardExpand> {
                       'Camera',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: LightColors.lightBlack,
+                          color: Color.fromRGBO(160, 160, 160, 1),
                           fontSize: 10),
                     ),
                   ],
@@ -204,7 +241,7 @@ class _CardExpandState extends State<CardExpand> {
                   children: <Widget>[
                     Icon(
                       FluentIcons.save_20_regular,
-                      color: LightColors.lightBlack,
+                      color: Color.fromRGBO(160, 160, 160, 0.7),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -213,7 +250,7 @@ class _CardExpandState extends State<CardExpand> {
                       'Done',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: LightColors.lightBlack,
+                          color: Color.fromRGBO(160, 160, 160, 1),
                           fontSize: 10),
                     ),
                   ],

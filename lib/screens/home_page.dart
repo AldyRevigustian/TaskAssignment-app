@@ -1,8 +1,10 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:svg_icon/svg_icon.dart';
 
 import '../expansion_tile_card_demo.dart';
@@ -13,15 +15,28 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
-  final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
-  final GlobalKey<ExpansionTileCardState> cardC = new GlobalKey();
-  final GlobalKey<ExpansionTileCardState> cardD = new GlobalKey();
+  // final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
+  // final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
+  // final GlobalKey<ExpansionTileCardState> cardC = new GlobalKey();
+  // final GlobalKey<ExpansionTileCardState> cardD = new GlobalKey();
   static const String routeName = "/homePage";
+  String parentName;
+  ParentInf getParentInfo;
+
   @override
   Widget build(BuildContext context) {
+    getParentInfo = Provider.of<Parent>(context).getParentInf();
+    parentName = getParentInfo.name;
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    var cardA;
+    var cardB;
+    var cardC;
+    var cardD;
+    var cardE;
+    String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
     return Scaffold(
       backgroundColor: Color(0xFFF7F7F7),
@@ -49,11 +64,34 @@ class _MainPageState extends State<MainPage> {
                       height: height / 3.3,
                       child: Stack(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                            child: Container(
+                              height: height / 3.51,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9F2F9),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Container(
+                              height: height / 3.61,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFAEE5F4),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
                           Align(
                             alignment: Alignment.topCenter,
                             child: Container(
                               height: height / 3.7,
                               decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(5),
+                                      bottomRight: Radius.circular(5)),
                                   color: LightColors.mainBlue,
                                   image: DecorationImage(
                                       image: AssetImage(
@@ -94,7 +132,7 @@ class _MainPageState extends State<MainPage> {
                                                 ),
                                               ),
                                               Text(
-                                                "Paryono",
+                                                capitalize(parentName),
                                                 style: TextStyle(
                                                     fontSize: 25,
                                                     color: Colors.white,
@@ -203,9 +241,13 @@ class _MainPageState extends State<MainPage> {
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
-                                CardExpand(card: cardA),
+                                CardExpand(
+                                  card: cardA,
+                                  status: "progress",
+                                  title: "Mengisi Galon Lantai 3",
+                                ),
                               ],
                             ),
                           ),
@@ -216,7 +258,11 @@ class _MainPageState extends State<MainPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                CardExpand(card: cardB),
+                                CardExpand(
+                                  card: cardB,
+                                  status: "progress",
+                                  title: "Membeli Gorengan",
+                                ),
                               ],
                             ),
                           ),
@@ -227,24 +273,80 @@ class _MainPageState extends State<MainPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                CardExpand(card: cardC),
+                                CardExpand(
+                                  card: cardE,
+                                  status: "progress",
+                                  title: "Membeli Kopi",
+                                ),
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CardExpand(card: cardD),
-                              ],
-                            ),
+                          SizedBox(
+                            height: 30,
                           ),
                           Container(
+                            // height: height,
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: LightColors.mainBlue,
+                                          width: 5)),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Completed Task",
+                                  style: TextStyle(
+                                      fontFamily: "Lato",
+                                      fontWeight: FontWeight.w700,
+                                      color: LightColors.oldBlue,
+                                      fontSize: 20),
+                                )
+                              ],
+                            ),
+
+                            // color: Colors.red,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CardExpand(
+                                  card: cardC,
+                                  status: "error",
+                                  title: "Membersihkan Kaca",
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CardExpand(
+                                  card: cardD,
+                                  status: "done",
+                                  title: "Menyapu Lantai 3",
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
                             height: 10,
-                          )
+                          ),
                         ],
                       ),
                     )
