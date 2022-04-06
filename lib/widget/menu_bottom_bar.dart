@@ -18,9 +18,9 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
   final Map<String, Widget> pageView = <String, Widget>{
     "main": MainPage(),
     // "main": MainPage(),
-    "java": Scaffold(
-        appBar: AppBar(title: Text('Java')),
-        body: Center(child: Text('Java Tutorial'))),
+    // "java": Scaffold(
+    //     appBar: AppBar(title: Text('Java')),
+    //     body: Center(child: Text('Java Tutorial'))),
     "logOut": LoginPage(),
   };
   changePage(String pageName) {
@@ -53,12 +53,12 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
               onTap: () {
                 changePage("main");
               }),
-          new BottomNavigationDotItem(
-              activeIcon: FluentIcons.history_16_filled,
-              icon: FluentIcons.history_16_regular,
-              onTap: () {
-                changePage("java");
-              }),
+          // new BottomNavigationDotItem(
+          //     activeIcon: FluentIcons.history_16_filled,
+          //     icon: FluentIcons.history_16_regular,
+          //     onTap: () {
+          //       changePage("java");
+          //     }),
           new BottomNavigationDotItem(
             activeIcon: FluentIcons.sign_out_20_filled,
             icon: FluentIcons.sign_out_20_regular,

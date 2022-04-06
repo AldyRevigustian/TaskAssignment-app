@@ -21,12 +21,14 @@ class _MainPageState extends State<MainPage> {
   // final GlobalKey<ExpansionTileCardState> cardD = new GlobalKey();
   static const String routeName = "/homePage";
   String parentName;
+  String parentAvatar;
   ParentInf getParentInfo;
 
   @override
   Widget build(BuildContext context) {
     getParentInfo = Provider.of<Parent>(context).getParentInf();
     parentName = getParentInfo.name;
+    parentAvatar = getParentInfo.image_profile;
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -64,34 +66,42 @@ class _MainPageState extends State<MainPage> {
                       height: height / 3.3,
                       child: Stack(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                            child: Container(
-                              height: height / 3.51,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFD9F2F9),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: Container(
-                              height: height / 3.61,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFAEE5F4),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                          //   child: Container(
+                          //     height: height / 3.51,
+                          //     decoration: BoxDecoration(
+                          //       color: Color(0xFFD9F2F9),
+                          //       borderRadius: BorderRadius.circular(5),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          //   child: Container(
+                          //     height: height / 3.61,
+                          //     decoration: BoxDecoration(
+                          //       color: Color(0xFFAEE5F4),
+                          //       borderRadius: BorderRadius.circular(5),
+                          //     ),
+                          //   ),
+                          // ),
                           Align(
                             alignment: Alignment.topCenter,
                             child: Container(
                               height: height / 3.7,
                               decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.2),
+                                      offset: Offset(0, 2),
+                                      blurRadius: 4,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
                                   borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(5),
-                                      bottomRight: Radius.circular(5)),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20)),
                                   color: LightColors.mainBlue,
                                   image: DecorationImage(
                                       image: AssetImage(
@@ -108,8 +118,13 @@ class _MainPageState extends State<MainPage> {
                                       height: 100,
                                       width: 100,
                                       child: CircleAvatar(
-                                        foregroundImage: AssetImage(
-                                            'assets/images/user.png'),
+                                        foregroundImage:
+                                            // (parentAvatar == null
+                                            //     ? new AssetImage(
+                                            //         "assets/images/user.png")
+                                            //     : new NetworkImage(parentAvatar))
+                                            AssetImage(
+                                                "assets/images/user.png"),
                                       ),
                                     ),
                                     SizedBox(
@@ -244,10 +259,10 @@ class _MainPageState extends State<MainPage> {
                                   height: 10,
                                 ),
                                 CardExpand(
-                                  card: cardA,
-                                  status: "progress",
-                                  title: "Mengisi Galon Lantai 3",
-                                ),
+                                    idCard: cardA,
+                                    status: "progress",
+                                    title: "Mengisi Galon Lantai 3",
+                                    description: ""),
                               ],
                             ),
                           ),
@@ -259,10 +274,10 @@ class _MainPageState extends State<MainPage> {
                                   height: 10,
                                 ),
                                 CardExpand(
-                                  card: cardB,
-                                  status: "progress",
-                                  title: "Membeli Gorengan",
-                                ),
+                                    idCard: cardB,
+                                    status: "progress",
+                                    title: "Membeli Gorengan",
+                                    description: ""),
                               ],
                             ),
                           ),
@@ -274,10 +289,10 @@ class _MainPageState extends State<MainPage> {
                                   height: 10,
                                 ),
                                 CardExpand(
-                                  card: cardE,
-                                  status: "progress",
-                                  title: "Membeli Kopi",
-                                ),
+                                    idCard: cardE,
+                                    status: "progress",
+                                    title: "Membeli Kopi",
+                                    description: ""),
                               ],
                             ),
                           ),
@@ -322,10 +337,10 @@ class _MainPageState extends State<MainPage> {
                                   height: 10,
                                 ),
                                 CardExpand(
-                                  card: cardC,
-                                  status: "error",
-                                  title: "Membersihkan Kaca",
-                                ),
+                                    idCard: cardC,
+                                    status: "error",
+                                    title: "Membersihkan Kaca",
+                                    description: ""),
                               ],
                             ),
                           ),
@@ -337,10 +352,10 @@ class _MainPageState extends State<MainPage> {
                                   height: 10,
                                 ),
                                 CardExpand(
-                                  card: cardD,
-                                  status: "done",
-                                  title: "Menyapu Lantai 3",
-                                ),
+                                    idCard: cardD,
+                                    status: "done",
+                                    title: "Menyapu Lantai 3",
+                                    description: ""),
                               ],
                             ),
                           ),

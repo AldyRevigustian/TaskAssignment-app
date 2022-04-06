@@ -6,15 +6,17 @@ import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 class CardExpand extends StatefulWidget {
   final String status;
   final String title;
+  final String description;
 
   const CardExpand(
       {Key key,
-      @required this.card,
+      @required this.idCard,
       @required this.status,
-      @required this.title})
+      @required this.title,
+      @required this.description})
       : super(key: key);
 
-  final GlobalKey<ExpansionTileCardState> card;
+  final GlobalKey<ExpansionTileCardState> idCard;
 
   @override
   State<CardExpand> createState() => _CardExpandState();
@@ -61,11 +63,10 @@ class _CardExpandState extends State<CardExpand> {
       ], borderRadius: BorderRadius.circular(10)),
       child: ExpansionTileCard(
         elevation: 0,
-
         // shadowColor: Color.fromRGBO(0, 0, 0, ),
         baseColor: Colors.white,
         expandedColor: Colors.white,
-        key: widget.card,
+        key: widget.idCard,
         leading: Icon(
           // FluentIcons.checkmark_circle_32_regular,
           iconStatus(widget.status),
@@ -141,8 +142,8 @@ class _CardExpandState extends State<CardExpand> {
                         color: LightColors.lightBlack),
                     keyboardType: TextInputType.multiline,
 
-                    decoration: const InputDecoration(
-                        hintText: "Sampai Bersih ya ;)",
+                    decoration: InputDecoration(
+                        hintText: widget.description,
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 0.3), fontSize: 15),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -187,7 +188,7 @@ class _CardExpandState extends State<CardExpand> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  widget.card.currentState?.expand();
+                  widget.idCard.currentState?.expand();
                 },
                 child: Column(
                   children: <Widget>[
@@ -212,7 +213,7 @@ class _CardExpandState extends State<CardExpand> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  widget.card.currentState?.collapse();
+                  widget.idCard.currentState?.collapse();
                 },
                 child: Column(
                   children: <Widget>[
