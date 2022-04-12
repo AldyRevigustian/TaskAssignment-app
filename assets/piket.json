@@ -10,5 +10,23 @@
         "title" : "Beli Gorengan",
         "description" : "Tahu, Pisang goreng, Tempe, Bakwan",
         "status" : "progress"
+    },
+    {
+        "id" : "3",
+        "title" : "Beli Gorengan",
+        "description" : "Tahu, Pisang goreng, Tempe, Bakwan",
+        "status" : "progress"
+    },
+    {
+        "id" : "4",
+        "title" : "Beli Tahu",
+        "description" : "Tahu, Pisang goreng, Tempe, Bakwan",
+        "status" : "done"
+    },
+    {
+        "id" : "5",
+        "title" : "Beli Tahu",
+        "description" : "Tahu, Pisang goreng, Tempe, Bakwan",
+        "status" : "done"
     }
 ]

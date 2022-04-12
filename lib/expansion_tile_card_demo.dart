@@ -1,22 +1,23 @@
+import 'dart:convert';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 
 class CardExpand extends StatefulWidget {
   final String status;
   final String title;
   final String description;
+  GlobalKey<ExpansionTileCardState> idCard;
 
-  const CardExpand(
+  CardExpand(
       {Key key,
-      @required this.idCard,
       @required this.status,
       @required this.title,
       @required this.description})
       : super(key: key);
-
-  final GlobalKey<ExpansionTileCardState> idCard;
 
   @override
   State<CardExpand> createState() => _CardExpandState();
