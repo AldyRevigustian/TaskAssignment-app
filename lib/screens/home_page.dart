@@ -5,12 +5,65 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_planner_app/expansion_tile_card_demo.dart';
+import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/loading_alert.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_task_planner_app/model/piketModel.dart';
+import 'package:http/http.dart' as http;
+
+Future<List<Task>> fetchTask() async {
+  final response = await http.get(Uri.parse(
+      'https://624e8ad153326d0cfe5c1a33.mockapi.io/api/task/listTask'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    // return Task.fromJson(json.decode(response.body));
+    // final data = convert.jsonDecode(response.body);
+    // Task template = Task.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    // return [
+    //   for (final item in jsonDecode(response.body)) Task.fromJson(item),
+    // ];
+    List jsonResponse = json.decode(response.body);
+    return jsonResponse.map((job) => new Task.fromJson(job)).toList();
+
+    // AdTemplate template = AdTemplate.fromJson(data[0]);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load Task');
+  }
+}
+
+class Task {
+  // final int userId;
+
+  final String id;
+  final String status;
+  final String title;
+  final String description;
+
+  const Task({
+    @required this.id,
+    @required this.status,
+    @required this.title,
+    @required this.description,
+  });
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      // userId: json['userId'],
+      id: json['id'],
+      status: json['status'],
+      title: json['title'],
+      description: json['description'],
+    );
+  }
+}
 
 class MainPage extends StatefulWidget {
   @override
@@ -18,6 +71,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  Future listTask;
+
   // final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
   // final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
   // final GlobalKey<ExpansionTileCardState> cardC = new GlobalKey();
@@ -26,6 +81,24 @@ class _MainPageState extends State<MainPage> {
   String parentName;
   String parentAvatar;
   ParentInf getParentInfo;
+
+  // void initState() {
+  //   listTask = GetHelper.getData();
+
+  //   super.initState();
+  // }
+  void initState() {
+    super.initState();
+    listTask = fetchTask();
+  }
+
+  showLoadingProgress() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LoadingAlert();
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,99 +125,209 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 children: [
                   Atas(height: height, parentName: parentName, width: width),
+                  // FutureBuilder(
+                  //   // future: ReadJsonData(),
+                  //   future: listTask,
+                  //   builder: (index, snapshot) {
+                  //     // var items = snapshot.data as List<ModelCard>;
+                  //     if (!snapshot.hasData || snapshot.data.length == 0) {
+                  //       return ListView.builder(
+                  //         shrinkWrap: true,
+                  //         primary: false,
+                  //         itemCount:
+                  //             snapshot.data == null ? 0 : snapshot.data.length,
+                  //         physics: const NeverScrollableScrollPhysics(),
+                  //         itemBuilder: (context, index) {
+                  //           return Padding(
+                  //             padding:
+                  //                 const EdgeInsets.symmetric(horizontal: 40),
+                  //             child: Column(
+                  //               children: [
+                  //                 // SizedBox(
+                  //                 //   height: 10,
+                  //                 // ),
+                  //                 // Padding(
+                  //                 //   padding: const EdgeInsets.only(
+                  //                 //       left: 30, top: 10),
+                  //                 //   child: CardExpand(
+                  //                 //       status: items[index].status,
+                  //                 //       title: items[index].title,
+                  //                 //       description: items[index].description),
+                  //                 // )
+                  //                 Text("No Task")
+                  //               ],
+                  //             ),
+                  //           );
+                  //         },
+                  //       );
+                  //     } else if (snapshot.hasData) {
+                  //       return Column(
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.only(left: 30, top: 20),
+                  //             child: Row(
+                  //               children: [
+                  //                 Container(
+                  //                   height: 20,
+                  //                   width: 20,
+                  //                   decoration: BoxDecoration(
+                  //                       color: Colors.white,
+                  //                       borderRadius: BorderRadius.circular(20),
+                  //                       border: Border.all(
+                  //                           color: LightColors.mainBlue,
+                  //                           width: 5)),
+                  //                 ),
+                  //                 SizedBox(
+                  //                   width: 20,
+                  //                 ),
+                  //                 Text(
+                  //                   "Main Task",
+                  //                   style: TextStyle(
+                  //                       fontFamily: "Lato",
+                  //                       fontWeight: FontWeight.w700,
+                  //                       color: LightColors.oldBlue,
+                  //                       fontSize: 20),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           ListView.builder(
+                  //             shrinkWrap: true,
+                  //             primary: false,
+                  //             itemCount: snapshot.data == null
+                  //                 ? 0
+                  //                 : snapshot.data.length,
+                  //             physics: const NeverScrollableScrollPhysics(),
+                  //             itemBuilder: (context, index) {
+                  //               return Padding(
+                  //                 padding: const EdgeInsets.symmetric(
+                  //                     horizontal: 40),
+                  //                 child: Column(
+                  //                   children: [
+                  //                     // SizedBox(
+                  //                     //   height: 10,
+                  //                     // ),
+                  //                     Padding(
+                  //                       padding: const EdgeInsets.only(
+                  //                           left: 30, top: 10, bottom: 5),
+                  //                       child: CardExpand(
+                  //                           status: snapshot.data[index].status,
+                  //                           title: snapshot.data[index].title,
+                  //                           description: snapshot
+                  //                               .data[index].description),
+                  //                     )
+                  //                   ],
+                  //                 ),
+                  //               );
+                  //             },
+                  //           ),
+                  //         ],
+                  //       );
+                  //     } else {
+                  //       return CircularProgressIndicator();
+                  //     }
+                  //   },
+                  // ),
                   FutureBuilder(
-                    future: ReadJsonData(),
-                    builder: (index, snapshot) {
-                      var items = snapshot.data as List<ModelCard>;
-                      if (!snapshot.hasData || snapshot.data.length == 0) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: items == null ? 0 : items.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
-                              child: Column(
-                                children: [
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       left: 30, top: 10),
-                                  //   child: CardExpand(
-                                  //       status: items[index].status,
-                                  //       title: items[index].title,
-                                  //       description: items[index].description),
-                                  // )
-                                ],
-                              ),
-                            );
-                          },
+                    future: listTask,
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot snapshot,
+                    ) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return AlertDialog(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)),
+                          insetPadding: EdgeInsets.symmetric(
+                              horizontal: 150, vertical: 150),
+                          content: Container(
+                              alignment: Alignment.center,
+                              height: 50,
+                              width: 100,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      LightColors.mainBlue),
+                                ),
+                              )),
                         );
-                      }
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 20),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: LightColors.mainBlue,
-                                          width: 5)),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  "Main Task",
-                                  style: TextStyle(
-                                      fontFamily: "Lato",
-                                      fontWeight: FontWeight.w700,
-                                      color: LightColors.oldBlue,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: items == null ? 0 : items.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Padding(
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return const Text('Error');
+                        } else if (snapshot.hasData) {
+                          return Column(
+                            children: [
+                              Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 40),
-                                child: Column(
+                                    const EdgeInsets.only(left: 30, top: 20),
+                                child: Row(
                                   children: [
-                                    // SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30, top: 10, bottom: 5),
-                                      child: CardExpand(
-                                          status: items[index].status,
-                                          title: items[index].title,
-                                          description:
-                                              items[index].description),
-                                    )
+                                    Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color: LightColors.mainBlue,
+                                              width: 5)),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      "Main Task",
+                                      style: TextStyle(
+                                          fontFamily: "Lato",
+                                          fontWeight: FontWeight.w700,
+                                          color: LightColors.oldBlue,
+                                          fontSize: 20),
+                                    ),
                                   ],
                                 ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                primary: false,
+                                itemCount: snapshot.data == null
+                                    ? 0
+                                    : snapshot.data.length,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40),
+                                    child: Column(
+                                      children: [
+                                        // SizedBox(
+                                        //   height: 10,
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 30, top: 10, bottom: 5),
+                                          child: CardExpand(
+                                              status:
+                                                  snapshot.data[index].status,
+                                              title: snapshot.data[index].title,
+                                              description: snapshot
+                                                  .data[index].description),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const Text('Empty data');
+                        }
+                      } else {
+                        return Text('State: ${snapshot.connectionState}');
+                      }
                     },
                   ),
                 ],
@@ -156,13 +339,13 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<List<ModelCard>> ReadJsonData() async {
-    final jsondata =
-        await rootBundle.rootBundle.loadString('assets/piket.json');
-    final list = json.decode(jsondata) as List<dynamic>;
+  // Future<List<ModelCard>> ReadJsonData() async {
+  //   final jsondata =
+  //       await rootBundle.rootBundle.loadString('assets/piket.json');
+  //   final list = json.decode(jsondata) as List<dynamic>;
 
-    return list.map((e) => ModelCard.fromJson(e)).toList();
-  }
+  //   return list.map((e) => ModelCard.fromJson(e)).toList();
+  // }
 }
 
 class Atas extends StatelessWidget {
@@ -262,8 +445,8 @@ class Atas extends StatelessWidget {
                               Container(
                                 width: 150,
                                 child: Text(
-                                  // capitalize(parentName),
-                                  "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
+                                  capitalize(parentName),
+                                  // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 25,
