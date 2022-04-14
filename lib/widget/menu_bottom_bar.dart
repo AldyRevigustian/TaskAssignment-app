@@ -61,8 +61,8 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
           //       changePage("java");
           //     }),
           new BottomNavigationDotItem(
-            activeIcon: FluentIcons.sign_out_20_filled,
-            icon: FluentIcons.sign_out_20_regular,
+            activeIcon: FluentIcons.sign_out_24_filled,
+            icon: FluentIcons.sign_out_24_regular,
             onTap: () {
               removeValuesSharedpref();
               Navigator.of(context).pushAndRemoveUntil(

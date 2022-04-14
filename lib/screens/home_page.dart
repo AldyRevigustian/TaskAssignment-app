@@ -485,87 +485,152 @@ class _MainPageState extends State<MainPage> {
                           if (snapshot.hasError) {
                             return const Text('Error');
                           } else if (snapshot.hasData) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 30, top: 20),
-                                  child: Row(
+                            return snapshot.data.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30, top: 40),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                      color:
+                                                          LightColors.mainBlue,
+                                                      width: 5)),
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text(
+                                              "Main Task",
+                                              style: TextStyle(
+                                                  fontFamily: "Lato",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: LightColors.oldBlue,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 40,
+                                            ),
+                                            Text("No Task Available",
+                                                style: TextStyle(
+                                                    fontFamily: "Lato",
+                                                    fontWeight: FontWeight.w400,
+                                                    color: LightColors.mainBlue,
+                                                    fontSize: 15)),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : Column(
                                     children: [
-                                      Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: LightColors.mainBlue,
-                                                width: 5)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 30, top: 30),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                      color:
+                                                          LightColors.mainBlue,
+                                                      width: 5)),
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text(
+                                              "Main Task",
+                                              style: TextStyle(
+                                                  fontFamily: "Lato",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: LightColors.oldBlue,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(
-                                        "Main Task",
-                                        style: TextStyle(
-                                            fontFamily: "Lato",
-                                            fontWeight: FontWeight.w700,
-                                            color: LightColors.oldBlue,
-                                            fontSize: 20),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ListView.builder(
-                                  padding: EdgeInsets.only(top: 10),
-                                  shrinkWrap: true,
-                                  primary: false,
-                                  itemCount: snapshot.data == null
-                                      ? 0
-                                      : snapshot.data.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return (snapshot.data[index].status == 0)
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 40),
-                                            child: Column(
-                                              children: [
-                                                // SizedBox(
-                                                //   height: 10,
-                                                // ),
-                                                // g bner nih
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 30,
-                                                          top: 5,
-                                                          bottom: 5),
-                                                  child: CardExpand(
-                                                    status: snapshot
-                                                        .data[index].status,
-                                                    title: snapshot
-                                                        .data[index].title,
-                                                    description: snapshot
-                                                        .data[index]
-                                                        .description,
-                                                    created_at: snapshot
-                                                        .data[index].created_at,
-                                                    end_time: snapshot
-                                                        .data[index].end_time,
+                                      ListView.builder(
+                                        padding: EdgeInsets.only(top: 10),
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        itemCount: snapshot.data == null
+                                            ? 0
+                                            : snapshot.data.length,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return (snapshot.data[index].status ==
+                                                  0)
+                                              ? Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 40),
+                                                  child: Column(
+                                                    children: [
+                                                      // SizedBox(
+                                                      //   height: 10,
+                                                      // ),
+                                                      // g bner nih
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 30,
+                                                                top: 5,
+                                                                bottom: 5),
+                                                        child: CardExpand(
+                                                          status: snapshot
+                                                              .data[index]
+                                                              .status,
+                                                          title: snapshot
+                                                              .data[index]
+                                                              .title,
+                                                          description: snapshot
+                                                              .data[index]
+                                                              .description,
+                                                          created_at: snapshot
+                                                              .data[index]
+                                                              .created_at,
+                                                          end_time: snapshot
+                                                              .data[index]
+                                                              .end_time,
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 )
-                                              ],
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 0,
-                                          );
-                                  },
-                                ),
-                              ],
-                            );
+                                              : Container(
+                                                  height: 0,
+                                                );
+                                        },
+                                      ),
+                                    ],
+                                  );
                           } else {
                             return Text('Empty data');
                           }
@@ -588,86 +653,97 @@ class _MainPageState extends State<MainPage> {
                           if (snapshot.hasError) {
                             return const Text('Error');
                           } else if (snapshot.hasData) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 30, top: 20),
-                                  child: Row(
+                            return snapshot.data.isEmpty
+                                ? Center()
+                                : Column(
                                     children: [
-                                      Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: LightColors.mainBlue,
-                                                width: 5)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 30, top: 20),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                      color:
+                                                          LightColors.mainBlue,
+                                                      width: 5)),
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text(
+                                              "Completed Task",
+                                              style: TextStyle(
+                                                  fontFamily: "Lato",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: LightColors.oldBlue,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(
-                                        "Completed Task",
-                                        style: TextStyle(
-                                            fontFamily: "Lato",
-                                            fontWeight: FontWeight.w700,
-                                            color: LightColors.oldBlue,
-                                            fontSize: 20),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ListView.builder(
-                                  padding: EdgeInsets.only(top: 10),
-                                  shrinkWrap: true,
-                                  primary: false,
-                                  itemCount: snapshot.data == null
-                                      ? 0
-                                      : snapshot.data.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return (snapshot.data[index].status != 0)
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 40),
-                                            child: Column(
-                                              children: [
-                                                // SizedBox(
-                                                //   height: 10,
-                                                // ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 30,
-                                                          top: 5,
-                                                          bottom: 5),
-                                                  child: CardExpand(
-                                                    status: snapshot
-                                                        .data[index].status,
-                                                    title: snapshot
-                                                        .data[index].title,
-                                                    description: snapshot
-                                                        .data[index]
-                                                        .description,
-                                                    created_at: snapshot
-                                                        .data[index].created_at,
-                                                    end_time: snapshot
-                                                        .data[index].end_time,
+                                      ListView.builder(
+                                        padding: EdgeInsets.only(top: 10),
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        itemCount: snapshot.data == null
+                                            ? 0
+                                            : snapshot.data.length,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return (snapshot.data[index].status !=
+                                                  0)
+                                              ? Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 40),
+                                                  child: Column(
+                                                    children: [
+                                                      // SizedBox(
+                                                      //   height: 10,
+                                                      // ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 30,
+                                                                top: 5,
+                                                                bottom: 5),
+                                                        child: CardExpand(
+                                                          status: snapshot
+                                                              .data[index]
+                                                              .status,
+                                                          title: snapshot
+                                                              .data[index]
+                                                              .title,
+                                                          description: snapshot
+                                                              .data[index]
+                                                              .description,
+                                                          created_at: snapshot
+                                                              .data[index]
+                                                              .created_at,
+                                                          end_time: snapshot
+                                                              .data[index]
+                                                              .end_time,
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 )
-                                              ],
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 0,
-                                          );
-                                  },
-                                ),
-                              ],
-                            );
+                                              : Container(
+                                                  height: 10,
+                                                );
+                                        },
+                                      ),
+                                    ],
+                                  );
                           } else {
                             return Text('Empty data');
                           }

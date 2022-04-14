@@ -86,6 +86,7 @@ class _CardExpandState extends State<CardExpand> {
         ),
         // animateTrailing: true,
         title: Text(
+          // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
           widget.title,
           style: TextStyle(
               fontFamily: "Lato",
@@ -98,16 +99,6 @@ class _CardExpandState extends State<CardExpand> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Center(
-              //   child: Icon(
-              //     FluentIcons.clock_12_regular,
-              //     size: 10,
-              //     color: LightColors.lightBlack,
-              //   ),
-              // ),
-              // // SizedBox(
-              // //   width: 5,
-              // // ),
               Row(
                 children: [
                   Text(
@@ -134,7 +125,7 @@ class _CardExpandState extends State<CardExpand> {
                     " - ",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: LightColors.lightBlack,
+                      color: LightColors.mainBlue,
                     ),
                   ),
                   Text(
@@ -202,7 +193,6 @@ class _CardExpandState extends State<CardExpand> {
                         fontSize: 15,
                         color: LightColors.lightBlack),
                     keyboardType: TextInputType.multiline,
-
                     decoration: InputDecoration(
                         hintText: (widget.description != null)
                             ? widget.description
