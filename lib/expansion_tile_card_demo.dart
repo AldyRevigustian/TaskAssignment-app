@@ -10,14 +10,16 @@ class CardExpand extends StatefulWidget {
   final String status;
   final String title;
   final String description;
+  final String timestamp;
   GlobalKey<ExpansionTileCardState> idCard;
 
-  CardExpand(
-      {Key key,
-      @required this.status,
-      @required this.title,
-      @required this.description})
-      : super(key: key);
+  CardExpand({
+    Key key,
+    @required this.status,
+    @required this.title,
+    @required this.description,
+    @required this.timestamp,
+  }) : super(key: key);
 
   @override
   State<CardExpand> createState() => _CardExpandState();
@@ -57,7 +59,6 @@ class _CardExpandState extends State<CardExpand> {
     // String title = "Menyapu Lantai";
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.1), blurRadius: 5)
@@ -91,8 +92,11 @@ class _CardExpandState extends State<CardExpand> {
                 size: 20,
                 color: LightColors.lightBlack,
               ),
+              SizedBox(
+                width: 5,
+              ),
               Text(
-                "01/06/2022 - 09:30",
+                widget.timestamp,
                 style: TextStyle(
                     fontFamily: "Lato",
                     // fontWeight: FontWeight.bold,
@@ -144,7 +148,9 @@ class _CardExpandState extends State<CardExpand> {
                     keyboardType: TextInputType.multiline,
 
                     decoration: InputDecoration(
-                        hintText: widget.description,
+                        hintText: (widget.description != null)
+                            ? widget.description
+                            : "",
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 0.3), fontSize: 15),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
