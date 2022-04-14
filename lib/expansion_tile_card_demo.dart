@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:intl/intl.dart';
 
 class CardExpand extends StatefulWidget {
-  final String status;
+  final int status;
   final String title;
   final String description;
-  final String timestamp;
+  final String created_at;
+  final String end_time;
   GlobalKey<ExpansionTileCardState> idCard;
 
   CardExpand({
@@ -18,7 +20,8 @@ class CardExpand extends StatefulWidget {
     @required this.status,
     @required this.title,
     @required this.description,
-    @required this.timestamp,
+    @required this.created_at,
+    @required this.end_time,
   }) : super(key: key);
 
   @override
@@ -26,6 +29,12 @@ class CardExpand extends StatefulWidget {
 }
 
 class _CardExpandState extends State<CardExpand> {
+  DateFormat formatTanggal;
+
+  void initState() {
+    formatTanggal = DateFormat.MMMMd('id');
+  }
+
   formatSize(String formatSize) {
     if (formatSize.length > 15) {
       return 13.00;
@@ -34,20 +43,20 @@ class _CardExpandState extends State<CardExpand> {
     }
   }
 
-  iconStatus(String status) {
-    if (status == "done") {
+  iconStatus(int status) {
+    if (status == 1) {
       return FluentIcons.checkmark_circle_32_regular;
-    } else if (status == "progress") {
+    } else if (status == 0) {
       return FluentIcons.error_circle_24_regular;
     } else {
       return FluentIcons.dismiss_circle_24_regular;
     }
   }
 
-  colorStatus(String colorStatus) {
-    if (colorStatus == "done") {
+  colorStatus(int colorStatus) {
+    if (colorStatus == 1) {
       return LightColors.lightGreen;
-    } else if (colorStatus == "progress") {
+    } else if (colorStatus == 0) {
       return LightColors.lightYellow;
     } else {
       return LightColors.lightRed;
@@ -75,6 +84,7 @@ class _CardExpandState extends State<CardExpand> {
           color: colorStatus(widget.status),
           size: 40,
         ),
+        // animateTrailing: true,
         title: Text(
           widget.title,
           style: TextStyle(
@@ -86,22 +96,68 @@ class _CardExpandState extends State<CardExpand> {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                FluentIcons.clock_16_regular,
-                size: 20,
-                color: LightColors.lightBlack,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                widget.timestamp,
-                style: TextStyle(
-                    fontFamily: "Lato",
-                    // fontWeight: FontWeight.bold,
-                    color: LightColors.lightBlack,
-                    fontSize: 13),
+              // Center(
+              //   child: Icon(
+              //     FluentIcons.clock_12_regular,
+              //     size: 10,
+              //     color: LightColors.lightBlack,
+              //   ),
+              // ),
+              // // SizedBox(
+              // //   width: 5,
+              // // ),
+              Row(
+                children: [
+                  Text(
+                    DateFormat('dd/MM ')
+                        .format(DateTime.parse(widget.created_at)),
+                    style: TextStyle(
+                        fontFamily: "Lato",
+                        // fontWeight: FontWeight.bold,
+                        color: LightColors.lightBlack,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11),
+                  ),
+                  Text(
+                    DateFormat(' kk : mm')
+                        .format(DateTime.parse(widget.created_at)),
+                    style: TextStyle(
+                        fontFamily: "Lato",
+                        // fontWeight: FontWeight.bold,
+                        color: LightColors.lightBlack,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11),
+                  ),
+                  Text(
+                    " - ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: LightColors.lightBlack,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('dd/MM ')
+                        .format(DateTime.parse(widget.end_time)),
+                    style: TextStyle(
+                        fontFamily: "Lato",
+                        // fontWeight: FontWeight.bold,
+                        color: LightColors.lightRed,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11),
+                  ),
+                  Text(
+                    DateFormat(' kk : mm')
+                        .format(DateTime.parse(widget.end_time)),
+                    style: TextStyle(
+                        fontFamily: "Lato",
+                        // fontWeight: FontWeight.bold,
+                        color: LightColors.lightRed,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11),
+                  ),
+                ],
               )
             ],
           ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -44,18 +45,20 @@ Future<List<Task>> fetchTask() async {
 class Task {
   // final int userId;
 
-  final String id;
-  final String status;
+  final int id;
+  final int status;
   final String title;
   final String description;
-  final String timestamp;
+  final String created_at;
+  final String end_time;
 
   const Task({
     @required this.id,
     @required this.status,
     @required this.title,
-    @required this.timestamp,
+    @required this.created_at,
     @required this.description,
+    @required this.end_time,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -65,7 +68,9 @@ class Task {
       status: json['status'],
       title: json['title'],
       description: json['description'],
-      timestamp: json['timestamp'],
+      // created_at: json['created_at'],
+      created_at: json["created_at"],
+      end_time: json["end_time"],
     );
   }
 }
@@ -144,6 +149,7 @@ class _MainPageState extends State<MainPage> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    print(dateTime);
 
     return Scaffold(
       body: Stack(
@@ -520,8 +526,7 @@ class _MainPageState extends State<MainPage> {
                                       : snapshot.data.length,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return (snapshot.data[index].status ==
-                                            "progress")
+                                    return (snapshot.data[index].status == 0)
                                         ? Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 40),
@@ -545,8 +550,10 @@ class _MainPageState extends State<MainPage> {
                                                     description: snapshot
                                                         .data[index]
                                                         .description,
-                                                    timestamp: snapshot
-                                                        .data[index].timestamp,
+                                                    created_at: snapshot
+                                                        .data[index].created_at,
+                                                    end_time: snapshot
+                                                        .data[index].end_time,
                                                   ),
                                                 )
                                               ],
@@ -622,8 +629,7 @@ class _MainPageState extends State<MainPage> {
                                       : snapshot.data.length,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return (snapshot.data[index].status !=
-                                            "progress")
+                                    return (snapshot.data[index].status != 0)
                                         ? Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 40),
@@ -646,8 +652,10 @@ class _MainPageState extends State<MainPage> {
                                                     description: snapshot
                                                         .data[index]
                                                         .description,
-                                                    timestamp: snapshot
-                                                        .data[index].timestamp,
+                                                    created_at: snapshot
+                                                        .data[index].created_at,
+                                                    end_time: snapshot
+                                                        .data[index].end_time,
                                                   ),
                                                 )
                                               ],
