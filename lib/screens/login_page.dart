@@ -70,24 +70,24 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // login function
-  saveSFstring(String username, String password) async {
+  saveSFstring(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', username);
+    prefs.setString('email', email);
     prefs.setString('password', password);
 
     print(
-        "Data username dan password sudah di simpan yaitu => ${prefs.getString('username')}");
+        "Data email dan password sudah di simpan yaitu => ${prefs.getString('email')}");
   }
 
   checkSFstring() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    bool username = prefs.containsKey('username');
+    bool email = prefs.containsKey('email');
     bool password = prefs.containsKey('password');
 
-    if (username == true && password == true) {
+    if (email == true && password == true) {
       setState(() {
-        usern = prefs.getString('username');
+        usern = prefs.getString('email');
         passwd = prefs.getString('password');
         sharedpref = true;
       });
@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       });
       print(
-          "Data username dan password sudah ada di sharedpreference yaitu => ${usern.toString()}");
+          "Data email dan password sudah ada di sharedpreference yaitu => ${usern.toString()}");
     } else {
       print("No Data sharedpreference bro");
     }
@@ -270,7 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                                             //     EdgeInsets.only(top: 0),
                                             // floatingLabelBehavior:
                                             //     FloatingLabelBehavior.auto,
-                                            hintText: "Username",
+                                            hintText: "Email",
                                             hintStyle: TextStyle(
                                                 fontFamily: "Montserrat",
                                                 fontSize: 15,

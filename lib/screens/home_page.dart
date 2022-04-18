@@ -178,486 +178,508 @@ class _MainPageState extends State<MainPage> {
 
                   // Future.
                 },
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: height / 3.3,
-                        child: Stack(
-                          children: [
-                            // Padding(
-                            //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                            //   child: Container(
-                            //     height: height / 3.51,
-                            //     decoration: BoxDecoration(
-                            //       color: Color(0xFFD9F2F9),
-                            //       borderRadius: BorderRadius.circular(5),
-                            //     ),
-                            //   ),
-                            // ),
-                            // Padding(
-                            //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            //   child: Container(
-                            //     height: height / 3.61,
-                            //     decoration: BoxDecoration(
-                            //       color: Color(0xFFAEE5F4),
-                            //       borderRadius: BorderRadius.circular(5),
-                            //     ),
-                            //   ),
-                            // ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                height: height / 3.7,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(50),
-                                        bottomRight: Radius.circular(0),
-                                        topRight: Radius.circular(0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color.fromRGBO(0, 0, 0, 0.2),
-                                        offset: Offset(0, 2),
-                                        blurRadius: 4,
-                                        spreadRadius: 0,
-                                      ),
-                                    ],
-                                    // borderRadius: BorderRadius.only(
-                                    //     bottomLeft: Radius.circular(20),
-                                    //     bottomRight: Radius.circular(20)),
-                                    color: LightColors.mainBlue,
-                                    image: DecorationImage(
-                                        opacity: 0.8,
-                                        image: AssetImage(
-                                            'assets/images/header.png'),
-                                        fit: BoxFit.fitWidth)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 100,
-                                        width: 100,
-                                        child: CircleAvatar(
-                                            foregroundImage: (parentAvatar ==
-                                                    null
-                                                ? new AssetImage(
-                                                    "assets/images/user.png")
-                                                : new NetworkImage(
-                                                    parentAvatar))
-                                            // AssetImage(
-                                            //     "assets/images/user.png"),
-                                            ),
-                                      ),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Hi, ",
-                                                  style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: 150,
-                                                  child: Text(
-                                                    capitalize(parentName),
-                                                    // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Text(
-                                              "PT. SOLUSI INTEK INDONESIA",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 13),
-                                            )
-                                          ],
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: height / 3.3,
+                          ),
+                          FutureBuilder(
+                            future: listTask,
+                            builder: (
+                              BuildContext context,
+                              AsyncSnapshot snapshot,
+                            ) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(100)),
+                                  insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 150, vertical: 150),
+                                  content: Container(
+                                      alignment: Alignment.center,
+                                      height: 50,
+                                      width: 100,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              new AlwaysStoppedAnimation<Color>(
+                                                  LightColors.mainBlue),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                width: width / 1.8,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color.fromRGBO(0, 0, 0, 0.1),
-                                        offset: Offset(0, 2),
-                                        blurRadius: 4,
-                                        spreadRadius: 0,
-                                      )
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(100)),
+                                      )),
+                                );
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasError) {
+                                  return const Text('Error');
+                                } else if (snapshot.hasData) {
+                                  return snapshot.data.isEmpty
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 30, top: 30),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(
+                                                            color: LightColors
+                                                                .mainBlue,
+                                                            width: 5)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    "Main Task",
+                                                    style: TextStyle(
+                                                        fontFamily: "Lato",
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color:
+                                                            LightColors.oldBlue,
+                                                        fontSize: 20),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 40,
+                                                  ),
+                                                  Text("No Task Available",
+                                                      style: TextStyle(
+                                                          fontFamily: "Lato",
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: LightColors
+                                                              .lightBlack,
+                                                          fontSize: 15)),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 30, top: 30),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(
+                                                            color: LightColors
+                                                                .mainBlue,
+                                                            width: 5)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    "Main Task",
+                                                    style: TextStyle(
+                                                        fontFamily: "Lato",
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color:
+                                                            LightColors.oldBlue,
+                                                        fontSize: 20),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            ListView.builder(
+                                              padding: EdgeInsets.only(
+                                                top: 10,
+                                              ),
+                                              shrinkWrap: true,
+                                              primary: false,
+                                              itemCount: snapshot.data == null
+                                                  ? 0
+                                                  : snapshot.data.length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return (snapshot.data[index]
+                                                            .status ==
+                                                        0)
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 40),
+                                                        child: Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 30,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              child: CardExpand(
+                                                                status: snapshot
+                                                                    .data[index]
+                                                                    .status,
+                                                                title: snapshot
+                                                                    .data[index]
+                                                                    .title,
+                                                                description: snapshot
+                                                                    .data[index]
+                                                                    .description,
+                                                                created_at: snapshot
+                                                                    .data[index]
+                                                                    .created_at,
+                                                                end_time: snapshot
+                                                                    .data[index]
+                                                                    .end_time,
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        height: 0,
+                                                      );
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                } else {
+                                  return Text('Empty data');
+                                }
+                              } else {
+                                return Text(
+                                    'State: ${snapshot.connectionState}');
+                              }
+                            },
+                          ),
+                          FutureBuilder(
+                            future: listTask,
+                            builder: (
+                              BuildContext context,
+                              AsyncSnapshot snapshot,
+                            ) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container();
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasError) {
+                                  return const Text('Error');
+                                } else if (snapshot.hasData) {
+                                  return snapshot.data.isEmpty
+                                      ? Center()
+                                      : Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 30,
+                                                top: 20,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(
+                                                            color: LightColors
+                                                                .mainBlue,
+                                                            width: 5)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    "Completed Task",
+                                                    style: TextStyle(
+                                                        fontFamily: "Lato",
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color:
+                                                            LightColors.oldBlue,
+                                                        fontSize: 20),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            ListView.builder(
+                                              padding: EdgeInsets.only(
+                                                top: 10,
+                                              ),
+                                              shrinkWrap: true,
+                                              primary: false,
+                                              itemCount: snapshot.data == null
+                                                  ? 0
+                                                  : snapshot.data.length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return (snapshot.data[index]
+                                                            .status !=
+                                                        0)
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 40),
+                                                        child: Column(
+                                                          children: [
+                                                            // SizedBox(
+                                                            //   height: 10,
+                                                            // ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 30,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              child: CardExpand(
+                                                                status: snapshot
+                                                                    .data[index]
+                                                                    .status,
+                                                                title: snapshot
+                                                                    .data[index]
+                                                                    .title,
+                                                                description: snapshot
+                                                                    .data[index]
+                                                                    .description,
+                                                                created_at: snapshot
+                                                                    .data[index]
+                                                                    .created_at,
+                                                                end_time: snapshot
+                                                                    .data[index]
+                                                                    .end_time,
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        height: 0,
+                                                      );
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                } else {
+                                  return Text('Empty data');
+                                }
+                              } else {
+                                return Text(
+                                    'State: ${snapshot.connectionState}');
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: height / 3.3,
+                      child: Stack(
+                        children: [
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                          //   child: Container(
+                          //     height: height / 3.51,
+                          //     decoration: BoxDecoration(
+                          //       color: Color(0xFFD9F2F9),
+                          //       borderRadius: BorderRadius.only(
+                          //           bottomLeft: Radius.circular(50)),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          //   child: Container(
+                          //     height: height / 3.61,
+                          //     decoration: BoxDecoration(
+                          //       color: Color(0xFFAEE5F4),
+                          //       borderRadius: BorderRadius.only(
+                          //           bottomLeft: Radius.circular(50)),
+                          //     ),
+                          //   ),
+                          // ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              height: height / 3.7,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(50),
+                                      bottomRight: Radius.circular(0),
+                                      topRight: Radius.circular(0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.2),
+                                      offset: Offset(0, 2),
+                                      blurRadius: 4,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
+                                  // borderRadius: BorderRadius.only(
+                                  //     bottomLeft: Radius.circular(20),
+                                  //     bottomRight: Radius.circular(20)),
+                                  color: LightColors.mainBlue,
+                                  image: DecorationImage(
+                                      opacity: 0.8,
+                                      image: AssetImage(
+                                          'assets/images/header.png'),
+                                      fit: BoxFit.fitWidth)),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SvgIcon(
-                                      'assets/images/calendar_filled.svg',
-                                      width: 32,
-                                      height: 32,
-                                      color: LightColors.oldBlue,
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: CircleAvatar(
+                                          foregroundImage: (parentAvatar == null
+                                              ? new AssetImage(
+                                                  "assets/images/user.png")
+                                              : new NetworkImage(parentAvatar))
+                                          // AssetImage(
+                                          //     "assets/images/user.png"),
+                                          ),
                                     ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 30,
                                     ),
-                                    Text(
-                                      formatHari.format(dateTime) + ", ",
-                                      style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 13),
-                                    ),
-                                    Text(
-                                      formatTanggal.format(dateTime) +
-                                          " " +
-                                          formatTahun.format(dateTime),
-                                      style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          fontSize: 13),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Hi, ",
+                                                style: TextStyle(
+                                                  fontSize: 25,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 150,
+                                                child: Text(
+                                                  capitalize(parentName),
+                                                  // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "PT. SOLUSI INTEK INDONESIA",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13),
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      FutureBuilder(
-                        future: listTask,
-                        builder: (
-                          BuildContext context,
-                          AsyncSnapshot snapshot,
-                        ) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return AlertDialog(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100)),
-                              insetPadding: EdgeInsets.symmetric(
-                                  horizontal: 150, vertical: 150),
-                              content: Container(
-                                  alignment: Alignment.center,
-                                  height: 50,
-                                  width: 100,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          new AlwaysStoppedAnimation<Color>(
-                                              LightColors.mainBlue),
-                                    ),
-                                  )),
-                            );
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return const Text('Error');
-                            } else if (snapshot.hasData) {
-                              return snapshot.data.isEmpty
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30, top: 30),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 20,
-                                                width: 20,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
-                                                        color: LightColors
-                                                            .mainBlue,
-                                                        width: 5)),
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "Main Task",
-                                                style: TextStyle(
-                                                    fontFamily: "Lato",
-                                                    fontWeight: FontWeight.w700,
-                                                    color: LightColors.oldBlue,
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 40,
-                                              ),
-                                              Text("No Task Available",
-                                                  style: TextStyle(
-                                                      fontFamily: "Lato",
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: LightColors
-                                                          .lightBlack,
-                                                      fontSize: 15)),
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: width / 1.8,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.1),
+                                      offset: Offset(0, 2),
+                                      blurRadius: 4,
+                                      spreadRadius: 0,
                                     )
-                                  : Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 30, top: 30),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 20,
-                                                width: 20,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
-                                                        color: LightColors
-                                                            .mainBlue,
-                                                        width: 5)),
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "Main Task",
-                                                style: TextStyle(
-                                                    fontFamily: "Lato",
-                                                    fontWeight: FontWeight.w700,
-                                                    color: LightColors.oldBlue,
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        ListView.builder(
-                                          padding: EdgeInsets.only(top: 10),
-                                          shrinkWrap: true,
-                                          primary: false,
-                                          itemCount: snapshot.data == null
-                                              ? 0
-                                              : snapshot.data.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            return (snapshot
-                                                        .data[index].status ==
-                                                    0)
-                                                ? Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 40),
-                                                    child: Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 30,
-                                                                  top: 5,
-                                                                  bottom: 5),
-                                                          child: CardExpand(
-                                                            status: snapshot
-                                                                .data[index]
-                                                                .status,
-                                                            title: snapshot
-                                                                .data[index]
-                                                                .title,
-                                                            description: snapshot
-                                                                .data[index]
-                                                                .description,
-                                                            created_at: snapshot
-                                                                .data[index]
-                                                                .created_at,
-                                                            end_time: snapshot
-                                                                .data[index]
-                                                                .end_time,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    height: 0,
-                                                  );
-                                          },
-                                        ),
-                                      ],
-                                    );
-                            } else {
-                              return Text('Empty data');
-                            }
-                          } else {
-                            return Text('State: ${snapshot.connectionState}');
-                          }
-                        },
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgIcon(
+                                    'assets/images/calendar_filled.svg',
+                                    width: 32,
+                                    height: 32,
+                                    color: LightColors.oldBlue,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    formatHari.format(dateTime) + ", ",
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13),
+                                  ),
+                                  Text(
+                                    formatTanggal.format(dateTime) +
+                                        " " +
+                                        formatTahun.format(dateTime),
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat", fontSize: 13),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      FutureBuilder(
-                        future: listTask,
-                        builder: (
-                          BuildContext context,
-                          AsyncSnapshot snapshot,
-                        ) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container();
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return const Text('Error');
-                            } else if (snapshot.hasData) {
-                              return snapshot.data.isEmpty
-                                  ? Center()
-                                  : Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 30, top: 20),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 20,
-                                                width: 20,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
-                                                        color: LightColors
-                                                            .mainBlue,
-                                                        width: 5)),
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "Completed Task",
-                                                style: TextStyle(
-                                                    fontFamily: "Lato",
-                                                    fontWeight: FontWeight.w700,
-                                                    color: LightColors.oldBlue,
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        ListView.builder(
-                                          padding: EdgeInsets.only(top: 10),
-                                          shrinkWrap: true,
-                                          primary: false,
-                                          itemCount: snapshot.data == null
-                                              ? 0
-                                              : snapshot.data.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            return (snapshot
-                                                        .data[index].status !=
-                                                    0)
-                                                ? Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 40),
-                                                    child: Column(
-                                                      children: [
-                                                        // SizedBox(
-                                                        //   height: 10,
-                                                        // ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 30,
-                                                                  top: 5,
-                                                                  bottom: 5),
-                                                          child: CardExpand(
-                                                            status: snapshot
-                                                                .data[index]
-                                                                .status,
-                                                            title: snapshot
-                                                                .data[index]
-                                                                .title,
-                                                            description: snapshot
-                                                                .data[index]
-                                                                .description,
-                                                            created_at: snapshot
-                                                                .data[index]
-                                                                .created_at,
-                                                            end_time: snapshot
-                                                                .data[index]
-                                                                .end_time,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    height: 0,
-                                                  );
-                                          },
-                                        ),
-                                      ],
-                                    );
-                            } else {
-                              return Text('Empty data');
-                            }
-                          } else {
-                            return Text('State: ${snapshot.connectionState}');
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
