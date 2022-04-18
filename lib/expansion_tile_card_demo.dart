@@ -9,9 +9,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:intl/intl.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
 class CardExpand extends StatefulWidget {

@@ -211,6 +211,10 @@ class _MainPageState extends State<MainPage> {
                               child: Container(
                                 height: height / 3.7,
                                 decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(50),
+                                        bottomRight: Radius.circular(0),
+                                        topRight: Radius.circular(0)),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Color.fromRGBO(0, 0, 0, 0.2),
@@ -224,6 +228,7 @@ class _MainPageState extends State<MainPage> {
                                     //     bottomRight: Radius.circular(20)),
                                     color: LightColors.mainBlue,
                                     image: DecorationImage(
+                                        opacity: 0.8,
                                         image: AssetImage(
                                             'assets/images/header.png'),
                                         fit: BoxFit.fitWidth)),
@@ -239,14 +244,15 @@ class _MainPageState extends State<MainPage> {
                                         height: 100,
                                         width: 100,
                                         child: CircleAvatar(
-                                          foregroundImage:
-                                              // (parentAvatar == null
-                                              //     ? new AssetImage(
-                                              //         "assets/images/user.png")
-                                              //     : new NetworkImage(parentAvatar))
-                                              AssetImage(
-                                                  "assets/images/user.png"),
-                                        ),
+                                            foregroundImage: (parentAvatar ==
+                                                    null
+                                                ? new AssetImage(
+                                                    "assets/images/user.png")
+                                                : new NetworkImage(
+                                                    parentAvatar))
+                                            // AssetImage(
+                                            //     "assets/images/user.png"),
+                                            ),
                                       ),
                                       SizedBox(
                                         width: 30,
@@ -348,115 +354,6 @@ class _MainPageState extends State<MainPage> {
                           ],
                         ),
                       ),
-                      // ElevatedButton(
-                      // onPressed: () {
-                      //   listTask = fetchTask();
-                      //   setState(() {});
-                      // },
-                      // child: Text("REFRESH")),
-                      // FutureBuilder(
-                      //   // future: ReadJsonData(),
-                      //   future: listTask,
-                      //   builder: (index, snapshot) {
-                      //     // var items = snapshot.data as List<ModelCard>;
-                      //     if (!snapshot.hasData || snapshot.data.length == 0) {
-                      //       return ListView.builder(
-                      //         shrinkWrap: true,
-                      //         primary: false,
-                      //         itemCount:
-                      //             snapshot.data == null ? 0 : snapshot.data.length,
-                      //         physics: const NeverScrollableScrollPhysics(),
-                      //         itemBuilder: (context, index) {
-                      //           return Padding(
-                      //             padding:
-                      //                 const EdgeInsets.symmetric(horizontal: 40),
-                      //             child: Column(
-                      //               children: [
-                      //                 // SizedBox(
-                      //                 //   height: 10,
-                      //                 // ),
-                      //                 // Padding(
-                      //                 //   padding: const EdgeInsets.only(
-                      //                 //       left: 30, top: 10),
-                      //                 //   child: CardExpand(
-                      //                 //       status: items[index].status,
-                      //                 //       title: items[index].title,
-                      //                 //       description: items[index].description),
-                      //                 // )
-                      //                 Text("No Task")
-                      //               ],
-                      //             ),
-                      //           );
-                      //         },
-                      //       );
-                      //     } else if (snapshot.hasData) {
-                      //       return Column(
-                      //         children: [
-                      //           Padding(
-                      //             padding: const EdgeInsets.only(left: 30, top: 20),
-                      //             child: Row(
-                      //               children: [
-                      //                 Container(
-                      //                   height: 20,
-                      //                   width: 20,
-                      //                   decoration: BoxDecoration(
-                      //                       color: Colors.white,
-                      //                       borderRadius: BorderRadius.circular(20),
-                      //                       border: Border.all(
-                      //                           color: LightColors.mainBlue,
-                      //                           width: 5)),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   width: 20,
-                      //                 ),
-                      //                 Text(
-                      //                   "Main Task",
-                      //                   style: TextStyle(
-                      //                       fontFamily: "Lato",
-                      //                       fontWeight: FontWeight.w700,
-                      //                       color: LightColors.oldBlue,
-                      //                       fontSize: 20),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //           ListView.builder(
-                      //             shrinkWrap: true,
-                      //             primary: false,
-                      //             itemCount: snapshot.data == null
-                      //                 ? 0
-                      //                 : snapshot.data.length,
-                      //             physics: const NeverScrollableScrollPhysics(),
-                      //             itemBuilder: (context, index) {
-                      //               return Padding(
-                      //                 padding: const EdgeInsets.symmetric(
-                      //                     horizontal: 40),
-                      //                 child: Column(
-                      //                   children: [
-                      //                     // SizedBox(
-                      //                     //   height: 10,
-                      //                     // ),
-                      //                     Padding(
-                      //                       padding: const EdgeInsets.only(
-                      //                           left: 30, top: 10, bottom: 5),
-                      //                       child: CardExpand(
-                      //                           status: snapshot.data[index].status,
-                      //                           title: snapshot.data[index].title,
-                      //                           description: snapshot
-                      //                               .data[index].description),
-                      //                     )
-                      //                   ],
-                      //                 ),
-                      //               );
-                      //             },
-                      //           ),
-                      //         ],
-                      //       );
-                      //     } else {
-                      //       return CircularProgressIndicator();
-                      //     }
-                      //   },
-                      // ),
                       FutureBuilder(
                         future: listTask,
                         builder: (
@@ -601,10 +498,6 @@ class _MainPageState extends State<MainPage> {
                                                         horizontal: 40),
                                                     child: Column(
                                                       children: [
-                                                        // SizedBox(
-                                                        //   height: 10,
-                                                        // ),
-                                                        // g bner nih
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
