@@ -1,11 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:intl/intl.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class CardExpand extends StatefulWidget {
   final int status;
@@ -29,10 +36,44 @@ class CardExpand extends StatefulWidget {
 }
 
 class _CardExpandState extends State<CardExpand> {
+  File image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  Future pickImageC() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
   DateFormat formatTanggal;
+
+  File _image;
+  final picker = ImagePicker();
 
   void initState() {
     formatTanggal = DateFormat.MMMMd('id');
+    super.initState();
   }
 
   formatSize(String formatSize) {
@@ -125,7 +166,7 @@ class _CardExpandState extends State<CardExpand> {
                     " - ",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: LightColors.mainBlue,
+                      color: LightColors.lightBlack,
                     ),
                   ),
                   Text(
@@ -221,17 +262,23 @@ class _CardExpandState extends State<CardExpand> {
                   ),
                 )),
           ),
-          // Align(
-          //   alignment: Alignment.bottomLeft,
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(left: 20, top: 10),
-          //     child: Container(
-          //       height: 100,
-          //       width: 100,
-          //       color: Colors.red,
-          //     ),
-          //   ),
-          // ),
+          image != null
+              ? Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.file(
+                        image,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+              : Center(),
           ButtonBar(
             alignment: MainAxisAlignment.spaceAround,
             buttonHeight: 20.0,
@@ -266,7 +313,8 @@ class _CardExpandState extends State<CardExpand> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  widget.idCard.currentState?.collapse();
+                  // getImage(ImageSource.camera);
+                  pickImageC();
                 },
                 child: Column(
                   children: <Widget>[
