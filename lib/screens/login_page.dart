@@ -102,13 +102,11 @@ class _LoginPageState extends State<LoginPage> {
         if (state) {
           // if the function returned true
           //Navigator.of(context).pushNamed(DashboardMenu.routeName);
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) {
-                return MenuBottomBarPage();
-              },
-            ),
+                builder: (BuildContext context) => MenuBottomBarPage()),
+            ModalRoute.withName('/home'),
           );
           //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
         } else {

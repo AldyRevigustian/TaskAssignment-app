@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_task_planner_app/expansion_tile_card_demo.dart';
+import 'package:flutter_task_planner_app/cardExpandActive.dart';
+import 'package:flutter_task_planner_app/cardExpandNon.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -13,67 +9,7 @@ import 'package:flutter_task_planner_app/widget/loading_alert.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_icon/svg_icon.dart';
-import 'package:flutter/services.dart' as rootBundle;
-import 'package:flutter_task_planner_app/model/piketModel.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
-Future<List<Task>> fetchTask() async {
-  final response = await http.get(Uri.parse(
-      'https://624e8ad153326d0cfe5c1a33.mockapi.io/api/task/listTask'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    // return Task.fromJson(json.decode(response.body));
-    // final data = convert.jsonDecode(response.body);
-    // Task template = Task.fromJson(json.decode(utf8.decode(response.bodyBytes)));
-    // return [
-    //   for (final item in jsonDecode(response.body)) Task.fromJson(item),
-    // ];
-    List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-
-    // AdTemplate template = AdTemplate.fromJson(data[0]);
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load Task');
-  }
-}
-
-class Task {
-  // final int userId;
-
-  final int id;
-  final int status;
-  final String title;
-  final String description;
-  final String created_at;
-  final String end_time;
-
-  const Task({
-    @required this.id,
-    @required this.status,
-    @required this.title,
-    @required this.created_at,
-    @required this.description,
-    @required this.end_time,
-  });
-
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      // userId: json['userId'],
-      id: json['id'],
-      status: json['status'],
-      title: json['title'],
-      description: json['description'],
-      // created_at: json['created_at'],
-      created_at: json["created_at"],
-      end_time: json["end_time"],
-    );
-  }
-}
 
 // List<Task> listOfDownloadedFile = List();
 // listOfDownloadedFile.add(...);
@@ -87,11 +23,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   Future listTask;
-
-  // final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
-  // final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
-  // final GlobalKey<ExpansionTileCardState> cardC = new GlobalKey();
-  // final GlobalKey<ExpansionTileCardState> cardD = new GlobalKey();
   static const String routeName = "/homePage";
   String parentName;
   String parentAvatar;
@@ -109,13 +40,8 @@ class _MainPageState extends State<MainPage> {
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  // void initState() {
-  //   listTask = GetHelper.getData();
-
-  //   super.initState();
-  // }
   void initState() {
-    listTask = fetchTask();
+    listTask = GetHelper().fetchTask();
     super.initState();
     initializeDateFormatting();
     initializeDateFormatting();
@@ -137,7 +63,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void fetchandrefresh() {
-    listTask = fetchTask();
+    listTask = GetHelper().fetchTask();
     setState(() {});
   }
 
@@ -329,7 +255,7 @@ class _MainPageState extends State<MainPage> {
                                               itemBuilder: (context, index) {
                                                 return (snapshot.data[index]
                                                             .status ==
-                                                        0)
+                                                        "0")
                                                     ? Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -345,7 +271,11 @@ class _MainPageState extends State<MainPage> {
                                                                       top: 5,
                                                                       bottom:
                                                                           5),
-                                                              child: CardExpand(
+                                                              child:
+                                                                  CardExpandActive(
+                                                                id: snapshot
+                                                                    .data[index]
+                                                                    .id,
                                                                 status: snapshot
                                                                     .data[index]
                                                                     .status,
@@ -450,7 +380,7 @@ class _MainPageState extends State<MainPage> {
                                               itemBuilder: (context, index) {
                                                 return (snapshot.data[index]
                                                             .status !=
-                                                        0)
+                                                        "0")
                                                     ? Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -469,7 +399,8 @@ class _MainPageState extends State<MainPage> {
                                                                       top: 5,
                                                                       bottom:
                                                                           5),
-                                                              child: CardExpand(
+                                                              child:
+                                                                  CardExpandNon(
                                                                 status: snapshot
                                                                     .data[index]
                                                                     .status,
@@ -688,12 +619,4 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-
-  // Future<List<ModelCard>> ReadJsonData() async {
-  //   final jsondata =
-  //       await rootBundle.rootBundle.loadString('assets/piket.json');
-  //   final list = json.decode(jsondata) as List<dynamic>;
-
-  //   return list.map((e) => ModelCard.fromJson(e)).toList();
-  // }
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
@@ -6,22 +5,28 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_task_planner_app/helpers/get_helper.dart';
+import 'package:flutter_task_planner_app/screens/home_page.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
-class CardExpand extends StatefulWidget {
-  final int status;
+class CardExpandActive extends StatefulWidget {
+  final String id;
+  final String status;
   final String title;
   final String description;
   final String created_at;
   final String end_time;
   GlobalKey<ExpansionTileCardState> idCard;
 
-  CardExpand({
+  CardExpandActive({
     Key key,
+    @required this.id,
     @required this.status,
     @required this.title,
     @required this.description,
@@ -30,11 +35,12 @@ class CardExpand extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CardExpand> createState() => _CardExpandState();
+  State<CardExpandActive> createState() => _CardExpandActiveState();
 }
 
-class _CardExpandState extends State<CardExpand> {
+class _CardExpandActiveState extends State<CardExpandActive> {
   File image;
+  final _descController = TextEditingController();
 
   Future pickImage() async {
     try {
@@ -82,20 +88,20 @@ class _CardExpandState extends State<CardExpand> {
     }
   }
 
-  iconStatus(int status) {
-    if (status == 1) {
+  iconStatus(String status) {
+    if (status == "1") {
       return FluentIcons.checkmark_circle_32_regular;
-    } else if (status == 0) {
+    } else if (status == "0") {
       return FluentIcons.error_circle_24_regular;
     } else {
       return FluentIcons.dismiss_circle_24_regular;
     }
   }
 
-  colorStatus(int colorStatus) {
-    if (colorStatus == 1) {
+  colorStatus(String colorStatus) {
+    if (colorStatus == "1") {
       return LightColors.lightGreen;
-    } else if (colorStatus == 0) {
+    } else if (colorStatus == "0") {
       return LightColors.lightYellow;
     } else {
       return LightColors.lightRed;
@@ -224,7 +230,8 @@ class _CardExpandState extends State<CardExpand> {
                             blurRadius: 4)
                       ],
                       borderRadius: BorderRadius.circular(5)),
-                  child: TextField(
+                  child: TextFormField(
+                    controller: _descController,
                     // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
@@ -285,8 +292,21 @@ class _CardExpandState extends State<CardExpand> {
               FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
-                onPressed: () {
-                  widget.idCard.currentState?.expand();
+                onPressed: () async {
+                  bool res = await GetHelper()
+                      .putTask(widget.id, "2", _descController.text);
+                  if (res) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return MenuBottomBarPage();
+                        },
+                      ),
+                    );
+                  } else {
+                    print("gagal");
+                  }
                 },
                 child: Column(
                   children: <Widget>[
@@ -336,7 +356,22 @@ class _CardExpandState extends State<CardExpand> {
               FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
-                onPressed: () {},
+                onPressed: () async {
+                  bool res = await GetHelper()
+                      .putTask(widget.id, "1", _descController.text);
+                  if (res) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return MenuBottomBarPage();
+                        },
+                      ),
+                    );
+                  } else {
+                    print("gagal");
+                  }
+                },
                 child: Column(
                   children: <Widget>[
                     Icon(
