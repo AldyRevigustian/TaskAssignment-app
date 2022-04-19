@@ -97,20 +97,16 @@ class _MainPageState extends State<MainPage> {
               },
               child: RefreshIndicator(
                 onRefresh: () {
-                  // return setState(() {
-                  //   listTask = fetchTask();
-                  // });
                   return _refreshProducts(context);
-
-                  // Future.
                 },
                 child: Stack(
                   children: [
                     SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           Container(
-                            height: height / 3.3,
+                            height: height / 3.4,
                           ),
                           FutureBuilder(
                             future: listTask,

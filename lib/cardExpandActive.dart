@@ -77,6 +77,8 @@ class _CardExpandActiveState extends State<CardExpandActive> {
 
   void initState() {
     formatTanggal = DateFormat.MMMMd('id');
+    _descController.text = widget.description;
+
     super.initState();
   }
 
@@ -235,16 +237,18 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                     // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
-                        fontFamily: "Lato",
-                        fontSize: 15,
-                        color: LightColors.lightBlack),
+                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        fontSize: 14,
+                        fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                         hintText: (widget.description != null)
                             ? widget.description
                             : "",
                         hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.3), fontSize: 15),
+                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                            fontSize: 15,
+                            fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -292,21 +296,8 @@ class _CardExpandActiveState extends State<CardExpandActive> {
               FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
-                onPressed: () async {
-                  bool res = await GetHelper()
-                      .putTask(widget.id, "2", _descController.text);
-                  if (res) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return MenuBottomBarPage();
-                        },
-                      ),
-                    );
-                  } else {
-                    print("gagal");
-                  }
+                onPressed: () {
+                  _showAlertDialog();
                 },
                 child: Column(
                   children: <Widget>[
@@ -318,7 +309,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
                     ),
                     Text(
-                      'Dissmiss',
+                      'Incomplete',
                       style: TextStyle(
                           fontFamily: "Lato",
                           color: Color.fromRGBO(160, 160, 160, 1),
@@ -382,7 +373,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
                     ),
                     Text(
-                      'Done',
+                      'Complete',
                       style: TextStyle(
                           fontFamily: "Lato",
                           color: Color.fromRGBO(160, 160, 160, 1),
@@ -395,6 +386,60 @@ class _CardExpandActiveState extends State<CardExpandActive> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showAlertDialog() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: const Text(
+            'Incomplete Task',
+            style: TextStyle(fontFamily: "Lato"),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                  "Are you sure you will report this task as uncompleted?",
+                  style: TextStyle(
+                      fontFamily: "Lato", color: LightColors.lightBlack),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () async {
+                bool res = await GetHelper()
+                    .putTask(widget.id, "2", _descController.text);
+                if (res) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return MenuBottomBarPage();
+                      },
+                    ),
+                  );
+                } else {
+                  print("gagal");
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

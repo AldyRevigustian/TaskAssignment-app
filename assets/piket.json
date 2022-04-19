@@ -1,42 +1,34 @@
 [
-    {
-      "id": 1,
-      "title": "Mengisi Galon Lantai 3",
-      "description": "Isi pake aqua ya",
-      "status": 0,
-      "created_at": "2022-04-27 02:00:00",
-      "end_time": "2022-04-30 12:00:00"
-    },
-    {
-      "id": 2,
-      "title": "Beli Gorengan",
-      "description": "Tahu, Pisang goreng, Tempe, Bakwan",
-      "status": 0,
-      "created_at": "2022-04-12 09:00:00",
-      "end_time": "2022-04-15 19:00:00"
-    },
-    {
-      "id": 3,
-      "title": "Beli Gorengan",
-      "description": "Tahu, Pisang goreng, Tempe, Bakwan",
-      "status": 0,
-      "created_at": "2022-04-07 18:00:00",
-      "end_time": "2022-04-17 20:00:00"
-    },
-    {
-      "id": 4,
-      "title": "Beli Tahu",
-      "description": "Tahu, Pisang goreng, Tempe, Bakwan",
-      "status": 2,
-      "created_at": "2022-04-27 08:00:00",
-      "end_time": "2022-04-30 12:00:00"
-    },
-    {
-      "id": 5,
-      "title": "Beli Tahu",
-      "description": "Tahu, Pisang goreng, Tempe, Bakwan",
-      "status": 1,
-      "created_at": "2022-04-15 10:00:00",
-      "end_time": "2022-04-27 15:00:00"
-    }
-  ]
+  {
+   "id": "1",
+   "title": "Mengisi Galon",
+   "description": "Tolong isi galon ke lantai 2",
+   "status": "0",
+   "created_at": "2022-04-27 12:00:00",
+   "end_time": "2022-04-27 14:00:00"
+  },
+  {
+   "id": "2",
+   "title": "Beli Gorengan",
+   "description": "Beli tahu 10, tempe 5, bakwan 10",
+   "status": "0",
+   "created_at": "2022-04-27 14:00:00",
+   "end_time": "2022-04-27 15:00:00"
+  },
+  {
+   "id": "3",
+   "title": "Nyalain Ac",
+   "description": "Tolong nyalain ac di mushola",
+   "status": "0",
+   "created_at": "2022-04-27 15:00:00",
+   "end_time": "2022-04-27 16:00:00"
+  },
+  {
+   "id": "4",
+   "title": "Restock Masker",
+   "description": "Tolong cek stock masker di semua lantai",
+   "status": "0",
+   "created_at": "2022-04-27 17:00:00",
+   "end_time": "2022-04-27 18:00:00"
+  }
+ ]

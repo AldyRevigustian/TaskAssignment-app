@@ -223,6 +223,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                       ],
                       borderRadius: BorderRadius.circular(5)),
                   child: TextField(
+                    enabled: false,
                     // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
@@ -235,9 +236,17 @@ class _CardExpandNonState extends State<CardExpandNon> {
                             ? widget.description
                             : "",
                         hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.3), fontSize: 15),
+                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                            fontSize: 15,
+                            fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           borderSide: BorderSide(
                             color: Colors.white,
