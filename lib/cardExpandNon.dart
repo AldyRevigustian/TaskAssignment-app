@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
@@ -16,6 +17,7 @@ class CardExpandNon extends StatefulWidget {
   final String description;
   final String created_at;
   final String end_time;
+  final String image;
   GlobalKey<ExpansionTileCardState> idCard;
 
   CardExpandNon({
@@ -25,6 +27,7 @@ class CardExpandNon extends StatefulWidget {
     @required this.description,
     @required this.created_at,
     @required this.end_time,
+    @required this.image,
   }) : super(key: key);
 
   @override
@@ -32,40 +35,18 @@ class CardExpandNon extends StatefulWidget {
 }
 
 class _CardExpandNonState extends State<CardExpandNon> {
-  File image;
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  Future pickImageC() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
+  showImage(String image) {
+    return Image.memory(
+      base64Decode(image),
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
+    );
   }
 
   DateFormat formatTanggal;
-
-  File _image;
-  final picker = ImagePicker();
 
   void initState() {
     formatTanggal = DateFormat.MMMMd('id');
@@ -81,9 +62,9 @@ class _CardExpandNonState extends State<CardExpandNon> {
   }
 
   iconStatus(String status) {
-    if (status == "1") {
+    if (status == "Completed") {
       return FluentIcons.checkmark_circle_32_regular;
-    } else if (status == "0") {
+    } else if (status == "On Progress") {
       return FluentIcons.error_circle_24_regular;
     } else {
       return FluentIcons.dismiss_circle_24_regular;
@@ -91,9 +72,9 @@ class _CardExpandNonState extends State<CardExpandNon> {
   }
 
   colorStatus(String colorStatus) {
-    if (colorStatus == "1") {
+    if (colorStatus == "Completed") {
       return LightColors.lightGreen;
-    } else if (colorStatus == "0") {
+    } else if (colorStatus == "On Progress") {
       return LightColors.lightYellow;
     } else {
       return LightColors.lightRed;
@@ -124,7 +105,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
         // animateTrailing: true,
         title: Text(
           // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
-          widget.title,
+          capitalize(widget.title),
           style: TextStyle(
               fontFamily: "Lato",
               fontWeight: FontWeight.bold,
@@ -267,19 +248,20 @@ class _CardExpandNonState extends State<CardExpandNon> {
                   ),
                 )),
           ),
-          image != null
+          widget.image != null
               ? Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, top: 10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      child: Image.file(
-                        image,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
+                      // child: Image.file(
+                      //   image,
+                      //   width: 100,
+                      //   height: 100,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      child: showImage(widget.image),
                     ),
                   ),
                 )

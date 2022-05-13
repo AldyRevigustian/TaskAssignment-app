@@ -1,6 +1,7 @@
 library bottom_navigation_dot;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BottomNavigationDot extends StatefulWidget {
   final List<BottomNavigationDotItem> items;
@@ -37,37 +38,41 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        child: Material(
-            child: Container(
-          decoration: BoxDecoration(color: widget.backgroundColor, boxShadow: [
-            BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.1),
-                blurRadius: 10,
-                offset: Offset(0, 3))
-          ]),
-          padding: EdgeInsets.only(top: 15, bottom: 12),
-          child: Stack(
-            key: _key,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: widget.paddingBottomCircle),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children:
-                        _createNavigationIconButtonList(widget.items.asMap())),
-              ),
-              AnimatedPositioned(
-                  child:
-                      CircleAvatar(radius: 2.5, backgroundColor: _activeColor),
-                  duration: Duration(milliseconds: widget.milliseconds),
-                  curve: Curves.easeInOut,
-                  left: _positionLeftIndicatorDot,
-                  bottom: 0),
-            ],
-          ),
-        )),
-      );
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
+    return Container(
+      child: Material(
+          child: Container(
+        decoration: BoxDecoration(color: widget.backgroundColor, boxShadow: [
+          BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.1),
+              blurRadius: 10,
+              offset: Offset(0, 3))
+        ]),
+        padding: EdgeInsets.only(top: 15, bottom: 12),
+        child: Stack(
+          key: _key,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: widget.paddingBottomCircle),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:
+                      _createNavigationIconButtonList(widget.items.asMap())),
+            ),
+            AnimatedPositioned(
+                child: CircleAvatar(radius: 2.5, backgroundColor: _activeColor),
+                duration: Duration(milliseconds: widget.milliseconds),
+                curve: Curves.easeInOut,
+                left: _positionLeftIndicatorDot,
+                bottom: 0),
+          ],
+        ),
+      )),
+    );
+  }
 
   List<_NavigationIconButton> _createNavigationIconButtonList(
       Map<int, BottomNavigationDotItem> mapItem) {

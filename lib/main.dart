@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
@@ -19,6 +20,9 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
     MaterialColor colorCustom = MaterialColor(0xFF2FA0BF, color);
 
     return MultiProvider(
@@ -29,31 +33,17 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Task Assignment',
-        // initialRoute: '/',
-        // routes: {
-        //   '/': (context) => ,
-        // },
         theme: ThemeData(
           primarySwatch: colorCustom,
-          textTheme: Theme.of(context).textTheme.apply(
-              // bodyColor: LightColors.kDarkBlue,
-              // displayColor: LightColors.kDarkBlue,
-              fontFamily: 'Montserrat'),
+          textTheme:
+              Theme.of(context).textTheme.apply(fontFamily: 'Montserrat'),
         ),
         // home: HomePage(),
         home: LoginPage(),
         debugShowCheckedModeBanner: false,
         routes: {
-          // route names to mainParentPage and mainTeacherPage
           MenuBottomBarPage.routeName: (ctx) => MenuBottomBarPage(),
           LoginPage.routeName: (ctx) => LoginPage(),
-          // MainParentPage.routeName: (ctx) => MainParentPage(),
-          // MainTeacherPage.routeName: (ctx) => MainTeacherPage(),
-          // InicialPage.routeName: (ctx) => InicialPage(),
-          // DashboardMenu.routeName: (ctx) => DashboardMenu(),
-          // // LeavePage.routeName: (ctx) => LeavePage(),
-          // InicialLeavePage.routeName: (ctx) => InicialLeavePage(),
-          // ReportPage.routeName: (ctx) => ReportPage()
         },
       ),
     );

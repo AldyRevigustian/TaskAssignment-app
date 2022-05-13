@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
@@ -10,10 +11,12 @@ import 'package:flutter_task_planner_app/screens/home_page.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CardExpandActive extends StatefulWidget {
   final String id;
@@ -39,18 +42,28 @@ class CardExpandActive extends StatefulWidget {
 }
 
 class _CardExpandActiveState extends State<CardExpandActive> {
-  File image;
+  File imageFile;
+  String imageData;
+  String imagePath;
+
   final _descController = TextEditingController();
 
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
+  pickImage() async {
+    try {
+      var image = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, imageQuality: 15);
       if (image == null) return;
 
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
+      setState(() {
+        imagePath = image.path;
+        imageFile = File(image.path);
+        imageData = base64Encode(imageFile.readAsBytesSync());
+      });
+      // print(imageData);
+      print(imagePath);
+      return imageData;
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
@@ -62,17 +75,27 @@ class _CardExpandActiveState extends State<CardExpandActive> {
 
       if (image == null) return;
 
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
+      setState(() {
+        imageFile = File(image.path);
+      });
+      imageData = base64Encode(imageFile.readAsBytesSync());
+      return imageData;
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
   }
 
+  showImage(String image) {
+    return Image.memory(
+      base64Decode(image),
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
+    );
+  }
+
   DateFormat formatTanggal;
 
-  File _image;
   final picker = ImagePicker();
 
   void initState() {
@@ -91,23 +114,11 @@ class _CardExpandActiveState extends State<CardExpandActive> {
   }
 
   iconStatus(String status) {
-    if (status == "1") {
-      return FluentIcons.checkmark_circle_32_regular;
-    } else if (status == "0") {
-      return FluentIcons.error_circle_24_regular;
-    } else {
-      return FluentIcons.dismiss_circle_24_regular;
-    }
+    return FluentIcons.error_circle_24_regular;
   }
 
   colorStatus(String colorStatus) {
-    if (colorStatus == "1") {
-      return LightColors.lightGreen;
-    } else if (colorStatus == "0") {
-      return LightColors.lightYellow;
-    } else {
-      return LightColors.lightRed;
-    }
+    return LightColors.lightYellow;
   }
 
   @override
@@ -134,7 +145,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
         // animateTrailing: true,
         title: Text(
           // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
-          widget.title,
+          capitalize(widget.title),
           style: TextStyle(
               fontFamily: "Lato",
               fontWeight: FontWeight.bold,
@@ -271,18 +282,24 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                   ),
                 )),
           ),
-          image != null
+          imageData != null
               ? Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, top: 10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
+                      // child: Image.file(
+                      //   image,
+                      //   width: 100,
+                      //   height: 100,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      // child: showImage(imageData),
                       child: Image.file(
-                        image,
+                        imageFile,
                         width: 100,
                         height: 100,
-                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -323,7 +340,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
                   // getImage(ImageSource.camera);
-                  pickImageC();
+                  pickImage();
                 },
                 child: Column(
                   children: <Widget>[
@@ -348,9 +365,19 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () async {
-                  bool res = await GetHelper()
-                      .putTask(widget.id, "1", _descController.text);
-                  if (res) {
+                  print(imageData);
+                  // print(imagePath);
+                  // bool res = await GetHelper().putDio(
+                  //   widget.id,
+                  //   "1",
+                  //   _descController.text,
+                  //   imageData,
+                  // );
+                  bool res = await GetHelper().putTaskImage(
+                      widget.id, "1", _descController.text, imageData);
+                  // bool res = await GetHelper()
+                  //     .putTask(widget.id, "1", _descController.text,);
+                  if (res == true) {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -359,10 +386,42 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                         },
                       ),
                     );
+                    Fluttertoast.showToast(
+                        msg: "Success set task as completed",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 12.0);
                   } else {
+                    Fluttertoast.showToast(
+                        msg: "Failed set task as completed",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 12.0);
                     print("gagal");
                   }
                 },
+                // onPressed: () async {
+                //   bool res = await GetHelper()
+                //       .putTask(widget.id, "1", _descController.text);
+                //   if (res) {
+                //     Navigator.pushReplacement(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (BuildContext context) {
+                //           return MenuBottomBarPage();
+                //         },
+                //       ),
+                //     );
+                //   } else {
+                //     print("gagal");
+                //   }
+                // },
                 child: Column(
                   children: <Widget>[
                     Icon(
@@ -432,7 +491,23 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                       },
                     ),
                   );
+                  Fluttertoast.showToast(
+                      msg: "Successfully set task as uncompleted",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 12.0);
                 } else {
+                  Fluttertoast.showToast(
+                      msg: "Failed set task as uncompleted",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 12.0);
                   print("gagal");
                 }
               },

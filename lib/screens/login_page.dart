@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_planner_app/main.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
@@ -91,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
         passwd = prefs.getString('password');
         sharedpref = true;
       });
-      if (state == false) {
+      if (state == true) {
         showLoadingProgress();
       }
       Provider.of<Parent>(context, listen: false)
@@ -200,6 +201,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xFF8fcdde),
+        systemNavigationBarIconBrightness: Brightness.light));
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
