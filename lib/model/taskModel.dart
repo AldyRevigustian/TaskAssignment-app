@@ -8,7 +8,7 @@ class Task {
   final String title;
   final String description;
   final String created_at;
-  final String end_time;
+  final String updated_at;
   final String image;
 
   const Task({
@@ -17,7 +17,7 @@ class Task {
     @required this.title,
     @required this.created_at,
     @required this.description,
-    @required this.end_time,
+    @required this.updated_at,
     @required this.image,
   });
 
@@ -30,7 +30,7 @@ class Task {
       description: json['task_description'],
       // created_at: json['created_at'],
       created_at: json["created_at"],
-      end_time: json["tanggal"],
+      updated_at: json["updated_at"],
       image: json["upload_bukti"],
     );
     // return Task(
@@ -41,7 +41,7 @@ class Task {
     //   description: json['description'],
     //   // created_at: json['created_at'],
     //   created_at: json["created_at"],
-    //   end_time: json["end_time"],
+    //   update_at: json["update_at"],
     //   image: json["image"],
     // );
   }

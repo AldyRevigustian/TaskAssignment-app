@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 //ParentClass
 class ParentInf {
@@ -39,6 +40,7 @@ class Parent with ChangeNotifier {
   Future<bool> loginParentAndGetInf(String user, String pass) async {
     var response;
     var datauser;
+    var dataid;
     var data = {
       "email": user.trim(),
       "password": pass.trim(),
@@ -51,8 +53,10 @@ class Parent with ChangeNotifier {
       });
       if (response.statusCode == 200) {
         datauser = await json.decode(response.body);
-        print(response.body);
+        dataid = json.decode(response.body);
+        // print(response.body);
         log(response.body);
+        // log(dataid['data']['id'].toString());
         insertInf(datauser);
         return true;
       }

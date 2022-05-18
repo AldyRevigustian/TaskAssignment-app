@@ -8,8 +8,10 @@ import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
+import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
 
@@ -19,6 +21,11 @@ import 'package:intl/intl.dart';
 // var
 
 class MainPage extends StatefulWidget {
+  final String id;
+  MainPage({
+    Key key,
+    @required this.id,
+  }) : super(key: key);
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -29,6 +36,7 @@ class _MainPageState extends State<MainPage> {
   String parentName;
   String parentAvatar;
   String parentId;
+  String usrId;
   ParentInf getParentInfo;
 
   DateFormat formatHari;
@@ -41,15 +49,24 @@ class _MainPageState extends State<MainPage> {
 
   var dateTime = new DateTime.now();
 
+  // void getId() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   usrId = prefs.getString('id');
+  // }
+
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   void initState() {
-    listTask = GetHelper().fetchTask(parentId);
-    super.initState();
+    // getId();
     initializeDateFormatting();
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
+    // listTask = GetHelper().fetchTask(widget.id);
+    fetchandrefresh();
+    // listTask = GetHelper().fetchTask
+    // _refreshProducts(context);
+    super.initState();
   }
 
   showLoadingProgress() {
@@ -65,7 +82,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void fetchandrefresh() {
-    listTask = GetHelper().fetchTask(parentId);
+    listTask = GetHelper().fetchTask(widget.id);
     setState(() {});
   }
 
@@ -88,33 +105,41 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 33),
-            child: Row(
-              children: [
-                Container(
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Container(
                   height: height,
-                  width: 1,
-                  color: LightColors.mainBlue,
+                  width: 1.8,
+                  color: LightColors.mainBlue.withOpacity(0.5),
                 ),
-                // SizedBox(
-                //   width: 2,
-                // ),
-                // Container(
-                //   height: height,
-                //   width: 1,
-                //   color: LightColors.mainBlue,
-                // ),
-                // SizedBox(
-                //   width: 2,
-                // ),
-                // Container(
-                //   height: height,
-                //   width: 1,
-                //   color: LightColors.mainBlue,
-                // ),
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Container(
+                  height: height,
+                  width: 1.8,
+                  color: LightColors.mainBlue.withOpacity(0.5),
+                ),
+              ),
+              // SizedBox(
+              //   width: 2,
+              // ),
+              // Container(
+              //   height: height,
+              //   width: 1,
+              //   color: LightColors.mainBlue,
+              // ),
+              // SizedBox(
+              //   width: 2,
+              // ),
+              // Container(
+              //   height: height,
+              //   width: 1,
+              //   color: LightColors.mainBlue,
+              // ),
+            ],
           ),
           NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (overScroll) {
@@ -170,7 +195,7 @@ class _MainPageState extends State<MainPage> {
                                 return snapshot.data.isEmpty
                                     ? Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 20, top: 30),
+                                            left: 25, top: 30),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -259,7 +284,7 @@ class _MainPageState extends State<MainPage> {
                                                 Container(
                                                   alignment:
                                                       Alignment.centerRight,
-                                                  height: 30,
+                                                  height: 40,
                                                   width: 50,
                                                   // child: Container(
                                                   //   width: 1,
@@ -291,7 +316,7 @@ class _MainPageState extends State<MainPage> {
                                                                       50))),
                                                 ),
                                                 SizedBox(
-                                                  width: 10,
+                                                  width: 20,
                                                 ),
                                                 Text(
                                                   "Main Task",
@@ -308,7 +333,7 @@ class _MainPageState extends State<MainPage> {
                                           ),
                                           ListView.builder(
                                             padding: EdgeInsets.only(
-                                              top: 10,
+                                              top: 5,
                                             ),
                                             shrinkWrap: true,
                                             primary: false,
@@ -331,7 +356,7 @@ class _MainPageState extends State<MainPage> {
                                                             padding:
                                                                 const EdgeInsets
                                                                         .only(
-                                                                    left: 20,
+                                                                    left: 25,
                                                                     top: 5,
                                                                     bottom: 5),
                                                             child:
@@ -351,9 +376,9 @@ class _MainPageState extends State<MainPage> {
                                                               created_at: snapshot
                                                                   .data[index]
                                                                   .created_at,
-                                                              end_time: snapshot
+                                                              updated_at: snapshot
                                                                   .data[index]
-                                                                  .end_time,
+                                                                  .updated_at,
                                                             ),
                                                           )
                                                         ],
@@ -402,7 +427,7 @@ class _MainPageState extends State<MainPage> {
                                                 Container(
                                                   alignment:
                                                       Alignment.centerRight,
-                                                  height: 30,
+                                                  height: 40,
                                                   width: 50,
                                                   // child: Container(
                                                   //   width: 1,
@@ -434,7 +459,7 @@ class _MainPageState extends State<MainPage> {
                                                                       50))),
                                                 ),
                                                 SizedBox(
-                                                  width: 10,
+                                                  width: 20,
                                                 ),
                                                 Text(
                                                   "Completed Task",
@@ -451,7 +476,7 @@ class _MainPageState extends State<MainPage> {
                                           ),
                                           ListView.builder(
                                             padding: EdgeInsets.only(
-                                              top: 10,
+                                              top: 5,
                                             ),
                                             shrinkWrap: true,
                                             primary: false,
@@ -477,7 +502,7 @@ class _MainPageState extends State<MainPage> {
                                                             padding:
                                                                 const EdgeInsets
                                                                         .only(
-                                                                    left: 20,
+                                                                    left: 25,
                                                                     top: 5,
                                                                     bottom: 5),
                                                             child:
@@ -494,9 +519,9 @@ class _MainPageState extends State<MainPage> {
                                                               created_at: snapshot
                                                                   .data[index]
                                                                   .created_at,
-                                                              end_time: snapshot
+                                                              updated_at: snapshot
                                                                   .data[index]
-                                                                  .end_time,
+                                                                  .updated_at,
                                                               image: snapshot
                                                                   .data[index]
                                                                   .image,
@@ -513,7 +538,17 @@ class _MainPageState extends State<MainPage> {
                                         ],
                                       );
                               } else {
-                                return Text('Empty data');
+                                return Container(
+                                  height: height / 2,
+                                  child: Center(
+                                    child: Text("No Task Available",
+                                        style: TextStyle(
+                                            fontFamily: "Lato",
+                                            fontWeight: FontWeight.w400,
+                                            color: LightColors.lightBlack,
+                                            fontSize: 15)),
+                                  ),
+                                );
                               }
                             } else {
                               return Text('State: ${snapshot.connectionState}');
@@ -614,7 +649,7 @@ class _MainPageState extends State<MainPage> {
                                               ),
                                             ),
                                             Container(
-                                              width: width / 3,
+                                              width: width / 2.5,
                                               child: Text(
                                                 capitalize(parentName),
                                                 // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",

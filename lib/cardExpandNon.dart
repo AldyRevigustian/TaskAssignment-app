@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
@@ -16,7 +17,7 @@ class CardExpandNon extends StatefulWidget {
   final String title;
   final String description;
   final String created_at;
-  final String end_time;
+  final String updated_at;
   final String image;
   GlobalKey<ExpansionTileCardState> idCard;
 
@@ -26,7 +27,7 @@ class CardExpandNon extends StatefulWidget {
     @required this.title,
     @required this.description,
     @required this.created_at,
-    @required this.end_time,
+    @required this.updated_at,
     @required this.image,
   }) : super(key: key);
 
@@ -37,9 +38,18 @@ class CardExpandNon extends StatefulWidget {
 class _CardExpandNonState extends State<CardExpandNon> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  showImage(String image) {
-    return Image.memory(
-      base64Decode(image),
+  // showImage(String image) {
+  //   return Image.memory(
+  //     base64Decode(image),
+  //     width: 100,
+  //     height: 100,
+  //     fit: BoxFit.cover,
+  //   );
+  // }
+
+  showImage(String path) {
+    return Image.network(
+      "http://10.0.2.2:8000/storage/bukti/" + path,
       width: 100,
       height: 100,
       fit: BoxFit.cover,
@@ -49,15 +59,15 @@ class _CardExpandNonState extends State<CardExpandNon> {
   DateFormat formatTanggal;
 
   void initState() {
-    formatTanggal = DateFormat.MMMMd('id');
+    formatTanggal = DateFormat.MMMMEEEEd('id');
     super.initState();
   }
 
   formatSize(String formatSize) {
     if (formatSize.length > 15) {
-      return 13.00;
+      return 14.00;
     } else {
-      return 13.00;
+      return 14.00;
     }
   }
 
@@ -83,6 +93,8 @@ class _CardExpandNonState extends State<CardExpandNon> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.image);
+    log(widget.image);
     // String title = "Menyapu Lantai";
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -115,59 +127,49 @@ class _CardExpandNonState extends State<CardExpandNon> {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(
+                  FluentIcons.clock_12_filled,
+                  color: (widget.status == "Completed")
+                      ? LightColors.lightGreen.withOpacity(0.7)
+                      : LightColors.lightRed.withOpacity(0.7),
+                  size: 15,
+                ),
+              ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    DateFormat('dd/MM ')
-                        .format(DateTime.parse(widget.created_at)),
+                    "  " +
+                        formatTanggal.format(DateTime.parse(widget.updated_at)),
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: "Lato",
                         // fontWeight: FontWeight.bold,
-                        color: LightColors.lightBlack,
+                        color: (widget.status == "Completed")
+                            ? LightColors.lightGreen.withOpacity(0.7)
+                            : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 11),
+                        fontSize: 12),
                   ),
                   Text(
-                    DateFormat(' kk : mm')
-                        .format(DateTime.parse(widget.created_at)),
+                    DateFormat('   kk : mm')
+                        .format(DateTime.parse(widget.updated_at)),
                     style: TextStyle(
                         fontFamily: "Lato",
                         // fontWeight: FontWeight.bold,
-                        color: LightColors.lightBlack,
+                        color: (widget.status == "Completed")
+                            ? LightColors.lightGreen.withOpacity(0.7)
+                            : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 11),
-                  ),
-                  Text(
-                    " - ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: LightColors.lightBlack,
-                    ),
-                  ),
-                  Text(
-                    DateFormat('dd/MM ')
-                        .format(DateTime.parse(widget.end_time)),
-                    style: TextStyle(
-                        fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
-                        color: LightColors.lightRed,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11),
-                  ),
-                  Text(
-                    DateFormat(' kk : mm')
-                        .format(DateTime.parse(widget.end_time)),
-                    style: TextStyle(
-                        fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
-                        color: LightColors.lightRed,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11),
+                        fontSize: 12),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -248,6 +250,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                   ),
                 )),
           ),
+
           widget.image != null
               ? Align(
                   alignment: Alignment.bottomLeft,
@@ -266,6 +269,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                   ),
                 )
               : Center(),
+
           SizedBox(
             height: 15,
           )
