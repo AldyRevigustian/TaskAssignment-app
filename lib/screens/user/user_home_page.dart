@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/cardExpandActive.dart';
@@ -20,17 +21,17 @@ import 'package:intl/intl.dart';
 
 // var
 
-class MainPage extends StatefulWidget {
+class UserMainPage extends StatefulWidget {
   final String id;
-  MainPage({
+  UserMainPage({
     Key key,
     @required this.id,
   }) : super(key: key);
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<UserMainPage> createState() => _UserMainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _UserMainPageState extends State<UserMainPage> {
   Future listTask;
   static const String routeName = "/homePage";
   String parentName;
@@ -267,7 +268,8 @@ class _MainPageState extends State<MainPage> {
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         color: LightColors
-                                                            .lightBlack,
+                                                            .lightBlack
+                                                            .withOpacity(0.3),
                                                         fontSize: 15)),
                                               ],
                                             )
@@ -540,13 +542,41 @@ class _MainPageState extends State<MainPage> {
                               } else {
                                 return Container(
                                   height: height / 2,
-                                  child: Center(
-                                    child: Text("No Task Available",
-                                        style: TextStyle(
-                                            fontFamily: "Lato",
-                                            fontWeight: FontWeight.w400,
-                                            color: LightColors.lightBlack,
-                                            fontSize: 15)),
+                                  child: Column(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/no_task2.png",
+                                        width: 100,
+                                        height: 100,
+                                        opacity: AlwaysStoppedAnimation(0.3),
+                                      ),
+
+                                      // Container(
+                                      //   height: 100,
+                                      //   width: 100,
+                                      //   decoration: BoxDecoration(
+                                      //       image: DecorationImage(
+                                      //           image: AssetImage(
+                                      //               "assets/images/no_task.png"),
+                                      //           opacity: 0.3,
+                                      //           colorFilter: ColorFilter.mode(
+                                      //               Colors.grey,
+                                      //               BlendMode.color))),
+                                      // ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("No Task Available",
+                                          style: TextStyle(
+                                              fontFamily: "Lato",
+                                              fontWeight: FontWeight.w400,
+                                              color: LightColors.lightBlack
+                                                  .withOpacity(0.5),
+                                              fontSize: 11)),
+                                    ],
                                   ),
                                 );
                               }

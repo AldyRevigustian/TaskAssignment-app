@@ -1,11 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
-import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
+import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> backgroundHandler(RemoteMessage message) async {
+  print(message.data.toString());
+  print(message.notification.title);
+}
+
+void main() async {
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   //   systemNavigationBarColor: Colors.transparent, // navigation bar color
   //   // systemNavigationBarColor: Color(0xFFE5E5E5), // navigation bar color
@@ -13,7 +20,9 @@ void main() {
   //   // statusBarColor: LightColors.mainBlue, // status bar color
   //   // statusBarColor: Colors.red, // status bar color
   // ));
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   return runApp(MyApp());
 }
 
@@ -42,7 +51,7 @@ class MyApp extends StatelessWidget {
         home: LoginPage(),
         debugShowCheckedModeBanner: false,
         routes: {
-          MenuBottomBarPage.routeName: (ctx) => MenuBottomBarPage(),
+          UserMenuBottomBarPage.routeName: (ctx) => UserMenuBottomBarPage(),
           LoginPage.routeName: (ctx) => LoginPage(),
         },
       ),

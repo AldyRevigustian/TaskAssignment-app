@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
-import 'package:flutter_task_planner_app/screens/home_page.dart';
+import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
-import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
+import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -399,7 +399,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                         context,
                         MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return MenuBottomBarPage();
+                            return UserMenuBottomBarPage();
                           },
                         ),
                       );
@@ -521,7 +521,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return MenuBottomBarPage();
+                          return UserMenuBottomBarPage();
                         },
                       ),
                     );

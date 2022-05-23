@@ -5,12 +5,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_task_planner_app/model/taskModel.dart';
+import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:http/http.dart' as http;
 
 class GetHelper {
   // String link = "https://6268a04eaa65b5d23e77f552.mockapi.io/listTask/";
-  String link = "http://10.0.2.2:8000/api/schedule";
-  String linkImage = "http://10.0.2.2:8000/storage/bukti/";
+  String link = LINKAPI + "/api/schedule";
+  String linkImage = LINKAPI + "/storage/bukti/";
 
   // Future<List<Task>> fetchTask() async {
   //   final response = await http.get(Uri.parse(link));
@@ -80,8 +81,8 @@ class GetHelper {
     String image,
     // String description,
   ) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('http://10.0.2.2:8000/api/update'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/update'));
     request.fields.addAll({'id': id, 'status': status});
     request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
 
@@ -100,8 +101,8 @@ class GetHelper {
     String image,
     // String description,
   ) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('http://10.0.2.2:8000/api/update'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + "/api/update"));
     request.fields.addAll({'id': id, 'status': status});
     request.files.add(http.MultipartFile.fromBytes(
         'upload_bukti',

@@ -4,13 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_planner_app/main.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
-import 'package:flutter_task_planner_app/screens/home_page.dart';
+import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
-import 'package:flutter_task_planner_app/widget/menu_bottom_bar.dart';
+import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
+
+import 'admin/admin_menu_bottom_bar.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -36,37 +38,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     checkSFstring();
-    if (sharedpref == true) {
-      Provider.of<Parent>(context, listen: false)
-          .loginParentAndGetInf(usern, passwd)
-          .then((state) {
-        // pass username and password that user entered
-
-        if (state) {
-          setState(() {
-            state = true;
-          });
-          // if the function returned true
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-            ModalRoute.withName('/login'),
-          );
-
-          // Navigator.of(context).pushNamed(
-          //     MainParentPage.routeName); // go to the Main page for parent
-        } else {
-          setState(() {
-            state = false;
-          });
-          // showAlert('Error',
-          //     'You Entered Wrong Email or password/ Phone not connected Internet'); // otherwise show an Alert
-        }
-      });
-    }
-    //call alert
-
-    // alertinfo(context);
     super.initState();
   }
 
@@ -100,16 +71,23 @@ class _LoginPageState extends State<LoginPage> {
           .then((state) {
         // pass username and password that user entered
 
-        if (state) {
+        if (state == "user") {
           // if the function returned true
-          //Navigator.of(context).pushNamed(DashboardMenu.routeName);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => MenuBottomBarPage()),
+                builder: (BuildContext context) => UserMenuBottomBarPage()),
             ModalRoute.withName('/home'),
           );
           //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
+        } else if (state == "admin") {
+          // showAlert("kmau", "admint share");
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => AdminMenuBottomBarPage()),
+            ModalRoute.withName('/home'),
+          );
         } else {
           setState(() {
             sharedpref = false;
@@ -174,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
             .then((state) {
           // pass username and password that user entered
 
-          if (state) {
+          if (state == "user") {
             setState(() {
               state = false;
             });
@@ -184,10 +162,18 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => MenuBottomBarPage()),
+                  builder: (BuildContext context) => UserMenuBottomBarPage()),
               ModalRoute.withName('/home'),
             );
             //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
+          } else if (state == "admin") {
+            // showAlert("Kamu", "Admin");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AdminMenuBottomBarPage()),
+              ModalRoute.withName('/home'),
+            );
           } else {
             setState(() {
               state = false;

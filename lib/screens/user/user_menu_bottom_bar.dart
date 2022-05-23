@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
-import 'package:flutter_task_planner_app/screens/home_page.dart';
+import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/bottom_nav.dart';
@@ -12,14 +12,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class MenuBottomBarPage extends StatefulWidget {
+class UserMenuBottomBarPage extends StatefulWidget {
   static const routeName = '/home';
 
   @override
   State<StatefulWidget> createState() => MenuBottomBarState();
 }
 
-class MenuBottomBarState extends State<MenuBottomBarPage> {
+class MenuBottomBarState extends State<UserMenuBottomBarPage> {
   String currentPage = 'main';
   String parentId;
   ParentInf getParentInfo;
@@ -49,7 +49,7 @@ class MenuBottomBarState extends State<MenuBottomBarPage> {
     parentId = getParentInfo.id.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
-      "main": MainPage(id: parentId),
+      "main": UserMainPage(id: parentId),
       "logOut": LoginPage(),
     };
     // log(parentId + "kntl");

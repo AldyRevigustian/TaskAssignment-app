@@ -9,6 +9,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -49,7 +50,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
 
   showImage(String path) {
     return Image.network(
-      "http://10.0.2.2:8000/storage/bukti/" + path,
+      LINKAPI + "/storage/bukti/" + path,
       width: 100,
       height: 100,
       fit: BoxFit.cover,
