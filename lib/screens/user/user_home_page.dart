@@ -10,6 +10,7 @@ import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
 import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -40,6 +41,7 @@ class _UserMainPageState extends State<UserMainPage> {
   String parentAvatar;
   String parentId;
   String usrId;
+  String tokens = "";
   ParentInf getParentInfo;
 
   DateFormat formatHari;
@@ -58,8 +60,12 @@ class _UserMainPageState extends State<UserMainPage> {
   // }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-
+  String deviceTokenToSendPushNotification = "";
   void initState() {
+    getDeviceTokenToSendNotification();
+
+    // GetHelper().registid("4", "deoepp");
+
     // getId();
     initializeDateFormatting();
     formatHari = new DateFormat.EEEE('id');
@@ -113,6 +119,18 @@ class _UserMainPageState extends State<UserMainPage> {
     super.initState();
   }
 
+  Future getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+    setState(() {
+      tokens = deviceTokenToSendPushNotification;
+    });
+    log("Token Value $deviceTokenToSendPushNotification");
+    await GetHelper().registid(parentId, deviceTokenToSendPushNotification);
+    return deviceTokenToSendPushNotification;
+  }
+
   showLoadingProgress() {
     showDialog(
         context: context,
@@ -137,7 +155,7 @@ class _UserMainPageState extends State<UserMainPage> {
         systemNavigationBarIconBrightness: Brightness.dark));
     getParentInfo = Provider.of<Parent>(context).getParentInf();
     parentName = getParentInfo.name;
-    parentAvatar = getParentInfo.image_profile;
+    parentAvatar = getParentInfo.avatar;
     parentId = getParentInfo.id.toString();
 
     double width = MediaQuery.of(context).size.width;
@@ -697,7 +715,9 @@ class _UserMainPageState extends State<UserMainPage> {
                                         foregroundImage: (parentAvatar == null
                                             ? new AssetImage(
                                                 "assets/images/user.png")
-                                            : new NetworkImage(parentAvatar))
+                                            : new NetworkImage(LINKAPI +
+                                                "storage/pp/" +
+                                                parentAvatar))
                                         // AssetImage(
                                         //     "assets/images/user.png"),
                                         ),
@@ -741,7 +761,15 @@ class _UserMainPageState extends State<UserMainPage> {
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 13),
-                                        )
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              GetHelper().notif(
+                                                  deviceTokenToSendPushNotification,
+                                                  "ZOE ",
+                                                  "tester");
+                                            },
+                                            child: Text("Test"))
                                       ],
                                     ),
                                   )

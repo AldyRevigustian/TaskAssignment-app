@@ -9,7 +9,6 @@ import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:http/http.dart' as http;
 
 class GetHelper {
-  // String link = "https://6268a04eaa65b5d23e77f552.mockapi.io/listTask/";
   String link = LINKAPI + "/api/schedule";
   String linkImage = LINKAPI + "/storage/bukti/";
 
@@ -35,7 +34,6 @@ class GetHelper {
 
     final response =
         await http.post(Uri.parse(link), body: {"user_id": id.toString()});
-
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       // print(jsonResponse.map((job) => new Task.fromJson(job)).toList());
@@ -168,5 +166,47 @@ class GetHelper {
     // open a bytestream
 
     // get file lengthvar length = await imageFile.length();
+  }
+
+  Future notif(String regis, String title, String body) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'key=AAAAX4bqqMs:APA91bGm76Hqu8z_YZfeEtuS7KenY99AG69HKOJwFD6lUDVjPlC6OM8JiSy2BT0DXv8IZFqL6XjfhYiWrr1PY3SUIIg9qhnwcRBzTdJc1b2rafIh_ps2-_RpWeUwOnn7JUWdm-fFfmpE'
+    };
+    var request =
+        http.Request('POST', Uri.parse('https://fcm.googleapis.com/fcm/send'));
+    request.body = json.encode({
+      "registration_ids": [regis],
+      "notification": {
+        "body": body,
+        "title": title,
+        "android_channel_id": "pushnotificationapp",
+        "sound": true
+      }
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future registid(String id, String regis) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/registration'));
+    request.fields.addAll({'id': id, 'registration': regis});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 }

@@ -15,13 +15,15 @@ class ParentInf {
   final String email;
   final String name;
   final String created_at;
-  final String image_profile;
+  final String registration;
+  final String avatar;
   ParentInf({
     this.id,
     this.email,
     this.name,
     this.created_at,
-    this.image_profile,
+    this.registration,
+    this.avatar,
   });
 }
 
@@ -120,8 +122,13 @@ class Parent with ChangeNotifier {
       id: datauser['data']['id'],
       name: datauser['data']['name'],
       email: datauser['data']['email'],
+      registration: (datauser['data']['registration'] == null)
+          ? " "
+          : datauser['data']['registration'],
       // created_at: datauser['data']['created_at'],
-      // image_profile: datauser['image_profile'],
+      avatar: (datauser['data']['registration'] == null)
+          ? null
+          : datauser['data']['poto'],
     );
 
     setParentInf(parentInf);

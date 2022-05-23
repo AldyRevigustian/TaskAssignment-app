@@ -50,7 +50,9 @@ class _CardExpandNonState extends State<CardExpandNon> {
 
   showImage(String path) {
     return Image.network(
-      LINKAPI + "/storage/bukti/" + path,
+      // "http://192.168.1.185:8080/storage/bukti/" + path,
+      LINKAPI + "storage/bukti/" + path,
+      // "http://192.168.1.185:8080/storage/bukti/scaled_image_picker2211077996532672474.jpg",
       width: 100,
       height: 100,
       fit: BoxFit.cover,
