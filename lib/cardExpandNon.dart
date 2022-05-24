@@ -7,6 +7,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
@@ -50,13 +51,29 @@ class _CardExpandNonState extends State<CardExpandNon> {
 
   showImage(String path) {
     return Image.network(
-      // "http://192.168.1.185:8080/storage/bukti/" + path,
-      LINKAPI + "storage/bukti/" + path,
-      // "http://192.168.1.185:8080/storage/bukti/scaled_image_picker2211077996532672474.jpg",
-      width: 100,
-      height: 100,
-      fit: BoxFit.cover,
-    );
+        // "http://192.168.1.185:8080/storage/bukti/" + path,
+        LINKAPI + "storage/bukti/" + path,
+        // "http://192.168.1.185:8080/storage/bukti/scaled_image_picker2211077996532672474.jpg",
+        width: 100,
+        height: 100,
+        fit: BoxFit.cover, loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent loadingProgress) {
+      if (loadingProgress == null) return child;
+      return Container(
+        width: 100,
+        height: 100,
+        child: SpinKitWave(
+          color: LightColors.mainBlue.withOpacity(0.5),
+          size: 25.0,
+        ),
+        // child: CircularProgressIndicator(
+        //   value: loadingProgress.expectedTotalBytes != null
+        //       ? loadingProgress.cumulativeBytesLoaded /
+        //           loadingProgress.expectedTotalBytes
+        //       : null,
+        // ),
+      );
+    });
   }
 
   DateFormat formatTanggal;
@@ -128,13 +145,13 @@ class _CardExpandNonState extends State<CardExpandNon> {
               fontSize: formatSize(widget.title)),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 3),
+          padding: const EdgeInsets.only(top: 4),
           child: Row(
             // crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(top: 1),
                 child: Icon(
                   FluentIcons.clock_12_filled,
                   color: (widget.status == "Completed")
@@ -157,7 +174,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                             ? LightColors.lightGreen.withOpacity(0.7)
                             : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: 10),
                   ),
                   Text(
                     DateFormat('   kk : mm')
@@ -169,7 +186,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                             ? LightColors.lightGreen.withOpacity(0.7)
                             : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: 10),
                   ),
                 ],
               ),
@@ -254,7 +271,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                 )),
           ),
 
-          widget.image != null
+          widget.image != "null"
               ? Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(

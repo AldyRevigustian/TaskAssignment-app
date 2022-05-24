@@ -31,7 +31,7 @@ class Task {
       // created_at: json['created_at'],
       created_at: json["created_at"],
       updated_at: json["updated_at"],
-      image: json["upload_bukti"],
+      image: (json["upload_bukti"] == null) ? "null" : json["upload_bukti"],
     );
     // return Task(
     //   // userId: json['userId'],

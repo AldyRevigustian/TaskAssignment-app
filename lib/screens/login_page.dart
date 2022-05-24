@@ -1,6 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_planner_app/main.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
         sharedpref = true;
       });
       if (state == true) {
-        showLoadingProgress();
+        showLoadingProgress(context);
       }
       Provider.of<Parent>(context, listen: false)
           .loginParentAndGetInf(usern.toString(), passwd.toString())
@@ -102,12 +103,22 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  showLoadingProgress() {
+  showLoadingProgress(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return LoadingAlert();
-        });
+        builder: (_) => Center(
+                // Aligns the container to center
+                child: Container(
+              // A simplified version of dialog.
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
+              width: 100.0,
+              height: 70.0,
+              child: SpinKitWave(
+                color: LightColors.mainBlue.withOpacity(0.5),
+                size: 25.0,
+              ),
+            )));
   }
 
   showAlert(String title, String content) {
@@ -142,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState.validate()) {
       // check if all the conditionsthe we put on validators are right
       if (state) {
-        showLoadingProgress(); // show CircularProgressIndicator
+        showLoadingProgress(context); // show CircularProgressIndicator
       }
       // if the radio button on parent then login using parent provider
 

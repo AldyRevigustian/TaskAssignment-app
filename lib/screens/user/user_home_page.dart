@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/cardExpandActive.dart';
 import 'package:flutter_task_planner_app/cardExpandNon.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
@@ -131,12 +132,22 @@ class _UserMainPageState extends State<UserMainPage> {
     return deviceTokenToSendPushNotification;
   }
 
-  showLoadingProgress() {
+  showLoadingProgress(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return LoadingAlert();
-        });
+        builder: (_) => Center(
+                // Aligns the container to center
+                child: Container(
+              // A simplified version of dialog.
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
+              width: 100.0,
+              height: 70.0,
+              child: SpinKitWave(
+                color: LightColors.mainBlue.withOpacity(0.5),
+                size: 25.0,
+              ),
+            )));
   }
 
   Future<void> _refreshProducts(BuildContext context) async {
@@ -174,7 +185,7 @@ class _UserMainPageState extends State<UserMainPage> {
                 child: Container(
                   height: height,
                   width: 1.8,
-                  color: LightColors.mainBlue.withOpacity(0.5),
+                  color: LightColors.oldBlue.withOpacity(0.5),
                 ),
               ),
               Padding(
@@ -236,18 +247,14 @@ class _UserMainPageState extends State<UserMainPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100)),
                                 insetPadding: EdgeInsets.symmetric(
-                                    horizontal: 150, vertical: 150),
-                                content: Container(
-                                    alignment: Alignment.center,
-                                    height: 50,
-                                    width: 100,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            new AlwaysStoppedAnimation<Color>(
-                                                LightColors.mainBlue),
-                                      ),
-                                    )),
+                                    horizontal: 140, vertical: 150),
+                                content: Center(
+                                  child: SpinKitWave(
+                                    color:
+                                        LightColors.mainBlue.withOpacity(0.5),
+                                    size: 25.0,
+                                  ),
+                                ),
                               );
                             } else if (snapshot.connectionState ==
                                 ConnectionState.done) {
@@ -703,7 +710,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                     fit: BoxFit.fitWidth)),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
+                                  const EdgeInsets.symmetric(horizontal: 0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -725,53 +732,44 @@ class _UserMainPageState extends State<UserMainPage> {
                                   SizedBox(
                                     width: 30,
                                   ),
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Hi, ",
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Hi, ",
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Container(
+                                            width: width / 2.5,
+                                            child: Text(
+                                              capitalize(parentName),
+                                              // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.white,
-                                              ),
+                                                  fontSize: 25,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700),
                                             ),
-                                            Container(
-                                              width: width / 2.5,
-                                              child: Text(
-                                                capitalize(parentName),
-                                                // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        width: width / 2.5,
+                                        child: Text(
                                           "PT. SOLUSI INTEK INDONESIA",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 13),
                                         ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              GetHelper().notif(
-                                                  deviceTokenToSendPushNotification,
-                                                  "ZOE ",
-                                                  "tester");
-                                            },
-                                            child: Text("Test"))
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),

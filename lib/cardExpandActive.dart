@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +54,7 @@ class _CardExpandActiveState extends State<CardExpandActive> {
   pickImage() async {
     try {
       var image = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 15);
+          .pickImage(source: ImageSource.camera, imageQuality: 15);
       if (image == null) return;
 
       setState(() {
@@ -184,13 +185,13 @@ class _CardExpandActiveState extends State<CardExpandActive> {
               fontSize: formatSize(widget.title)),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 3),
+          padding: const EdgeInsets.only(top: 4),
           child: Row(
             // crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(top: 1),
                 child: Icon(
                   FluentIcons.clock_12_filled,
                   color: LightColors.lightBlack.withOpacity(0.6),
@@ -209,17 +210,17 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                         // fontWeight: FontWeight.bold,
                         color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: 10),
                   ),
                   Text(
-                    DateFormat('   kk : mm')
+                    DateFormat(' kk : mm')
                         .format(DateTime.parse(widget.created_at)),
                     style: TextStyle(
                         fontFamily: "Lato",
                         // fontWeight: FontWeight.bold,
                         color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: 10),
                   ),
                 ],
               ),
@@ -392,7 +393,10 @@ class _CardExpandActiveState extends State<CardExpandActive> {
                         fontSize: 12.0);
                   } else {
                     bool res = await GetHelper().putTaskFinale(
-                        widget.id, "Completed", imagePath.toString());
+                        widget.id,
+                        "Completed",
+                        imagePath.toString(),
+                        _descController.text);
 
                     if (res == true) {
                       Navigator.pushReplacement(
@@ -509,41 +513,37 @@ class _CardExpandActiveState extends State<CardExpandActive> {
             TextButton(
               child: const Text('Yes'),
               onPressed: () async {
-                if (imagePath == null) {
-                  String imagePath = "";
-                  bool res = await GetHelper().putTaskCancel(
-                      widget.id, "Incompleted", imagePath.toString());
+                bool res = await GetHelper().putTaskCancel(
+                  widget.id,
+                  "Incompleted",
+                );
+                if (res) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return UserMenuBottomBarPage();
+                      },
+                    ),
+                  );
+                  Fluttertoast.showToast(
+                      msg: "Successfully set task as incompleted",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 12.0);
                 } else {
-                  bool res = await GetHelper().putTaskCancel(
-                      widget.id, "Incompleted", imagePath.toString());
-                  if (res) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return UserMenuBottomBarPage();
-                        },
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                        msg: "Successfully set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Failed set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                    print("gagal");
-                  }
+                  Fluttertoast.showToast(
+                      msg: "Failed set task as incompleted",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 12.0);
+                  print("gagal");
                 }
               },
             ),

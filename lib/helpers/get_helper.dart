@@ -46,42 +46,16 @@ class GetHelper {
     }
   }
 
-  // Future putTaskFinale(
-  //   String id,
-  //   String status,
-  //   String image,
-  //   // String description,
-  // ) async {
-  //   // var request = http.MultipartRequest(
-  //   // 'POST', Uri.parse('http://10.0.2.2:8000/api/update'));
-  //   // request.fields.addAll({'id': id, 'status': status});
-  //   // request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
-
-  //   // http.StreamedResponse response = await request.send();
-
-  //   final response =
-  //       await http.put(Uri.parse("http://10.0.2.2:8000/api/update"), body: {
-  //     'id': id,
-  //     'status': status,
-  //     // 'description': description,
-  //     'image': "",
-  //   });
-
-  //   if (response.statusCode == 200) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
   Future putTaskFinale(
     String id,
     String status,
     String image,
-    // String description,
+    String description,
   ) async {
     var request =
         http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/update'));
-    request.fields.addAll({'id': id, 'status': status});
+    request.fields
+        .addAll({'id': id, 'status': status, "task_description": description});
     request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
 
     http.StreamedResponse response = await request.send();
@@ -96,18 +70,10 @@ class GetHelper {
   Future putTaskCancel(
     String id,
     String status,
-    String image,
-    // String description,
   ) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + "/api/update"));
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/update'));
     request.fields.addAll({'id': id, 'status': status});
-    request.files.add(http.MultipartFile.fromBytes(
-        'upload_bukti',
-        (await rootBundle.load('assets/images/multiply.png'))
-            .buffer
-            .asUint8List(),
-        filename: 'testimage.png'));
 
     http.StreamedResponse response = await request.send();
 
@@ -116,56 +82,6 @@ class GetHelper {
     } else {
       return false;
     }
-  }
-
-  Future putTaskImage(
-    String id,
-    String status,
-    String description,
-    String image,
-  ) async {
-    try {
-      final response = await http.put(Uri.parse(link + id), body: {
-        // 'id': id,
-        'status': status,
-        'description': description,
-        'image': image.toString(),
-      });
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print(e);
-    }
-    // open a bytestream
-
-    // get file lengthvar length = await imageFile.length();
-  }
-
-  Future putDio(
-    String id,
-    String status,
-    String description,
-    String image,
-  ) async {
-    try {
-      final response = await Dio().put(link + id, data: {
-        "image": image,
-      });
-
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print(e);
-    }
-    // open a bytestream
-
-    // get file lengthvar length = await imageFile.length();
   }
 
   Future notif(String regis, String title, String body) async {
@@ -200,6 +116,26 @@ class GetHelper {
     var request =
         http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/registration'));
     request.fields.addAll({'id': id, 'registration': regis});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future postSchedule(
+      String id, String title, String description, String date) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/addSchedule'));
+    request.fields.addAll({
+      'user_id': "3",
+      'task_title': title,
+      'task_description': description,
+      'tanggal': '2022-05-23'
+    });
 
     http.StreamedResponse response = await request.send();
 

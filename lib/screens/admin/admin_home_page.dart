@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/cardExpandActive.dart';
 import 'package:flutter_task_planner_app/cardExpandNon.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
@@ -73,12 +75,22 @@ class _AdminMainPageState extends State<AdminMainPage> {
     super.initState();
   }
 
-  showLoadingProgress() {
+  showLoadingProgress(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return LoadingAlert();
-        });
+        builder: (_) => Center(
+                // Aligns the container to center
+                child: Container(
+              // A simplified version of dialog.
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
+              width: 100.0,
+              height: 70.0,
+              child: SpinKitWave(
+                color: LightColors.mainBlue.withOpacity(0.5),
+                size: 25.0,
+              ),
+            )));
   }
 
   Future<void> _refreshProducts(BuildContext context) async {
@@ -92,6 +104,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController title = new TextEditingController();
+    TextEditingController desc = new TextEditingController();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
@@ -141,6 +155,34 @@ class _AdminMainPageState extends State<AdminMainPage> {
               },
               child: Stack(
                 children: [
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(35.0),
+                      child: Column(children: [
+                        Container(
+                          height: height / 2,
+                        ),
+                        TextFormField(
+                          controller: title,
+                        ),
+                        TextFormField(
+                          controller: desc,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              GetHelper().postSchedule(
+                                  "3", title.text, desc.text, "2022-05-23");
+                              GetHelper().notif(
+                                  "eM4amWXEQuiZDdZXESPu98:APA91bFhep19JnjDn4FnL_OOx9JgH_h4VeOgw1oC6bm0qqW8sOM7fPh5bD_n0twO5b0ikiP7nAZJ9GwhcKS_3oZNZ-TMzi2PVl4OQmPG2t3jXmzTTNCWd-R_LI3TUyQQRfpxVESkPeNL",
+                                  title.text,
+                                  desc.text);
+                              title.clear();
+                              desc.clear();
+                            },
+                            child: Text('send')),
+                      ]),
+                    ),
+                  ),
                   Container(
                     height: height / 2.9,
                     child: Stack(
