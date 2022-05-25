@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:http/http.dart' as http;
 
 class GetHelper {
-  String link = LINKAPI + "/api/schedule";
-  String linkImage = LINKAPI + "/storage/bukti/";
+  String link = LINKAPI + "api/schedule";
+  String linkImage = LINKAPI + "storage/bukti/";
 
   // Future<List<Task>> fetchTask() async {
   //   final response = await http.get(Uri.parse(link));
@@ -46,6 +47,19 @@ class GetHelper {
     }
   }
 
+  Future<List<Task>> getAllTask() async {
+    final response = await http.get(Uri.parse(LINKAPI + "api/dataSchedule"));
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      log("Masok");
+      return jsonResponse.map((job) => new Task.fromJson(job)).toList();
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      // throw Exception('Failed to load Task');
+    }
+  }
+
   Future putTaskFinale(
     String id,
     String status,
@@ -53,7 +67,7 @@ class GetHelper {
     String description,
   ) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/update'));
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/update'));
     request.fields
         .addAll({'id': id, 'status': status, "task_description": description});
     request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
@@ -70,10 +84,13 @@ class GetHelper {
   Future putTaskCancel(
     String id,
     String status,
+    String description,
   ) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/update'));
-    request.fields.addAll({'id': id, 'status': status});
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/update'));
+    request.fields
+        .addAll({'id': id, "task_description": description, 'status': status});
+    // request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
 
     http.StreamedResponse response = await request.send();
 
@@ -114,7 +131,7 @@ class GetHelper {
 
   Future registid(String id, String regis) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + '/api/registration'));
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/registration'));
     request.fields.addAll({'id': id, 'registration': regis});
 
     http.StreamedResponse response = await request.send();
@@ -131,10 +148,10 @@ class GetHelper {
     var request =
         http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/addSchedule'));
     request.fields.addAll({
-      'user_id': "3",
+      'user_id': id,
       'task_title': title,
       'task_description': description,
-      'tanggal': '2022-05-23'
+      'tanggal': date
     });
 
     http.StreamedResponse response = await request.send();
@@ -143,6 +160,22 @@ class GetHelper {
       print(await response.stream.bytesToString());
     } else {
       print(response.reasonPhrase);
+    }
+  }
+
+  Future deleteTask(String id) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/delete'));
+    request.fields.addAll({'id': id});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      // print(await response.stream.bytesToString());
+      return true;
+    } else {
+      // print(response.reasonPhrase);
+      return false;
     }
   }
 }

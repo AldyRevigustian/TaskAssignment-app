@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,9 @@ import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CardExpandNon extends StatefulWidget {
+import '../detail.dart';
+
+class UserCardExpandNon extends StatefulWidget {
   final String status;
   final String title;
   final String description;
@@ -23,7 +26,7 @@ class CardExpandNon extends StatefulWidget {
   final String image;
   GlobalKey<ExpansionTileCardState> idCard;
 
-  CardExpandNon({
+  UserCardExpandNon({
     Key key,
     @required this.status,
     @required this.title,
@@ -34,10 +37,10 @@ class CardExpandNon extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CardExpandNon> createState() => _CardExpandNonState();
+  State<UserCardExpandNon> createState() => _UserCardExpandNonState();
 }
 
-class _CardExpandNonState extends State<CardExpandNon> {
+class _UserCardExpandNonState extends State<UserCardExpandNon> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   // showImage(String image) {
@@ -50,30 +53,41 @@ class _CardExpandNonState extends State<CardExpandNon> {
   // }
 
   showImage(String path) {
-    return Image.network(
-        // "http://192.168.1.185:8080/storage/bukti/" + path,
-        LINKAPI + "storage/bukti/" + path,
-        // "http://192.168.1.185:8080/storage/bukti/scaled_image_picker2211077996532672474.jpg",
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover, loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent loadingProgress) {
-      if (loadingProgress == null) return child;
-      return Container(
-        width: 100,
-        height: 100,
-        child: SpinKitWave(
-          color: LightColors.mainBlue.withOpacity(0.5),
-          size: 25.0,
-        ),
-        // child: CircularProgressIndicator(
-        //   value: loadingProgress.expectedTotalBytes != null
-        //       ? loadingProgress.cumulativeBytesLoaded /
-        //           loadingProgress.expectedTotalBytes
-        //       : null,
-        // ),
-      );
-    });
+    return GestureDetector(
+      onTap: () {
+        // log("pencet ni gan");
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return DetailScreen(
+            pathImage: LINKAPI + "storage/bukti/" + path,
+          );
+        }));
+      },
+      child: Hero(
+        tag: path + Random().toString(),
+        child: Image.network(LINKAPI + "storage/bukti/" + path,
+            width: 100,
+            height: 100,
+            alignment: Alignment.center,
+            fit: BoxFit.cover, loadingBuilder: (BuildContext context,
+                Widget child, ImageChunkEvent loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: 100,
+            height: 100,
+            child: SpinKitWave(
+              color: LightColors.mainBlue.withOpacity(0.5),
+              size: 25.0,
+            ),
+            // child: CircularProgressIndicator(
+            //   value: loadingProgress.expectedTotalBytes != null
+            //       ? loadingProgress.cumulativeBytesLoaded /
+            //           loadingProgress.expectedTotalBytes
+            //       : null,
+            // ),
+          );
+        }),
+      ),
+    );
   }
 
   DateFormat formatTanggal;
@@ -113,9 +127,6 @@ class _CardExpandNonState extends State<CardExpandNon> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.image);
-    log(widget.image);
-    // String title = "Menyapu Lantai";
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Container(
@@ -145,27 +156,16 @@ class _CardExpandNonState extends State<CardExpandNon> {
               fontSize: formatSize(widget.title)),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: 0),
           child: Row(
             // crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: Icon(
-                  FluentIcons.clock_12_filled,
-                  color: (widget.status == "Completed")
-                      ? LightColors.lightGreen.withOpacity(0.7)
-                      : LightColors.lightRed.withOpacity(0.7),
-                  size: 15,
-                ),
-              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "  " +
-                        formatTanggal.format(DateTime.parse(widget.updated_at)),
+                    formatTanggal.format(DateTime.parse(widget.updated_at)),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: "Lato",
@@ -174,10 +174,10 @@ class _CardExpandNonState extends State<CardExpandNon> {
                             ? LightColors.lightGreen.withOpacity(0.7)
                             : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 10),
+                        fontSize: 11),
                   ),
                   Text(
-                    DateFormat('   kk : mm')
+                    DateFormat('  ●  kk : mm')
                         .format(DateTime.parse(widget.updated_at)),
                     style: TextStyle(
                         fontFamily: "Lato",
@@ -186,7 +186,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                             ? LightColors.lightGreen.withOpacity(0.7)
                             : LightColors.lightRed.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
-                        fontSize: 10),
+                        fontSize: 11),
                   ),
                 ],
               ),
@@ -236,7 +236,7 @@ class _CardExpandNonState extends State<CardExpandNon> {
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                         hintText: (widget.description != null)
-                            ? widget.description
+                            ? capitalize(widget.description)
                             : "",
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 0.3),

@@ -5,8 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_task_planner_app/cardExpandActive.dart';
-import 'package:flutter_task_planner_app/cardExpandNon.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
@@ -19,6 +17,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
+
+import 'userCardExpandActive.dart';
+import 'userCardExpandNon.dart';
 
 // List<Task> listOfDownloadedFile = List();
 // listOfDownloadedFile.add(...);
@@ -247,7 +248,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100)),
                                 insetPadding: EdgeInsets.symmetric(
-                                    horizontal: 140, vertical: 150),
+                                    horizontal: 140, vertical: 200),
                                 content: Center(
                                   child: SpinKitWave(
                                     color:
@@ -262,85 +263,45 @@ class _UserMainPageState extends State<UserMainPage> {
                                 return const Text('Error');
                               } else if (snapshot.hasData) {
                                 return snapshot.data.isEmpty
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 25, top: 30),
+                                    ? Container(
+                                        height: height / 1.8,
                                         child: Column(
+                                          // crossAxisAlignment:
+                                          //     CrossAxisAlignment.center,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  height: 30,
-                                                  width: 50,
-                                                  // child: Container(
-                                                  //   width: 1,
-                                                  //   height: 1,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.white,
-                                                  //       borderRadius:
-                                                  //           BorderRadius
-                                                  //               .circular(50)),
-                                                  // ),
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        right: 10),
-                                                    width: 15,
-                                                    height: 15,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20)),
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                          LightColors.mainBlue,
-                                                      borderRadius: BorderRadius
-                                                          .horizontal(
-                                                              right: Radius
-                                                                  .circular(
-                                                                      50))),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  "Main Task",
-                                                  style: TextStyle(
-                                                      fontFamily: "Lato",
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color:
-                                                          LightColors.oldBlue,
-                                                      fontSize: 20),
-                                                ),
-                                              ],
+                                            Image.asset(
+                                              "assets/images/no_task2.png",
+                                              width: 100,
+                                              height: 100,
+                                              opacity:
+                                                  AlwaysStoppedAnimation(0.3),
                                             ),
+
+                                            // Container(
+                                            //   height: 100,
+                                            //   width: 100,
+                                            //   decoration: BoxDecoration(
+                                            //       image: DecorationImage(
+                                            //           image: AssetImage(
+                                            //               "assets/images/no_task.png"),
+                                            //           opacity: 0.3,
+                                            //           colorFilter: ColorFilter.mode(
+                                            //               Colors.grey,
+                                            //               BlendMode.color))),
+                                            // ),
                                             SizedBox(
-                                              height: 20,
+                                              height: 15,
                                             ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 40,
-                                                ),
-                                                Text("No Task Available",
-                                                    style: TextStyle(
-                                                        fontFamily: "Lato",
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: LightColors
-                                                            .lightBlack
-                                                            .withOpacity(0.3),
-                                                        fontSize: 15)),
-                                              ],
-                                            )
+                                            Text("No Task Available",
+                                                style: TextStyle(
+                                                    fontFamily: "Lato",
+                                                    fontWeight: FontWeight.w400,
+                                                    color: LightColors
+                                                        .lightBlack
+                                                        .withOpacity(0.5),
+                                                    fontSize: 11)),
                                           ],
                                         ),
                                       )
@@ -389,7 +350,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                                   width: 20,
                                                 ),
                                                 Text(
-                                                  "Main Task",
+                                                  "Assigned Task",
                                                   style: TextStyle(
                                                       fontFamily: "Lato",
                                                       fontWeight:
@@ -430,7 +391,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                                                     top: 5,
                                                                     bottom: 5),
                                                             child:
-                                                                CardExpandActive(
+                                                                UserCardExpandActive(
                                                               id: snapshot
                                                                   .data[index]
                                                                   .id,
@@ -532,7 +493,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                                   width: 20,
                                                 ),
                                                 Text(
-                                                  "Completed Task",
+                                                  "Submitted Task",
                                                   style: TextStyle(
                                                       fontFamily: "Lato",
                                                       fontWeight:
@@ -576,7 +537,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                                                     top: 5,
                                                                     bottom: 5),
                                                             child:
-                                                                CardExpandNon(
+                                                                UserCardExpandNon(
                                                               status: snapshot
                                                                   .data[index]
                                                                   .status,
@@ -710,7 +671,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                     fit: BoxFit.fitWidth)),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -722,9 +683,11 @@ class _UserMainPageState extends State<UserMainPage> {
                                         foregroundImage: (parentAvatar == null
                                             ? new AssetImage(
                                                 "assets/images/user.png")
-                                            : new NetworkImage(LINKAPI +
-                                                "storage/pp/" +
-                                                parentAvatar))
+                                            : new NetworkImage(
+                                                LINKAPI +
+                                                    "storage/pp/" +
+                                                    parentAvatar,
+                                              ))
                                         // AssetImage(
                                         //     "assets/images/user.png"),
                                         ),
@@ -732,44 +695,45 @@ class _UserMainPageState extends State<UserMainPage> {
                                   SizedBox(
                                     width: 30,
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Hi, ",
-                                            style: TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Container(
-                                            width: width / 2.5,
-                                            child: Text(
-                                              capitalize(parentName),
-                                              // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
-                                              overflow: TextOverflow.ellipsis,
+                                  Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Hi, ",
                                               style: TextStyle(
-                                                  fontSize: 25,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700),
+                                                fontSize: 25,
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        width: width / 2.5,
-                                        child: Text(
+                                            Container(
+                                              width: width / 2.5,
+                                              child: Text(
+                                                capitalize(parentName),
+                                                // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
                                           "PT. SOLUSI INTEK INDONESIA",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 13),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),

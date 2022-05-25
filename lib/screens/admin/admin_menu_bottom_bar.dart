@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/screens/admin/add_schedule.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -39,9 +40,7 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
 
   removeValuesSharedpref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
     prefs.remove("username");
-    //Remove bool
     prefs.remove("password");
   }
 
@@ -51,7 +50,10 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
     parentId = getParentInfo.id.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
-      "main": AdminMainPage(id: parentId),
+      "main": AdminMainPage(
+        id: parentId,
+      ),
+      "history": HistorySchedule(),
       "logOut": LoginPage(),
     };
     // log(parentId + "kntl");
@@ -69,12 +71,12 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
               onTap: () {
                 changePage("main");
               }),
-          // new BottomNavigationDotItem(
-          //     activeIcon: FluentIcons.history_16_filled,
-          //     icon: FluentIcons.history_16_regular,
-          //     onTap: () {
-          //       changePage("java");
-          //     }),
+          new BottomNavigationDotItem(
+              activeIcon: FluentIcons.history_24_filled,
+              icon: FluentIcons.history_24_regular,
+              onTap: () {
+                changePage("history");
+              }),
           new BottomNavigationDotItem(
             activeIcon: FluentIcons.sign_out_24_filled,
             icon: FluentIcons.sign_out_24_regular,

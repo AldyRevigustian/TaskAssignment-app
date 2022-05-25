@@ -1,25 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_task_planner_app/cardExpandActive.dart';
-import 'package:flutter_task_planner_app/cardExpandNon.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
+import 'adminCardExpandActive.dart';
+import 'adminCardExpandNon.dart';
 
 // List<Task> listOfDownloadedFile = List();
 // listOfDownloadedFile.add(...);
@@ -37,6 +40,8 @@ class AdminMainPage extends StatefulWidget {
 }
 
 class _AdminMainPageState extends State<AdminMainPage> {
+  String _mySelection;
+
   Future listTask;
   static const String routeName = "/homePage";
   String parentName;
@@ -56,6 +61,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   var dateTime = new DateTime.now();
 
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
   // void getId() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   usrId = prefs.getString('id');
@@ -68,11 +74,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
-    // listTask = GetHelper().fetchTask(widget.id);
+    listTask = GetHelper().getAllTask();
     fetchandrefresh();
     // listTask = GetHelper().fetchTask
     // _refreshProducts(context);
     super.initState();
+    this.getSWData();
   }
 
   showLoadingProgress(BuildContext context) {
@@ -98,12 +105,33 @@ class _AdminMainPageState extends State<AdminMainPage> {
   }
 
   void fetchandrefresh() {
-    listTask = GetHelper().fetchTask(widget.id);
+    listTask = GetHelper().getAllTask();
+    getSWData();
     setState(() {});
+  }
+
+  List data = List(); //edited line
+
+  Future<String> getSWData() async {
+    var res = await http.get(Uri.parse(LINKAPI + "api/dataOb"),
+        headers: {"Accept": "application/json"});
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+
+    print(resBody);
+
+    return "Sucess";
   }
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
+    String formatted = formatter.format(now);
+
     TextEditingController title = new TextEditingController();
     TextEditingController desc = new TextEditingController();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -121,6 +149,218 @@ class _AdminMainPageState extends State<AdminMainPage> {
     // log(parentId);
 
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 10, right: 10),
+        child: FloatingActionButton(
+          backgroundColor: LightColors.oldBlue,
+          child: Icon(FluentIcons.add_20_filled),
+          onPressed: () {
+            showDialog(
+                barrierDismissible: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return WillPopScope(
+                    onWillPop: () {
+                      // print("test");
+                      // log("test");
+                      Navigator.pop(context);
+                      setState(() {
+                        _mySelection = null;
+                      });
+                      title.clear();
+                      desc.clear();
+                      return;
+                    },
+                    child: AlertDialog(
+                      title: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, bottom: 0, top: 10),
+                          child: Text("Add Task"),
+                        ),
+                      ),
+                      insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      content: StatefulBuilder(builder:
+                          (BuildContext context, StateSetter setState) {
+                        return Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              // Padding(
+                              //   padding:
+                              //       const EdgeInsets.only(left: 8, right: 8),
+                              //   child: Text("Select Employee"),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10, left: 8, right: 8),
+                                child: DropdownButtonFormField(
+                                  iconEnabledColor:
+                                      LightColors.lightBlack.withOpacity(0.5),
+                                  validator: (value) => value == null
+                                      ? 'Please fill this field'
+                                      : null,
+                                  isExpanded: true,
+                                  // label
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: LightColors.lightBlack
+                                                .withOpacity(0.5))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color:
+                                          LightColors.mainBlue.withOpacity(1),
+                                    )),
+                                    label: Text(
+                                      "Assign To",
+                                    ),
+                                    // hintText: "Assign To",
+                                    // hint: Text(),
+                                  ),
+                                  items: data.map((item) {
+                                    return new DropdownMenuItem(
+                                      child: new Text(item['name']),
+                                      // value: "${item['id']}" "${item['registration']}",
+                                      value: item["id"].toString() +
+                                          " " +
+                                          item["registration"].toString(),
+                                      // value: item['registration'].toString(),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newVal) {
+                                    log(newVal);
+                                    // log(newVal.split(" ")[0]);
+                                    // log(newVal.split(" ")[1]);
+                                    setState(() {
+                                      _mySelection = newVal;
+                                      // _mySelection = newVal.split(" ")[0];
+                                      // regis = newVal.split(" ")[1];
+                                    });
+                                  },
+                                  value: _mySelection,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: TextFormField(
+                                  minLines: 1,
+                                  maxLines: 3,
+
+                                  // decoration:
+                                  //     InputDecoration(label: Text("Title"), ),
+                                  decoration: InputDecoration(
+                                    // border: OutlineInputBorder(
+                                    //     borderSide: BorderSide(
+                                    //         color: LightColors.lightBlack
+                                    //             .withOpacity(0.5))),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color:
+                                          LightColors.mainBlue.withOpacity(1),
+                                    )),
+                                    // disabledBorder: UnderlineInputBorder(
+                                    //     borderSide: BorderSide(width: 0.3)),
+                                    label: Text("Task Title"),
+                                    // hintText: "Assign To",
+                                    // hint: Text(),
+                                  ),
+                                  enabled:
+                                      (_mySelection == null) ? false : true,
+                                  // (_mySelection)
+                                  // enabled: ,
+
+                                  controller: title,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter the title';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: TextFormField(
+                                  minLines: 1,
+                                  maxLines: 3,
+                                  decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color:
+                                            LightColors.mainBlue.withOpacity(1),
+                                      )),
+                                      label: Text("Description")),
+                                  enabled:
+                                      (_mySelection == null) ? false : true,
+                                  controller: desc,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter the description.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 50, 0, 8),
+                                child: ButtonTheme(
+                                  minWidth: width,
+                                  height: 50.0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40)),
+                                  child: RaisedButton(
+                                    color: LightColors.oldBlue,
+                                    child: Text(
+                                      "Send Task",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        log(formatted);
+                                        GetHelper().postSchedule(
+                                            _mySelection.split(" ")[0].trim(),
+                                            title.text,
+                                            desc.text,
+                                            formatted);
+                                        GetHelper().notif(
+                                            _mySelection.split(" ")[1].trim(),
+                                            title.text,
+                                            desc.text);
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  AdminMenuBottomBarPage()),
+                                          ModalRoute.withName('/home'),
+                                        );
+                                        // title.clear();
+                                        // desc.clear();
+                                        // Navigator.pop(context);
+                                        // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false)
+                                        // _formKey.currentState.save();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                        ;
+                      }),
+                    ),
+                  );
+                });
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Row(
@@ -156,59 +396,408 @@ class _AdminMainPageState extends State<AdminMainPage> {
               child: Stack(
                 children: [
                   SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(35.0),
-                      child: Column(children: [
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
                         Container(
-                          height: height / 2,
+                          height: height / 3.1,
                         ),
-                        TextFormField(
-                          controller: title,
+                        FutureBuilder(
+                          future: listTask,
+                          builder: (
+                            BuildContext context,
+                            AsyncSnapshot snapshot,
+                          ) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return AlertDialog(
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100)),
+                                insetPadding: EdgeInsets.symmetric(
+                                    horizontal: 140, vertical: 200),
+                                content: Center(
+                                  child: SpinKitWave(
+                                    color:
+                                        LightColors.mainBlue.withOpacity(0.5),
+                                    size: 25.0,
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return const Text('Error');
+                              } else if (snapshot.hasData) {
+                                return snapshot.data.isEmpty
+                                    ? Container(
+                                        height: height / 1.8,
+                                        child: Column(
+                                          // crossAxisAlignment:
+                                          //     CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/no_task2.png",
+                                              width: 100,
+                                              height: 100,
+                                              opacity:
+                                                  AlwaysStoppedAnimation(0.3),
+                                            ),
+
+                                            // Container(
+                                            //   height: 100,
+                                            //   width: 100,
+                                            //   decoration: BoxDecoration(
+                                            //       image: DecorationImage(
+                                            //           image: AssetImage(
+                                            //               "assets/images/no_task.png"),
+                                            //           opacity: 0.3,
+                                            //           colorFilter: ColorFilter.mode(
+                                            //               Colors.grey,
+                                            //               BlendMode.color))),
+                                            // ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Text('Add New Task Press  " + "',
+                                                style: TextStyle(
+                                                    fontFamily: "Lato",
+                                                    fontWeight: FontWeight.w400,
+                                                    color: LightColors
+                                                        .lightBlack
+                                                        .withOpacity(0.5),
+                                                    fontSize: 11)),
+                                          ],
+                                        ),
+                                      )
+                                    : Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 0, top: 30),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  height: 40,
+                                                  width: 50,
+                                                  // child: Container(
+                                                  //   width: 1,
+                                                  //   height: 1,
+                                                  //   decoration: BoxDecoration(
+                                                  //       color: Colors.white,
+                                                  //       borderRadius:
+                                                  //           BorderRadius
+                                                  //               .circular(50)),
+                                                  // ),
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: 10),
+                                                    width: 15,
+                                                    height: 15,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20)),
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          LightColors.mainBlue,
+                                                      borderRadius: BorderRadius
+                                                          .horizontal(
+                                                              right: Radius
+                                                                  .circular(
+                                                                      50))),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "All Task",
+                                                  style: TextStyle(
+                                                      fontFamily: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color:
+                                                          LightColors.oldBlue,
+                                                      fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          ListView.builder(
+                                            padding: EdgeInsets.only(
+                                              top: 5,
+                                            ),
+                                            shrinkWrap: true,
+                                            primary: false,
+                                            itemCount: snapshot.data == null
+                                                ? 0
+                                                : snapshot.data.length,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return (snapshot
+                                                          .data[index].status ==
+                                                      "On Progress")
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 40),
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 25,
+                                                                    top: 5,
+                                                                    bottom: 5),
+                                                            child:
+                                                                AdminCardExpandActive(
+                                                              id: snapshot
+                                                                  .data[index]
+                                                                  .id,
+                                                              status: snapshot
+                                                                  .data[index]
+                                                                  .status,
+                                                              title: snapshot
+                                                                  .data[index]
+                                                                  .title,
+                                                              description: snapshot
+                                                                  .data[index]
+                                                                  .description,
+                                                              created_at: snapshot
+                                                                  .data[index]
+                                                                  .created_at,
+                                                              updated_at: snapshot
+                                                                  .data[index]
+                                                                  .updated_at,
+                                                              name: snapshot
+                                                                  .data[index]
+                                                                  .user_id,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      height: 0,
+                                                    );
+                                            },
+                                          ),
+                                        ],
+                                      );
+                              } else {
+                                return Text('Empty data');
+                              }
+                            } else {
+                              return Text('State: ${snapshot.connectionState}');
+                            }
+                          },
                         ),
-                        TextFormField(
-                          controller: desc,
+                        FutureBuilder(
+                          future: listTask,
+                          builder: (
+                            BuildContext context,
+                            AsyncSnapshot snapshot,
+                          ) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container();
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return const Text('Error');
+                              } else if (snapshot.hasData) {
+                                return snapshot.data.isEmpty
+                                    ? Center()
+                                    : Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 0,
+                                              top: 20,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  height: 40,
+                                                  width: 50,
+                                                  // child: Container(
+                                                  //   width: 1,
+                                                  //   height: 1,
+                                                  //   decoration: BoxDecoration(
+                                                  //       color: Colors.white,
+                                                  //       borderRadius:
+                                                  //           BorderRadius
+                                                  //               .circular(50)),
+                                                  // ),
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: 10),
+                                                    width: 15,
+                                                    height: 15,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20)),
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          LightColors.mainBlue,
+                                                      borderRadius: BorderRadius
+                                                          .horizontal(
+                                                              right: Radius
+                                                                  .circular(
+                                                                      50))),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "Submitted Task",
+                                                  style: TextStyle(
+                                                      fontFamily: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color:
+                                                          LightColors.oldBlue,
+                                                      fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          ListView.builder(
+                                            padding: EdgeInsets.only(
+                                              top: 5,
+                                            ),
+                                            shrinkWrap: true,
+                                            primary: false,
+                                            itemCount: snapshot.data == null
+                                                ? 0
+                                                : snapshot.data.length,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return (snapshot
+                                                          .data[index].status !=
+                                                      "On Progress")
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 40),
+                                                      child: Column(
+                                                        children: [
+                                                          // SizedBox(
+                                                          //   height: 10,
+                                                          // ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 25,
+                                                                    top: 5,
+                                                                    bottom: 5),
+                                                            child:
+                                                                AdminCardExpandNon(
+                                                              status: snapshot
+                                                                  .data[index]
+                                                                  .status,
+                                                              id: snapshot
+                                                                  .data[index]
+                                                                  .id,
+                                                              title: snapshot
+                                                                  .data[index]
+                                                                  .title,
+                                                              description: snapshot
+                                                                  .data[index]
+                                                                  .description,
+                                                              created_at: snapshot
+                                                                  .data[index]
+                                                                  .created_at,
+                                                              updated_at: snapshot
+                                                                  .data[index]
+                                                                  .updated_at,
+                                                              image: snapshot
+                                                                  .data[index]
+                                                                  .image,
+                                                              name: snapshot
+                                                                  .data[index]
+                                                                  .user_id,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      height: 0,
+                                                    );
+                                            },
+                                          ),
+                                        ],
+                                      );
+                              } else {
+                                return Container(
+                                  height: height / 2,
+                                  child: Column(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/no_task2.png",
+                                        width: 100,
+                                        height: 100,
+                                        opacity: AlwaysStoppedAnimation(0.3),
+                                      ),
+
+                                      // Container(
+                                      //   height: 100,
+                                      //   width: 100,
+                                      //   decoration: BoxDecoration(
+                                      //       image: DecorationImage(
+                                      //           image: AssetImage(
+                                      //               "assets/images/no_task.png"),
+                                      //           opacity: 0.3,
+                                      //           colorFilter: ColorFilter.mode(
+                                      //               Colors.grey,
+                                      //               BlendMode.color))),
+                                      // ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("No Task Available",
+                                          style: TextStyle(
+                                              fontFamily: "Lato",
+                                              fontWeight: FontWeight.w400,
+                                              color: LightColors.lightBlack
+                                                  .withOpacity(0.5),
+                                              fontSize: 11)),
+                                    ],
+                                  ),
+                                );
+                              }
+                            } else {
+                              return Text('State: ${snapshot.connectionState}');
+                            }
+                          },
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              GetHelper().postSchedule(
-                                  "3", title.text, desc.text, "2022-05-23");
-                              GetHelper().notif(
-                                  "eM4amWXEQuiZDdZXESPu98:APA91bFhep19JnjDn4FnL_OOx9JgH_h4VeOgw1oC6bm0qqW8sOM7fPh5bD_n0twO5b0ikiP7nAZJ9GwhcKS_3oZNZ-TMzi2PVl4OQmPG2t3jXmzTTNCWd-R_LI3TUyQQRfpxVESkPeNL",
-                                  title.text,
-                                  desc.text);
-                              title.clear();
-                              desc.clear();
-                            },
-                            child: Text('send')),
-                      ]),
+                      ],
                     ),
                   ),
                   Container(
                     height: height / 2.9,
                     child: Stack(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                        //   child: Container(
-                        //     height: height / 3.51,
-                        //     decoration: BoxDecoration(
-                        //       color: Color(0xFFD9F2F9),
-                        //       borderRadius: BorderRadius.only(
-                        //           bottomLeft: Radius.circular(50)),
-                        //     ),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        //   child: Container(
-                        //     height: height / 3.61,
-                        //     decoration: BoxDecoration(
-                        //       color: Color(0xFFAEE5F4),
-                        //       borderRadius: BorderRadius.only(
-                        //           bottomLeft: Radius.circular(50)),
-                        //     ),
-                        //   ),
-                        // ),
                         Align(
                           alignment: Alignment.topCenter,
                           child: Container(
@@ -232,12 +821,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                 color: LightColors.mainBlue,
                                 image: DecorationImage(
                                     opacity: 0.8,
-                                    image:
-                                        AssetImage('assets/images/header.png'),
+                                    image: AssetImage(
+                                        'assets/images/header_admin.png'),
                                     fit: BoxFit.fitWidth)),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -248,7 +837,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                     child: CircleAvatar(
                                         foregroundImage: (parentAvatar == null
                                             ? new AssetImage(
-                                                "assets/images/user.png")
+                                                "assets/images/admin.png")
                                             : new NetworkImage(LINKAPI +
                                                 "storage/pp/" +
                                                 parentAvatar))
