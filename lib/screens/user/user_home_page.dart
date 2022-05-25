@@ -248,7 +248,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100)),
                                 insetPadding: EdgeInsets.symmetric(
-                                    horizontal: 140, vertical: 200),
+                                    horizontal: 140, vertical: width / 2),
                                 content: Center(
                                   child: SpinKitWave(
                                     color:

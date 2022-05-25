@@ -201,7 +201,7 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
             children: [
               Text(
                 // widget.name,
-                capitalize(widget.name),
+                capitalize(widget.name),  
                 style: TextStyle(
                     fontFamily: "Lato",
                     // fontWeight: FontWeight.bold,

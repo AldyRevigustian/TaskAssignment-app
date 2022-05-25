@@ -144,9 +144,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // print(dateTime);
-    // log(parentName);
-    // log(parentId);
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -416,7 +413,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100)),
                                 insetPadding: EdgeInsets.symmetric(
-                                    horizontal: 140, vertical: 200),
+                                    horizontal: 140, vertical: width / 2),
                                 content: Center(
                                   child: SpinKitWave(
                                     color:

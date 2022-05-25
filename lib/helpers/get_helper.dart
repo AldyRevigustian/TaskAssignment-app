@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_task_planner_app/model/taskModel.dart';
+import 'package:flutter_task_planner_app/screens/admin/history_schedule.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:http/http.dart' as http;
 
@@ -176,6 +177,21 @@ class GetHelper {
     } else {
       // print(response.reasonPhrase);
       return false;
+    }
+  }
+
+  Future<List<Task>> history(String date) async {
+    final response = await http.post(Uri.parse(LINKAPI + "api/history"),
+        body: {'tanggal': date.toString()});
+    // body: {'tanggal': '2022-05-25'});
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      log("Masok");
+      return jsonResponse.map((job) => new Task.fromJson(job)).toList();
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      // throw Exception('Failed to load Task');
     }
   }
 }
