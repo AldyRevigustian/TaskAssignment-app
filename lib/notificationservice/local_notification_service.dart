@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
+import 'package:path/path.dart';
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static void initialize(context) {
+  static void initialize() {
+    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
     // initializationSettings  for Android
     const InitializationSettings initializationSettings =
         InitializationSettings(
@@ -20,7 +23,7 @@ class LocalNotificationService {
     _notificationsPlugin.initialize(
       initializationSettings,
       // onSelectNotification: (String id) async {
-      //   print("onSelectNotification");
+      //   log("onSelectNotification");
 
       //   // Navigator.of(context).push(
       //   //   MaterialPageRoute(
@@ -53,11 +56,26 @@ class LocalNotificationService {
       // },
       onSelectNotification: (String payload) async {
         log("pencet");
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => UserMenuBottomBarPage(),
-          ),
-        );
+        // Get.to(UserMenuBottomBarPage());
+
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => UserMenuBottomBarPage(),
+        //   ),
+        // );
+        // showDialog(
+        //     context: context,
+        //     builder: (_) {
+        //       return new AlertDialog(
+        //         title: Text("Your Notification Detail"),
+        //         // content: Text("Payload : $payload"),
+        //       );
+        //     });
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => UserMenuBottomBarPage(),
+        //   ),
+        // );
       },
     );
   }

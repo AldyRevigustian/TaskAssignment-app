@@ -99,9 +99,11 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
   }
 
   DateFormat formatTanggal;
+  DateFormat formatJam;
 
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
+    formatJam = DateFormat.jm('id');
     super.initState();
   }
 
@@ -205,7 +207,7 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
                       ),
                       Text(
                         DateFormat('  ●  kk : mm')
-                            .format(DateTime.parse(widget.created_at)),
+                            .format(DateTime.parse(widget.updated_at)),
                         style: TextStyle(
                             fontFamily: "Lato",
                             // fontWeight: FontWeight.bold,

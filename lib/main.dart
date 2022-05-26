@@ -25,11 +25,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  LocalNotificationService.initialize(context);
+  LocalNotificationService.initialize();
   return runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -45,6 +52,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Task Assignment',
+        // onGenerateRoute: generateRoute,
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           primarySwatch: colorCustom,
           textTheme:

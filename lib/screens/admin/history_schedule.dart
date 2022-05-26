@@ -176,7 +176,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                               } else if (snapshot.hasData) {
                                 return snapshot.data.isEmpty
                                     ? Container(
-                                        height: height / 1.8,
+                                        height: height / 1.5,
                                         child: Column(
                                           // crossAxisAlignment:
                                           //     CrossAxisAlignment.center,
@@ -193,7 +193,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                             SizedBox(
                                               height: 15,
                                             ),
-                                            Text("No Task Available",
+                                            Text("No History Available",
                                                 style: TextStyle(
                                                     fontFamily: "Lato",
                                                     fontWeight: FontWeight.w400,
@@ -449,7 +449,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                   borderRadius: BorderRadius.circular(100)),
                               child: Center(
                                   child: Text(
-                                "Pick Date",
+                                "History Picker",
                                 style: TextStyle(
                                     color: LightColors.mainBlue,
                                     fontWeight: FontWeight.bold,

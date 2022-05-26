@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
@@ -7,10 +8,14 @@ import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/bottom_nav.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+import '../../helpers/get_helper.dart';
+import '../../notificationservice/local_notification_service.dart';
 
 class UserMenuBottomBarPage extends StatefulWidget {
   static const routeName = '/home';
@@ -23,10 +28,81 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
   String currentPage = 'main';
   String parentId;
   ParentInf getParentInfo;
+  String tokens = "";
+  String deviceTokenToSendPushNotification = "";
 
   @override
   void initState() {
+    getDeviceTokenToSendNotification();
+
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        log("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          log("New OII");
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserMenuBottomBarPage(),
+            ),
+          );
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        log("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          log(message.notification.title);
+          log(message.notification.body);
+          log("message.data11 ${message.data}");
+          log("hoho");
+          LocalNotificationService.createanddisplaynotification(message);
+          // setState(() {});
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return UserMenuBottomBarPage();
+              },
+            ),
+          );
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        log("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          log(message.notification.title);
+          log(message.notification.body);
+          log("message.data22 ${message.data['_id']}");
+        }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return UserMenuBottomBarPage();
+            },
+          ),
+        );
+      },
+    );
+
     super.initState();
+  }
+
+  Future getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+    setState(() {
+      tokens = deviceTokenToSendPushNotification;
+    });
+    log("Token Value $deviceTokenToSendPushNotification");
+    await GetHelper().registid(parentId, deviceTokenToSendPushNotification);
+    return deviceTokenToSendPushNotification;
   }
 
   changePage(String pageName) {
@@ -77,10 +153,63 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
             activeIcon: FluentIcons.sign_out_24_filled,
             icon: FluentIcons.sign_out_24_regular,
             onTap: () {
-              removeValuesSharedpref();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                  (Route<dynamic> route) => false);
+              return showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    // <-- SEE HERE
+                    title: const Text(
+                      'Log Out',
+                      style: TextStyle(fontFamily: "Lato"),
+                    ),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text(
+                            "Are you sure you want to log out ?",
+                            style: TextStyle(
+                                fontFamily: "Lato",
+                                color: LightColors.lightBlack),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('No'),
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      UserMenuBottomBarPage()),
+                              (Route<dynamic> route) => false);
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Yes'),
+                        onPressed: () async {
+                          removeValuesSharedpref();
+                          GetHelper().registid(parentId, "logout");
+
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (Route<dynamic> route) => false);
+                          Fluttertoast.showToast(
+                              msg: "Successfully log out ",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: 12.0);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],

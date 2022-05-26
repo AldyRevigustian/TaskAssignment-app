@@ -15,6 +15,7 @@ import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dar
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +71,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
   String deviceTokenToSendPushNotification = "";
   void initState() {
+    getSWData();
     initializeDateFormatting();
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
@@ -79,7 +81,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
     // listTask = GetHelper().fetchTask
     // _refreshProducts(context);
     super.initState();
-    this.getSWData();
   }
 
   showLoadingProgress(BuildContext context) {
@@ -153,6 +154,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
           backgroundColor: LightColors.oldBlue,
           child: Icon(FluentIcons.add_20_filled),
           onPressed: () {
+            getSWData();
             showDialog(
                 barrierDismissible: true,
                 context: context,
@@ -318,25 +320,49 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                       "Send Task",
                                       style: TextStyle(color: Colors.white),
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_formKey.currentState.validate()) {
                                         log(formatted);
-                                        GetHelper().postSchedule(
-                                            _mySelection.split(" ")[0].trim(),
-                                            title.text,
-                                            desc.text,
-                                            formatted);
-                                        GetHelper().notif(
-                                            _mySelection.split(" ")[1].trim(),
-                                            title.text,
-                                            desc.text);
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  AdminMenuBottomBarPage()),
-                                          ModalRoute.withName('/home'),
-                                        );
+                                        bool res = await GetHelper()
+                                            .postSchedule(
+                                                _mySelection
+                                                    .split(" ")[0]
+                                                    .trim(),
+                                                title.text,
+                                                desc.text,
+                                                formatted);
+                                        if (res) {
+                                          GetHelper().notif(
+                                              _mySelection.split(" ")[1].trim(),
+                                              "New Task  📝",
+                                              title.text);
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    AdminMenuBottomBarPage()),
+                                            ModalRoute.withName('/home'),
+                                          );
+                                          Fluttertoast.showToast(
+                                              msg: "Successfully add task ",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.black54,
+                                              textColor: Colors.white,
+                                              fontSize: 12.0);
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg: "Failed to add task ",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.black54,
+                                              textColor: Colors.white,
+                                              fontSize: 12.0);
+                                        }
+
                                         // title.clear();
                                         // desc.clear();
                                         // Navigator.pop(context);

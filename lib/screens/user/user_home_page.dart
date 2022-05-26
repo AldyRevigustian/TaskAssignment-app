@@ -45,7 +45,6 @@ class _UserMainPageState extends State<UserMainPage> {
   String parentAvatar;
   String parentId;
   String usrId;
-  String tokens = "";
   ParentInf getParentInfo;
 
   DateFormat formatHari;
@@ -59,71 +58,14 @@ class _UserMainPageState extends State<UserMainPage> {
   var dateTime = new DateTime.now();
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-  String deviceTokenToSendPushNotification = "";
   void initState() {
-    getDeviceTokenToSendNotification();
-
-    // GetHelper().registid("4", "deoepp");
-
-    // getId();
     initializeDateFormatting();
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
-    // listTask = GetHelper().fetchTask(widget.id);
     fetchandrefresh();
-    // listTask = GetHelper().fetchTask
-    // _refreshProducts(context);
 
-    FirebaseMessaging.instance.getInitialMessage().then(
-      (message) {
-        log("FirebaseMessaging.instance.getInitialMessage");
-        if (message != null) {
-          log("New OII");
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserMenuBottomBarPage(),
-            ),
-          );
-        }
-      },
-    );
-
-    FirebaseMessaging.onMessage.listen(
-      (message) {
-        log("FirebaseMessaging.onMessage.listen");
-        if (message.notification != null) {
-          log(message.notification.title);
-          log(message.notification.body);
-          log("message.data11 ${message.data}");
-          LocalNotificationService.createanddisplaynotification(message);
-        }
-      },
-    );
-
-    FirebaseMessaging.onMessageOpenedApp.listen(
-      (message) {
-        log("FirebaseMessaging.onMessageOpenedApp.listen");
-        if (message.notification != null) {
-          log(message.notification.title);
-          log(message.notification.body);
-          log("message.data22 ${message.data['_id']}");
-        }
-      },
-    );
     super.initState();
-  }
-
-  Future getDeviceTokenToSendNotification() async {
-    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-    final token = await _fcm.getToken();
-    deviceTokenToSendPushNotification = token.toString();
-    setState(() {
-      tokens = deviceTokenToSendPushNotification;
-    });
-    log("Token Value $deviceTokenToSendPushNotification");
-    await GetHelper().registid(parentId, deviceTokenToSendPushNotification);
-    return deviceTokenToSendPushNotification;
   }
 
   showLoadingProgress(BuildContext context) {

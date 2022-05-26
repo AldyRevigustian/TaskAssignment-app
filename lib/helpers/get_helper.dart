@@ -158,9 +158,11 @@ class GetHelper {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
+      return true;
     } else {
-      print(response.reasonPhrase);
+      // print(response.reasonPhrase);
+      return false;
     }
   }
 

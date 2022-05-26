@@ -42,6 +42,27 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    precacheImage(
+        AssetImage(
+          "assets/images/background.png",
+        ),
+        context);
+    precacheImage(
+        AssetImage(
+          "assets/images/admin.png",
+        ),
+        context);
+    precacheImage(
+        AssetImage(
+          "assets/images/user.png",
+        ),
+        context);
+    // precacheImage(image2.image, context);
+    super.didChangeDependencies();
+  }
+
   // login function
   saveSFstring(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
