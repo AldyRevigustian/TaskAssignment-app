@@ -59,6 +59,16 @@ class _LoginPageState extends State<LoginPage> {
           "assets/images/user.png",
         ),
         context);
+    precacheImage(
+        AssetImage(
+          "assets/images/header.png",
+        ),
+        context);
+    precacheImage(
+        AssetImage(
+          "assets/images/header_admin.png",
+        ),
+        context);
     // precacheImage(image2.image, context);
     super.didChangeDependencies();
   }

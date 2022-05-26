@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
+import 'package:flutter_task_planner_app/screens/user/userDetailScreen.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -118,11 +121,23 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
     //   height: 100,
     //   fit: BoxFit.cover,
     // );
-    return Image.file(
-      image,
-      width: 100,
-      height: 100,
-      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserDetailScreen(
+            pathImage: image,
+          );
+        }));
+      },
+      child: Hero(
+        tag: image.toString() + Random().toString(),
+        child: Image.file(
+          image,
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -303,13 +318,13 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                       //   height: 100,
                       //   fit: BoxFit.cover,
                       // ),
-                      // child: showImage(imageFile),
-                      child: Image.file(
-                        imageFile,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
+                      child: showImage(imageFile),
+                      // child: Image.file(
+                      //   imageFile,
+                      //   width: 100,
+                      //   height: 100,
+                      //   fit: BoxFit.cover,
+                      // ),
                     ),
                   ),
                 )
@@ -374,7 +389,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () async {
-                  // print(imageData);
                   if (imagePath == null) {
                     Fluttertoast.showToast(
                         msg: "Please add Image",
@@ -385,43 +399,9 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                         textColor: Colors.white,
                         fontSize: 12.0);
                   } else {
-                    bool res = await GetHelper().putTaskFinale(
-                        widget.id,
-                        "Completed",
-                        imagePath.toString(),
-                        _descController.text == ""
-                            ? widget.description
-                            : _descController.text);
-
-                    if (res == true) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return UserMenuBottomBarPage();
-                          },
-                        ),
-                      );
-                      Fluttertoast.showToast(
-                          msg: "Success set task as completed",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.black54,
-                          textColor: Colors.white,
-                          fontSize: 12.0);
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Failed set task as completed",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.black54,
-                          textColor: Colors.white,
-                          fontSize: 12.0);
-                      print("gagal");
-                    }
+                    _showAlertCompleteDialog();
                   }
+                  // print(imageData);
                   // print(imagePath);
                   // bool res = await GetHelper().putDio(
                   //   widget.id,
@@ -571,6 +551,93 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                   } else {
                     Fluttertoast.showToast(
                         msg: "Failed set task as incompleted",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 12.0);
+                    print("gagal");
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showAlertCompleteDialog() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: const Text(
+            'Complete Task',
+            style: TextStyle(fontFamily: "Lato"),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                  "Are you sure you will report this task as Completed?",
+                  style: TextStyle(
+                      fontFamily: "Lato", color: LightColors.lightBlack),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () async {
+                if (imagePath == null) {
+                  Fluttertoast.showToast(
+                      msg: "Please add Image",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 12.0);
+                } else {
+                  bool res = await GetHelper().putTaskFinale(
+                      widget.id,
+                      "Completed",
+                      imagePath.toString(),
+                      _descController.text == ""
+                          ? widget.description
+                          : _descController.text);
+
+                  if (res == true) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return UserMenuBottomBarPage();
+                        },
+                      ),
+                    );
+                    Fluttertoast.showToast(
+                        msg: "Success set task as completed",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 12.0);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "Failed set task as completed",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,
