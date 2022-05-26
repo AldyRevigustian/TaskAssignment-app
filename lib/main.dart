@@ -6,6 +6,7 @@ import 'package:flutter_task_planner_app/notificationservice/local_notification_
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
@@ -24,7 +25,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  LocalNotificationService.initialize();
+  LocalNotificationService.initialize(context);
   return runApp(MyApp());
 }
 

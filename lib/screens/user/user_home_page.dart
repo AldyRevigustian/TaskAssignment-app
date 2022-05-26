@@ -8,6 +8,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/screens/login_page.dart';
+import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
@@ -56,11 +58,6 @@ class _UserMainPageState extends State<UserMainPage> {
 
   var dateTime = new DateTime.now();
 
-  // void getId() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   usrId = prefs.getString('id');
-  // }
-
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
   String deviceTokenToSendPushNotification = "";
   void initState() {
@@ -80,29 +77,25 @@ class _UserMainPageState extends State<UserMainPage> {
 
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
-        print("FirebaseMessaging.instance.getInitialMessage");
+        log("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
-          print("New Notification");
-          // if (message.data['_id'] != null) {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => DemoScreen(
-          //         id: message.data['_id'],
-          //       ),
-          //     ),
-          //   );
-          // }
+          log("New OII");
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserMenuBottomBarPage(),
+            ),
+          );
         }
       },
     );
 
     FirebaseMessaging.onMessage.listen(
       (message) {
-        print("FirebaseMessaging.onMessage.listen");
+        log("FirebaseMessaging.onMessage.listen");
         if (message.notification != null) {
-          print(message.notification.title);
-          print(message.notification.body);
-          print("message.data11 ${message.data}");
+          log(message.notification.title);
+          log(message.notification.body);
+          log("message.data11 ${message.data}");
           LocalNotificationService.createanddisplaynotification(message);
         }
       },
@@ -110,11 +103,11 @@ class _UserMainPageState extends State<UserMainPage> {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (message) {
-        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        log("FirebaseMessaging.onMessageOpenedApp.listen");
         if (message.notification != null) {
-          print(message.notification.title);
-          print(message.notification.body);
-          print("message.data22 ${message.data['_id']}");
+          log(message.notification.title);
+          log(message.notification.body);
+          log("message.data22 ${message.data['_id']}");
         }
       },
     );
@@ -172,7 +165,7 @@ class _UserMainPageState extends State<UserMainPage> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print(dateTime);
+    // log(dateTime);
     log(parentName);
     log(parentId);
 
