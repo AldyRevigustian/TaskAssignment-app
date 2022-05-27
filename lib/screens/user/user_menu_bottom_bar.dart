@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
@@ -16,6 +17,7 @@ import 'dart:convert';
 
 import '../../helpers/get_helper.dart';
 import '../../notificationservice/local_notification_service.dart';
+import '../../widget/custAlert.dart';
 
 class UserMenuBottomBarPage extends StatefulWidget {
   static const routeName = '/home';
@@ -59,13 +61,19 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
           log("hoho");
           LocalNotificationService.createanddisplaynotification(message);
           // setState(() {});
-          Navigator.pushReplacement(
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (BuildContext context) {
+          //       return UserMenuBottomBarPage();
+          //     },
+          //   ),
+          // );
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) {
-                return UserMenuBottomBarPage();
-              },
-            ),
+                builder: (BuildContext context) => UserMenuBottomBarPage()),
+            ModalRoute.withName('/home'),
           );
         }
       },
@@ -79,13 +87,19 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
           log(message.notification.body);
           log("message.data22 ${message.data['_id']}");
         }
-        Navigator.pushReplacement(
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (BuildContext context) {
+        //       return UserMenuBottomBarPage();
+        //     },
+        //   ),
+        // );
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) {
-              return UserMenuBottomBarPage();
-            },
-          ),
+              builder: (BuildContext context) => UserMenuBottomBarPage()),
+          ModalRoute.withName('/home'),
         );
       },
     );
@@ -153,68 +167,59 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
             activeIcon: FluentIcons.sign_out_24_filled,
             icon: FluentIcons.sign_out_24_regular,
             onTap: () {
-              return showDialog<void>(
-                context: context,
-                barrierDismissible: false, // user must tap button!
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    // <-- SEE HERE
-                    title: const Text(
-                      'Log Out',
-                      style: TextStyle(fontFamily: "Lato"),
-                    ),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: const <Widget>[
-                          Text(
-                            "Are you sure you want to log out ?",
-                            style: TextStyle(
-                                fontFamily: "Lato",
-                                color: LightColors.lightBlack),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('No'),
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      UserMenuBottomBarPage()),
-                              (Route<dynamic> route) => false);
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Yes'),
-                        onPressed: () async {
-                          removeValuesSharedpref();
-                          GetHelper().registid(parentId, "logout");
+              return showCustAlertDouble(
+                  height: 280,
+                  context: context,
+                  title: "Log Out",
+                  // buttonString: "OK",
+                  onSubmitOk: () async {
+                    removeValuesSharedpref();
+                    GetHelper().registid(parentId, "logout");
 
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (Route<dynamic> route) => false);
-                          Fluttertoast.showToast(
-                              msg: "Successfully log out ",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black54,
-                              textColor: Colors.white,
-                              fontSize: 12.0);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (Route<dynamic> route) => false);
+                    Fluttertoast.showToast(
+                        msg: "Successfully log out ",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 12.0);
+                  },
+                  onSubmitCancel: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => UserMenuBottomBarPage()),
+                        (Route<dynamic> route) => false);
+                  },
+                  detailContent: "Are you sure you want to log out ?",
+                  pathLottie: "warning");
             },
-          ),
+          )
         ],
         milliseconds: 200,
       ),
     );
   }
+}
+
+showLoadingProgress(BuildContext context) {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => Center(
+              // Aligns the container to center
+              child: Container(
+            // A simplified version of dialog.
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8)),
+            width: 100.0,
+            height: 70.0,
+            child: SpinKitWave(
+              color: LightColors.mainBlue.withOpacity(0.5),
+              size: 25.0,
+            ),
+          )));
 }

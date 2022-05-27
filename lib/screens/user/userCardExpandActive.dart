@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:async';
 import 'dart:math';
@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/screens/user/userDetailScreen.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
@@ -21,6 +22,8 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../../widget/custAlert.dart';
 
 class UserCardExpandActive extends StatefulWidget {
   final String id;
@@ -114,13 +117,48 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
   //     fit: BoxFit.cover,
   //   );
   // }
+  // showImage(File image) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(context, MaterialPageRoute(builder: (context) {
+  //         return UserDetailScreen(
+  //           pathImage: image,
+  //         );
+  //       }));
+  //     },
+  //     child: Hero(
+  //       tag: image.toString() + Random().toString(),
+  //       // child: Image.file(
+  //       //   image,
+  //       //   width: 100,
+  //       //   height: 100,
+  //       //   fit: BoxFit.cover,
+  //       // ),
+  //       child: Image(
+  //         image: Image.file(image),
+  //         width: 100,
+  //         height: 100,
+  //         loadingBuilder: (BuildContext context, Widget child,
+  //             ImageChunkEvent loadingProgress) {
+  //           if (loadingProgress == null) return child;
+  //           return Container(
+  //             width: 100,
+  //             height: 100,
+  //             child: Center(
+  //               child: CircularProgressIndicator(
+  //                 value: loadingProgress.expectedTotalBytes != null
+  //                     ? loadingProgress.cumulativeBytesLoaded /
+  //                         loadingProgress.expectedTotalBytes
+  //                     : null,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
   showImage(File image) {
-    // return Image.memory(
-    //   base64Decode(image),
-    //   width: 100,
-    //   height: 100,
-    //   fit: BoxFit.cover,
-    // );
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -457,201 +495,274 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
   }
 
   Future<void> _showAlertDialog() {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // <-- SEE HERE
-          title: const Text(
-            'Incomplete Task',
-            style: TextStyle(fontFamily: "Lato"),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text(
-                  "Are you sure you will report this task as incompleted?",
-                  style: TextStyle(
-                      fontFamily: "Lato", color: LightColors.lightBlack),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () async {
-                if (imagePath == null) {
-                  bool res = await GetHelper().putTaskCancel(
-                      widget.id,
-                      "Incompleted",
-                      _descController.text == ""
-                          ? widget.description
-                          : _descController.text);
-                  if (res) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return UserMenuBottomBarPage();
-                        },
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                        msg: "Successfully set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Failed set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                    print("gagal");
-                  }
-                } else {
-                  bool res = await GetHelper().putTaskFinale(
-                      widget.id,
-                      "Incompleted",
-                      imagePath.toString(),
-                      _descController.text == ""
-                          ? widget.description
-                          : _descController.text);
-                  if (res) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return UserMenuBottomBarPage();
-                        },
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                        msg: "Successfully set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Failed set task as incompleted",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                    print("gagal");
-                  }
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+    return showCustAlertDouble(
+        height: 290,
+        context: context,
+        title: "Incomplete Task",
+        // buttonString: "OK",
+        onSubmitOk: () async {
+          showLoadingProgress(context);
+          if (imagePath == null) {
+            bool res = await GetHelper().putTaskCancel(
+                widget.id,
+                "Incompleted",
+                _descController.text == ""
+                    ? widget.description
+                    : _descController.text);
+            if (res) {
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (BuildContext context) {
+              //       return UserMenuBottomBarPage();
+              //     },
+              //   ),
+              // );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => UserMenuBottomBarPage()),
+                ModalRoute.withName('/home'),
+              );
+              Fluttertoast.showToast(
+                  msg: "Successfully set task as incompleted",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Failed set task as incompleted",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+              print("gagal");
+            }
+          } else {
+            bool res = await GetHelper().putTaskFinale(
+                widget.id,
+                "Incompleted",
+                imagePath.toString(),
+                _descController.text == ""
+                    ? widget.description
+                    : _descController.text);
+            if (res) {
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (BuildContext context) {
+              //       return UserMenuBottomBarPage();
+              //     },
+              //   ),
+              // );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => UserMenuBottomBarPage()),
+                ModalRoute.withName('/home'),
+              );
+              Fluttertoast.showToast(
+                  msg: "Successfully set task as incompleted",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Failed set task as incompleted",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+              print("gagal");
+            }
+          }
+        },
+        onSubmitCancel: () {
+          Navigator.of(context).pop();
+        },
+        detailContent: "Are you sure you will report this task as incompleted?",
+        pathLottie: "warning");
   }
 
   Future<void> _showAlertCompleteDialog() {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // <-- SEE HERE
-          title: const Text(
-            'Complete Task',
-            style: TextStyle(fontFamily: "Lato"),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text(
-                  "Are you sure you will report this task as Completed?",
-                  style: TextStyle(
-                      fontFamily: "Lato", color: LightColors.lightBlack),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () async {
-                if (imagePath == null) {
-                  Fluttertoast.showToast(
-                      msg: "Please add Image",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 12.0);
-                } else {
-                  bool res = await GetHelper().putTaskFinale(
-                      widget.id,
-                      "Completed",
-                      imagePath.toString(),
-                      _descController.text == ""
-                          ? widget.description
-                          : _descController.text);
+    // return showDialog<void>(
+    //   context: context,
+    //   barrierDismissible: false, // user must tap button!
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       // <-- SEE HERE
+    //       title: const Text(
+    //         'Complete Task',
+    //         style: TextStyle(fontFamily: "Lato"),
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: ListBody(
+    //           children: const <Widget>[
+    //             Text(
+    //               "Are you sure you will report this task as Completed?",
+    //               style: TextStyle(
+    //                   fontFamily: "Lato", color: LightColors.lightBlack),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: const Text('No'),
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //         ),
+    //         TextButton(
+    //           child: const Text('Yes'),
+    //           onPressed: () async {
+    //             if (imagePath == null) {
+    //               Fluttertoast.showToast(
+    //                   msg: "Please add Image",
+    //                   toastLength: Toast.LENGTH_SHORT,
+    //                   gravity: ToastGravity.BOTTOM,
+    //                   timeInSecForIosWeb: 1,
+    //                   backgroundColor: Colors.black54,
+    //                   textColor: Colors.white,
+    //                   fontSize: 12.0);
+    //             } else {
+    //               bool res = await GetHelper().putTaskFinale(
+    //                   widget.id,
+    //                   "Completed",
+    //                   imagePath.toString(),
+    //                   _descController.text == ""
+    //                       ? widget.description
+    //                       : _descController.text);
 
-                  if (res == true) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return UserMenuBottomBarPage();
-                        },
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                        msg: "Success set task as completed",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Failed set task as completed",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 12.0);
-                    print("gagal");
-                  }
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+    //               if (res == true) {
+    //                 // Navigator.pushReplacement(
+    //                 //   context,
+    //                 //   MaterialPageRoute(
+    //                 //     builder: (BuildContext context) {
+    //                 //       return UserMenuBottomBarPage();
+    //                 //     },
+    //                 //   ),
+    //                 // );
+    //                 Navigator.pushAndRemoveUntil(
+    //                   context,
+    //                   MaterialPageRoute(
+    //                       builder: (BuildContext context) =>
+    //                           UserMenuBottomBarPage()),
+    //                   ModalRoute.withName('/home'),
+    //                 );
+    //                 Fluttertoast.showToast(
+    //                     msg: "Success set task as completed",
+    //                     toastLength: Toast.LENGTH_SHORT,
+    //                     gravity: ToastGravity.BOTTOM,
+    //                     timeInSecForIosWeb: 1,
+    //                     backgroundColor: Colors.black54,
+    //                     textColor: Colors.white,
+    //                     fontSize: 12.0);
+    //               } else {
+    //                 Fluttertoast.showToast(
+    //                     msg: "Failed set task as completed",
+    //                     toastLength: Toast.LENGTH_SHORT,
+    //                     gravity: ToastGravity.BOTTOM,
+    //                     timeInSecForIosWeb: 1,
+    //                     backgroundColor: Colors.black54,
+    //                     textColor: Colors.white,
+    //                     fontSize: 12.0);
+    //                 print("gagal");
+    //               }
+    //             }
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+
+    return showCustAlertDouble(
+        height: 290,
+        context: context,
+        title: "Complete Task",
+        // buttonString: "OK",
+        onSubmitOk: () async {
+          if (imagePath == null) {
+            Fluttertoast.showToast(
+                msg: "Please add Image",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black54,
+                textColor: Colors.white,
+                fontSize: 12.0);
+          } else {
+            showLoadingProgress(context);
+            bool res = await GetHelper().putTaskFinale(
+                widget.id,
+                "Completed",
+                imagePath.toString(),
+                _descController.text == ""
+                    ? widget.description
+                    : _descController.text);
+
+            if (res == true) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => UserMenuBottomBarPage()),
+                ModalRoute.withName('/home'),
+              );
+              Fluttertoast.showToast(
+                  msg: "Success set task as completed",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Failed set task as completed",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black54,
+                  textColor: Colors.white,
+                  fontSize: 12.0);
+              print("gagal");
+            }
+          }
+        },
+        onSubmitCancel: () {
+          Navigator.of(context).pop();
+        },
+        detailContent: "Are you sure you will report this task as Completed?",
+        pathLottie: "warning");
   }
+}
+
+showLoadingProgress(BuildContext context) {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => Center(
+              // Aligns the container to center
+              child: Container(
+            // A simplified version of dialog.
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8)),
+            width: 100.0,
+            height: 70.0,
+            child: SpinKitWave(
+              color: LightColors.mainBlue.withOpacity(0.5),
+              size: 25.0,
+            ),
+          )));
 }

@@ -17,7 +17,7 @@ class LocalNotificationService {
     // initializationSettings  for Android
     const InitializationSettings initializationSettings =
         InitializationSettings(
-      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      android: AndroidInitializationSettings("@drawable/ic_stat_group_68"),
     );
 
     _notificationsPlugin.initialize(
@@ -63,14 +63,7 @@ class LocalNotificationService {
         //     builder: (context) => UserMenuBottomBarPage(),
         //   ),
         // );
-        // showDialog(
-        //     context: context,
-        //     builder: (_) {
-        //       return new AlertDialog(
-        //         title: Text("Your Notification Detail"),
-        //         // content: Text("Payload : $payload"),
-        //       );
-        //     });
+
         // Navigator.of(context).push(
         //   MaterialPageRoute(
         //     builder: (context) => UserMenuBottomBarPage(),
@@ -89,6 +82,8 @@ class LocalNotificationService {
           "pushnotificationappchannel",
           importance: Importance.max,
           priority: Priority.high,
+          // icon: '@mipmap/ic_launcher',
+          largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_trans'),
         ),
       );
 

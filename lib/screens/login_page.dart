@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 
+import '../widget/custAlert.dart';
 import 'admin/admin_menu_bottom_bar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -90,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
     bool password = prefs.containsKey('password');
 
     if (email == true && password == true) {
+      showLoadingProgress(context);
+
       setState(() {
         usern = prefs.getString('email');
         passwd = prefs.getString('password');
@@ -102,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
           .loginParentAndGetInf(usern.toString(), passwd.toString())
           .then((state) {
         // pass username and password that user entered
-
         if (state == "user") {
           // if the function returned true
           Navigator.pushAndRemoveUntil(
@@ -113,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
           );
           //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
         } else if (state == "admin") {
-          // showAlert("kmau", "admint share");
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -121,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
             ModalRoute.withName('/home'),
           );
         } else {
+          Navigator.pop(context);
           setState(() {
             sharedpref = false;
           });
-          // otherwise show an Alert
         }
       });
       print(
@@ -136,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
 
   showLoadingProgress(BuildContext context) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (_) => Center(
                 // Aligns the container to center
@@ -150,30 +152,6 @@ class _LoginPageState extends State<LoginPage> {
                 size: 25.0,
               ),
             )));
-  }
-
-  showAlert(String title, String content) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(content),
-            actions: [
-              FlatButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      new MaterialPageRoute(builder: (context) => LoginPage()));
-                  // Navigator.popUntil(
-                  //   context,
-                  //   ModalRoute.withName('/login'),
-                  // );
-                },
-              )
-            ],
-          );
-        });
   }
 
   _login() async {
@@ -209,7 +187,6 @@ class _LoginPageState extends State<LoginPage> {
             );
             //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
           } else if (state == "admin") {
-            // showAlert("Kamu", "Admin");
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -220,8 +197,22 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               state = false;
             });
-            showAlert('Error',
-                'You Entered Wrong Email or password'); // otherwise show an Alert
+            showCustAlert(
+                height: 290,
+                context: context,
+                title: "Error",
+                buttonString: "OK",
+                onSubmit: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => LoginPage()),
+                    ModalRoute.withName('/login'),
+                  );
+                },
+                detailContent:
+                    "You Entered Wrong Email or password / Phone not connected to Internet",
+                pathLottie: "error");
           }
         });
       }

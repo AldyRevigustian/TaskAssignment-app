@@ -64,28 +64,29 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
       },
       child: Hero(
         tag: path + Random().toString(),
-        child: Image.network(LINKAPI + "storage/bukti/" + path,
-            width: 100,
-            height: 100,
-            alignment: Alignment.center,
-            fit: BoxFit.cover, loadingBuilder: (BuildContext context,
-                Widget child, ImageChunkEvent loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            width: 100,
-            height: 100,
-            child: SpinKitWave(
-              color: LightColors.mainBlue.withOpacity(0.5),
-              size: 25.0,
-            ),
-            // child: CircularProgressIndicator(
-            //   value: loadingProgress.expectedTotalBytes != null
-            //       ? loadingProgress.cumulativeBytesLoaded /
-            //           loadingProgress.expectedTotalBytes
-            //       : null,
-            // ),
-          );
-        }),
+        child: Image.network(
+          LINKAPI + "storage/bukti/" + path,
+          width: 100,
+          height: 100,
+          alignment: Alignment.center,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              width: 100,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes
+                      : null,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

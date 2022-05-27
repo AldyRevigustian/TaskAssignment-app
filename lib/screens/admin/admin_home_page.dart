@@ -171,213 +171,238 @@ class _AdminMainPageState extends State<AdminMainPage> {
                       desc.clear();
                       return;
                     },
-                    child: AlertDialog(
-                      title: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, bottom: 0, top: 10),
-                          child: Text("Add Task"),
-                        ),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
                       ),
-                      insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      content: StatefulBuilder(builder:
-                          (BuildContext context, StateSetter setState) {
-                        return Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.only(left: 8, right: 8),
-                              //   child: Text("Select Employee"),
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10, left: 8, right: 8),
-                                child: DropdownButtonFormField(
-                                  iconEnabledColor:
-                                      LightColors.lightBlack.withOpacity(0.5),
-                                  validator: (value) => value == null
-                                      ? 'Please fill this field'
-                                      : null,
-                                  isExpanded: true,
-                                  // label
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: LightColors.lightBlack
-                                                .withOpacity(0.5))),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color:
-                                          LightColors.mainBlue.withOpacity(1),
-                                    )),
-                                    label: Text(
-                                      "Assign To",
+                      child: AlertDialog(
+                        title: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, bottom: 0, top: 10),
+                            child: Text("Add Task"),
+                          ),
+                        ),
+                        insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        content: StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setState) {
+                          return Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.only(left: 8, right: 8),
+                                //   child: Text("Select Employee"),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, left: 8, right: 8),
+                                  child: DropdownButtonFormField(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
+
+                                    iconEnabledColor:
+                                        LightColors.lightBlack.withOpacity(0.5),
+                                    validator: (value) => value == null
+                                        ? 'Please fill this field'
+                                        : null,
+                                    isExpanded: true,
+                                    // label
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.all(20),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          borderSide: BorderSide(
+                                              color: LightColors.lightBlack
+                                                  .withOpacity(0.5))),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          borderSide: BorderSide(
+                                            color: LightColors.mainBlue
+                                                .withOpacity(1),
+                                          )),
+                                      label: Text(
+                                        "Assign To",
+                                      ),
+                                      // hintText: "Assign To",
+                                      // hint: Text(),
                                     ),
-                                    // hintText: "Assign To",
-                                    // hint: Text(),
+                                    items: data.map((item) {
+                                      return new DropdownMenuItem(
+                                        child: new Text(item['name']),
+                                        // value: "${item['id']}" "${item['registration']}",
+                                        value: item["id"].toString() +
+                                            " " +
+                                            item["registration"].toString() +
+                                            " " +
+                                            item["name"],
+                                        // value: item['registration'].toString(),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newVal) {
+                                      log(newVal);
+                                      // log(newVal.split(" ")[0]);
+                                      // log(newVal.split(" ")[2]);
+                                      setState(() {
+                                        _mySelection = newVal;
+                                        // _mySelection = newVal.split(" ")[0];
+                                        // regis = newVal.split(" ")[1];
+                                      });
+                                    },
+                                    value: _mySelection,
                                   ),
-                                  items: data.map((item) {
-                                    return new DropdownMenuItem(
-                                      child: new Text(item['name']),
-                                      // value: "${item['id']}" "${item['registration']}",
-                                      value: item["id"].toString() +
-                                          " " +
-                                          item["registration"].toString(),
-                                      // value: item['registration'].toString(),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newVal) {
-                                    log(newVal);
-                                    // log(newVal.split(" ")[0]);
-                                    // log(newVal.split(" ")[1]);
-                                    setState(() {
-                                      _mySelection = newVal;
-                                      // _mySelection = newVal.split(" ")[0];
-                                      // regis = newVal.split(" ")[1];
-                                    });
-                                  },
-                                  value: _mySelection,
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(12.0),
-                                child: TextFormField(
-                                  minLines: 1,
-                                  maxLines: 3,
+                                Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: TextFormField(
+                                    minLines: 1,
+                                    maxLines: 3,
 
-                                  // decoration:
-                                  //     InputDecoration(label: Text("Title"), ),
-                                  decoration: InputDecoration(
-                                    // border: OutlineInputBorder(
-                                    //     borderSide: BorderSide(
-                                    //         color: LightColors.lightBlack
-                                    //             .withOpacity(0.5))),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color:
-                                          LightColors.mainBlue.withOpacity(1),
-                                    )),
-                                    // disabledBorder: UnderlineInputBorder(
-                                    //     borderSide: BorderSide(width: 0.3)),
-                                    label: Text("Task Title"),
-                                    // hintText: "Assign To",
-                                    // hint: Text(),
-                                  ),
-                                  enabled:
-                                      (_mySelection == null) ? false : true,
-                                  // (_mySelection)
-                                  // enabled: ,
-
-                                  controller: title,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the title';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(12.0),
-                                child: TextFormField(
-                                  minLines: 1,
-                                  maxLines: 3,
-                                  decoration: InputDecoration(
+                                    // decoration:
+                                    //     InputDecoration(label: Text("Title"), ),
+                                    decoration: InputDecoration(
+                                      // border: OutlineInputBorder(
+                                      //     borderSide: BorderSide(
+                                      //         color: LightColors.lightBlack
+                                      //             .withOpacity(0.5))),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                         color:
                                             LightColors.mainBlue.withOpacity(1),
                                       )),
-                                      label: Text("Description")),
-                                  enabled:
-                                      (_mySelection == null) ? false : true,
-                                  controller: desc,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the description.';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 50, 0, 8),
-                                child: ButtonTheme(
-                                  minWidth: width,
-                                  height: 50.0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40)),
-                                  child: RaisedButton(
-                                    color: LightColors.oldBlue,
-                                    child: Text(
-                                      "Send Task",
-                                      style: TextStyle(color: Colors.white),
+                                      // disabledBorder: UnderlineInputBorder(
+                                      //     borderSide: BorderSide(width: 0.3)),
+                                      label: Text("Task Title"),
+                                      // hintText: "Assign To",
+                                      // hint: Text(),
                                     ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        log(formatted);
-                                        bool res = await GetHelper()
-                                            .postSchedule(
-                                                _mySelection
-                                                    .split(" ")[0]
-                                                    .trim(),
-                                                title.text,
-                                                desc.text,
-                                                formatted);
-                                        if (res) {
-                                          GetHelper().notif(
-                                              _mySelection.split(" ")[1].trim(),
-                                              "New Task  📝",
-                                              title.text);
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    AdminMenuBottomBarPage()),
-                                            ModalRoute.withName('/home'),
-                                          );
-                                          Fluttertoast.showToast(
-                                              msg: "Successfully add task ",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.black54,
-                                              textColor: Colors.white,
-                                              fontSize: 12.0);
-                                        } else {
-                                          Fluttertoast.showToast(
-                                              msg: "Failed to add task ",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.black54,
-                                              textColor: Colors.white,
-                                              fontSize: 12.0);
-                                        }
+                                    enabled:
+                                        (_mySelection == null) ? false : true,
+                                    // (_mySelection)
+                                    // enabled: ,
 
-                                        // title.clear();
-                                        // desc.clear();
-                                        // Navigator.pop(context);
-                                        // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false)
-                                        // _formKey.currentState.save();
+                                    controller: title,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the title';
                                       }
+                                      return null;
                                     },
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        );
-                        ;
-                      }),
+                                Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: TextFormField(
+                                    minLines: 1,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: LightColors.mainBlue
+                                              .withOpacity(1),
+                                        )),
+                                        label: Text("Description")),
+                                    enabled:
+                                        (_mySelection == null) ? false : true,
+                                    controller: desc,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the description.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 50, 0, 8),
+                                  child: ButtonTheme(
+                                    minWidth: width,
+                                    height: 50.0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(40)),
+                                    child: RaisedButton(
+                                      color: LightColors.oldBlue,
+                                      child: Text(
+                                        "Send Task",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () async {
+                                        if (_formKey.currentState.validate()) {
+                                          log(formatted);
+                                          bool res = await GetHelper()
+                                              .postSchedule(
+                                                  _mySelection
+                                                      .split(" ")[0]
+                                                      .trim(),
+                                                  title.text,
+                                                  desc.text,
+                                                  formatted);
+                                          if (res) {
+                                            GetHelper().notif(
+                                                _mySelection
+                                                    .split(" ")[1]
+                                                    .trim(),
+                                                "New Task " +
+                                                    _mySelection
+                                                        .split(" ")[2]
+                                                        .trim() +
+                                                    " 📝",
+                                                title.text);
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      AdminMenuBottomBarPage()),
+                                              ModalRoute.withName('/home'),
+                                            );
+                                            Fluttertoast.showToast(
+                                                msg: "Successfully add task ",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.black54,
+                                                textColor: Colors.white,
+                                                fontSize: 12.0);
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "Failed to add task ",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.black54,
+                                                textColor: Colors.white,
+                                                fontSize: 12.0);
+                                          }
+
+                                          // title.clear();
+                                          // desc.clear();
+                                          // Navigator.pop(context);
+                                          // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false)
+                                          // _formKey.currentState.save();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                          ;
+                        }),
+                      ),
                     ),
                   );
                 });
@@ -855,19 +880,40 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircleAvatar(
-                                        foregroundImage: (parentAvatar == null
-                                            ? new AssetImage(
+                                      height: 100,
+                                      width: 100,
+                                      child: ClipOval(
+                                        child: parentAvatar == null
+                                            ? Image.asset(
                                                 "assets/images/admin.png")
-                                            : new NetworkImage(LINKAPI +
-                                                "storage/pp/" +
-                                                parentAvatar))
-                                        // AssetImage(
-                                        //     "assets/images/user.png"),
-                                        ),
-                                  ),
+                                            : Image.network(
+                                                LINKAPI +
+                                                    "storage/pp/" +
+                                                    parentAvatar,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                      )),
                                   SizedBox(
                                     width: 30,
                                   ),

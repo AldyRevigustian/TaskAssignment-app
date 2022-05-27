@@ -126,9 +126,8 @@ class Parent with ChangeNotifier {
           ? " "
           : datauser['data']['registration'],
       // created_at: datauser['data']['created_at'],
-      avatar: (datauser['data']['registration'] == null)
-          ? null
-          : datauser['data']['poto'],
+      avatar:
+          (datauser['data']['poto'] == null) ? null : datauser['data']['poto'],
     );
 
     setParentInf(parentInf);

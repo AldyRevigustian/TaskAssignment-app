@@ -10,6 +10,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
+import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
@@ -18,6 +19,7 @@ import 'package:full_screen_image/full_screen_image.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../widget/custAlert.dart';
 import 'admin_menu_bottom_bar.dart';
 import '../detail.dart';
 
@@ -72,28 +74,47 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
       },
       child: Hero(
         tag: path + Random().toString(),
-        child: Image.network(LINKAPI + "storage/bukti/" + path,
-            width: 100,
-            height: 100,
-            alignment: Alignment.center,
-            fit: BoxFit.cover, loadingBuilder: (BuildContext context,
-                Widget child, ImageChunkEvent loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            width: 100,
-            height: 100,
-            child: SpinKitWave(
-              color: LightColors.mainBlue.withOpacity(0.5),
-              size: 25.0,
-            ),
-            // child: CircularProgressIndicator(
-            //   value: loadingProgress.expectedTotalBytes != null
-            //       ? loadingProgress.cumulativeBytesLoaded /
-            //           loadingProgress.expectedTotalBytes
-            //       : null,
-            // ),
-          );
-        }),
+        child:
+            // Image.network(LINKAPI + "storage/bukti/" + path,
+            //     width: 100,
+            //     height: 100,
+            //     alignment: Alignment.center,
+            //     fit: BoxFit.cover, loadingBuilder: (BuildContext context,
+            //         Widget child, ImageChunkEvent loadingProgress) {
+            //   if (loadingProgress == null) return child;
+            //   return Container(
+            //     width: 100,
+            //     height: 100,
+            //     child: SpinKitWave(
+            //       color: LightColors.mainBlue.withOpacity(0.5),
+            //       size: 25.0,
+            //     ),
+
+            //   );
+            // }),
+            Image.network(
+          LINKAPI + "storage/bukti/" + path,
+          width: 100,
+          height: 100,
+          alignment: Alignment.center,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              width: 100,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes
+                      : null,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -375,71 +396,110 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
   }
 
   Future<void> _showAlertDialog() {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // <-- SEE HERE
-          title: const Text(
-            'Delete Task',
-            style: TextStyle(fontFamily: "Lato"),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text(
-                  "Are you sure you want delete this task ?",
-                  style: TextStyle(
-                      fontFamily: "Lato", color: LightColors.lightBlack),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () async {
-                bool res = await GetHelper().deleteTask(widget.id);
-                if (res) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return AdminMenuBottomBarPage();
-                      },
-                    ),
-                  );
-                  Fluttertoast.showToast(
-                      msg: "Successfully delete task ",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 12.0);
-                } else {
-                  Fluttertoast.showToast(
-                      msg: "Failed delete task ",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 12.0);
-                  print("gagal");
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+    // return showDialog<void>(
+    //   context: context,
+    //   barrierDismissible: false, // user must tap button!
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       // <-- SEE HERE
+    //       title: const Text(
+    //         'Delete Task',
+    //         style: TextStyle(fontFamily: "Lato"),
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: ListBody(
+    //           children: const <Widget>[
+    //             Text(
+    //               "Are you sure you want delete this task ?",
+    //               style: TextStyle(
+    //                   fontFamily: "Lato", color: LightColors.lightBlack),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: const Text('No'),
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //         ),
+    //         TextButton(
+    //           child: const Text('Yes'),
+    //           onPressed: () async {
+    //             bool res = await GetHelper().deleteTask(widget.id);
+    //             if (res) {
+    //               Navigator.pushAndRemoveUntil(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (BuildContext context) =>
+    //                         AdminMenuBottomBarPage()),
+    //                 ModalRoute.withName('/home'),
+    //               );
+    //               Fluttertoast.showToast(
+    //                   msg: "Successfully delete task ",
+    //                   toastLength: Toast.LENGTH_SHORT,
+    //                   gravity: ToastGravity.BOTTOM,
+    //                   timeInSecForIosWeb: 1,
+    //                   backgroundColor: Colors.black54,
+    //                   textColor: Colors.white,
+    //                   fontSize: 12.0);
+    //             } else {
+    //               Fluttertoast.showToast(
+    //                   msg: "Failed delete task ",
+    //                   toastLength: Toast.LENGTH_SHORT,
+    //                   gravity: ToastGravity.BOTTOM,
+    //                   timeInSecForIosWeb: 1,
+    //                   backgroundColor: Colors.black54,
+    //                   textColor: Colors.white,
+    //                   fontSize: 12.0);
+    //               print("gagal");
+    //             }
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+    return showCustAlertDouble(
+        height: 280,
+        context: context,
+        title: "Delete Task",
+        // buttonString: "OK",
+        onSubmitOk: () async {
+          showLoadingProgress(context);
+          bool res = await GetHelper().deleteTask(widget.id);
+          if (res) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AdminMenuBottomBarPage()),
+              ModalRoute.withName('/home'),
+            );
+            Fluttertoast.showToast(
+                msg: "Successfully delete task ",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black54,
+                textColor: Colors.white,
+                fontSize: 12.0);
+          } else {
+            Fluttertoast.showToast(
+                msg: "Failed delete task ",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black54,
+                textColor: Colors.white,
+                fontSize: 12.0);
+            print("gagal");
+          }
+        },
+        onSubmitCancel: () {
+          Navigator.of(context).pop();
+        },
+        detailContent: "Are you sure you want delete this task ?",
+        pathLottie: "warning");
   }
 }

@@ -108,8 +108,8 @@ class _UserMainPageState extends State<UserMainPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     // log(dateTime);
-    log(parentName);
-    log(parentId);
+    // log(parentName);
+    // log(parentId);
 
     return Scaffold(
       body: Stack(
@@ -612,21 +612,71 @@ class _UserMainPageState extends State<UserMainPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircleAvatar(
-                                        foregroundImage: (parentAvatar == null
-                                            ? new AssetImage(
+                                      height: 100,
+                                      width: 100,
+                                      child: ClipOval(
+                                        child: parentAvatar == null
+                                            ? Image.asset(
                                                 "assets/images/user.png")
-                                            : new NetworkImage(
+                                            : Image.network(
                                                 LINKAPI +
                                                     "storage/pp/" +
                                                     parentAvatar,
-                                              ))
-                                        // AssetImage(
-                                        //     "assets/images/user.png"),
-                                        ),
-                                  ),
+                                                fit: BoxFit.cover,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                      )),
+
+                                  // Container(
+                                  //   height: 100,
+                                  //   width: 100,
+                                  //   decoration: BoxDecoration(
+                                  //       // shape: BoxShape.circle,
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(100)),
+                                  //   child: Image.network(
+                                  //     LINKAPI + "storage/pp/" + parentAvatar,
+                                  //     fit: BoxFit.cover,
+                                  //     loadingBuilder: (BuildContext context,
+                                  //         Widget child,
+                                  //         ImageChunkEvent loadingProgress) {
+                                  //       if (loadingProgress == null)
+                                  //         return child;
+                                  //       return Center(
+                                  //         child: CircularProgressIndicator(
+                                  //           value: loadingProgress
+                                  //                       .expectedTotalBytes !=
+                                  //                   null
+                                  //               ? loadingProgress
+                                  //                       .cumulativeBytesLoaded /
+                                  //                   loadingProgress
+                                  //                       .expectedTotalBytes
+                                  //               : null,
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     width: 30,
                                   ),

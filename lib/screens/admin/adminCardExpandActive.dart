@@ -201,7 +201,7 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
             children: [
               Text(
                 // widget.name,
-                capitalize(widget.name),  
+                capitalize(widget.name),
                 style: TextStyle(
                     fontFamily: "Lato",
                     // fontWeight: FontWeight.bold,
@@ -389,13 +389,20 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
               onPressed: () async {
                 bool res = await GetHelper().deleteTask(widget.id);
                 if (res) {
-                  Navigator.pushReplacement(
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (BuildContext context) {
+                  //       return AdminMenuBottomBarPage();
+                  //     },
+                  //   ),
+                  // );
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return AdminMenuBottomBarPage();
-                      },
-                    ),
+                        builder: (BuildContext context) =>
+                            AdminMenuBottomBarPage()),
+                    ModalRoute.withName('/home'),
                   );
                   Fluttertoast.showToast(
                       msg: "Successfully delete task ",
