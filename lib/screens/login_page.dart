@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
               state = false;
             });
             showCustAlert(
-                height: 290,
+                height: 300,
                 context: context,
                 title: "Error",
                 buttonString: "OK",

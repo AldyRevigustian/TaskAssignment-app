@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
@@ -37,15 +38,22 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
   void initState() {
     getDeviceTokenToSendNotification();
 
+    // FirebaseMessaging.onBackgroundMessage((message) {
+    //   LocalNotificationService.createanddisplaynotification(message);
+
+    //   return;
+    // });
+
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
         log("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
           log("New OII");
-          Navigator.of(context).push(
+          Navigator.pushAndRemoveUntil(
+            context,
             MaterialPageRoute(
-              builder: (context) => UserMenuBottomBarPage(),
-            ),
+                builder: (BuildContext context) => UserMenuBottomBarPage()),
+            ModalRoute.withName('/home'),
           );
         }
       },
@@ -58,7 +66,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
           log(message.notification.title);
           log(message.notification.body);
           log("message.data11 ${message.data}");
-          log("hoho");
           LocalNotificationService.createanddisplaynotification(message);
           // setState(() {});
           // Navigator.pushReplacement(
@@ -135,6 +142,9 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
     getParentInfo = Provider.of<Parent>(context).getParentInf();
     parentId = getParentInfo.id.toString();
 

@@ -182,7 +182,13 @@ class _AdminMainPageState extends State<AdminMainPage> {
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 8, bottom: 0, top: 10),
-                            child: Text("Add Task"),
+                            child: Text(
+                              "Add Task",
+                              style: TextStyle(
+                                  fontFamily: "Lato",
+                                  fontWeight: FontWeight.bold,
+                                  color: LightColors.lightBlack),
+                            ),
                           ),
                         ),
                         insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
@@ -220,13 +226,13 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                       contentPadding: EdgeInsets.all(20),
                                       border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(100),
+                                              BorderRadius.circular(16),
                                           borderSide: BorderSide(
                                               color: LightColors.lightBlack
                                                   .withOpacity(0.5))),
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(100),
+                                              BorderRadius.circular(16),
                                           borderSide: BorderSide(
                                             color: LightColors.mainBlue
                                                 .withOpacity(1),
@@ -354,7 +360,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                 _mySelection
                                                     .split(" ")[1]
                                                     .trim(),
-                                                "New Task " +
+                                                "You have a new task, " +
                                                     _mySelection
                                                         .split(" ")[2]
                                                         .trim() +
@@ -510,7 +516,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                             SizedBox(
                                               height: 15,
                                             ),
-                                            Text('Add New Task Press  " + "',
+                                            Text(
+                                                'To Add A New Task Press  " + "',
                                                 style: TextStyle(
                                                     fontFamily: "Lato",
                                                     fontWeight: FontWeight.w400,

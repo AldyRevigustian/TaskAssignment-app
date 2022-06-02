@@ -17,58 +17,19 @@ class LocalNotificationService {
     // initializationSettings  for Android
     const InitializationSettings initializationSettings =
         InitializationSettings(
-      android: AndroidInitializationSettings("@drawable/ic_stat_group_68"),
-    );
+            android:
+                AndroidInitializationSettings("@drawable/ic_stat_group_68"),
+            iOS: IOSInitializationSettings(
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+              requestAlertPermission: false,
+              // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+            ));
 
     _notificationsPlugin.initialize(
       initializationSettings,
-      // onSelectNotification: (String id) async {
-      //   log("onSelectNotification");
-
-      //   // Navigator.of(context).push(
-      //   //   MaterialPageRoute(
-      //   //     builder: (context) => DemoScreen(
-      //   //       id: id,
-      //   //     ),
-      //   //   ),
-      //   // );
-
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (BuildContext context) {
-      //         return LoginPage();
-      //       },
-      //     ),
-      //   );
-      //   if (id.isNotEmpty) {
-      //     print("Router Value1234 $id");
-
-      //     // Navigator.of(context).push(
-      //     //   MaterialPageRoute(
-      //     //     builder: (context) => DemoScreen(
-      //     //       id: id,
-      //     //     ),
-      //     //   ),
-      //     // );
-
-      //   }
-      // },
       onSelectNotification: (String payload) async {
         log("pencet");
-        // Get.to(UserMenuBottomBarPage());
-
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => UserMenuBottomBarPage(),
-        //   ),
-        // );
-
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => UserMenuBottomBarPage(),
-        //   ),
-        // );
       },
     );
   }
@@ -77,15 +38,22 @@ class LocalNotificationService {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const NotificationDetails notificationDetails = NotificationDetails(
-        android: AndroidNotificationDetails(
-          "pushnotificationapp",
-          "pushnotificationappchannel",
-          importance: Importance.max,
-          priority: Priority.high,
-          // icon: '@mipmap/ic_launcher',
-          largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_trans'),
-        ),
-      );
+          android: AndroidNotificationDetails(
+            "pushnotificationapp",
+            "pushnotificationappchannel",
+            importance: Importance.max,
+            priority: Priority.high,
+            // icon: '@mipmap/ic_launcher',
+            // largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_trans'),
+          ),
+          iOS: IOSNotificationDetails(
+            presentAlert:
+                true, // Present an alert when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentBadge:
+                true, // Present the badge number when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentSound:
+                true, // Play a sound when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+          ));
 
       await _notificationsPlugin.show(
         id,

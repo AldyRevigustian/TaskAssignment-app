@@ -256,8 +256,16 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Icon(
+                      FluentIcons.clock_12_filled,
+                      size: 12,
+                      color: LightColors.lightBlack.withOpacity(0.6),
+                    ),
+                  ),
                   Text(
-                    DateFormat('  ●  kk : mm')
+                    DateFormat('kk : mm')
                         .format(DateTime.parse(widget.created_at)),
                     style: TextStyle(
                         fontFamily: "Lato",

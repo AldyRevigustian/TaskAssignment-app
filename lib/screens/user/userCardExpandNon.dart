@@ -177,8 +177,18 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Icon(
+                      FluentIcons.clock_12_filled,
+                      size: 12,
+                      color: (widget.status == "Completed")
+                          ? LightColors.lightGreen.withOpacity(0.7)
+                          : LightColors.lightRed.withOpacity(0.7),
+                    ),
+                  ),
                   Text(
-                    DateFormat('  ●  kk : mm')
+                    DateFormat('kk : mm')
                         .format(DateTime.parse(widget.updated_at)),
                     style: TextStyle(
                         fontFamily: "Lato",

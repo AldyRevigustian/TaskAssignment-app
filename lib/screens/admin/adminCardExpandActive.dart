@@ -19,6 +19,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../widget/custAlert.dart';
 import 'admin_menu_bottom_bar.dart';
 
 class AdminCardExpandActive extends StatefulWidget {
@@ -184,7 +185,6 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
         title: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Text(
-            // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
             capitalize(widget.title),
             style: TextStyle(
                 fontFamily: "Lato",
@@ -220,17 +220,25 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                         style: TextStyle(
                             fontFamily: "Lato",
                             // fontWeight: FontWeight.bold,
-                            color: LightColors.lightYellow.withOpacity(0.6),
+                            color: LightColors.lightBlack.withOpacity(0.6),
                             fontWeight: FontWeight.w600,
                             fontSize: 11),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Icon(
+                          FluentIcons.clock_12_filled,
+                          size: 12,
+                          color: LightColors.lightBlack.withOpacity(0.6),
+                        ),
+                      ),
                       Text(
-                        DateFormat('  ●  kk : mm')
+                        DateFormat('kk : mm')
                             .format(DateTime.parse(widget.created_at)),
                         style: TextStyle(
                             fontFamily: "Lato",
                             // fontWeight: FontWeight.bold,
-                            color: LightColors.lightYellow.withOpacity(0.6),
+                            color: LightColors.lightBlack.withOpacity(0.6),
                             fontWeight: FontWeight.w600,
                             fontSize: 11),
                       ),
@@ -356,78 +364,45 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
   }
 
   Future<void> _showAlertDialog() {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // <-- SEE HERE
-          title: const Text(
-            'Delete Task',
-            style: TextStyle(fontFamily: "Lato"),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text(
-                  "Are you sure you want delete this task ?",
-                  style: TextStyle(
-                      fontFamily: "Lato", color: LightColors.lightBlack),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () async {
-                bool res = await GetHelper().deleteTask(widget.id);
-                if (res) {
-                  // Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (BuildContext context) {
-                  //       return AdminMenuBottomBarPage();
-                  //     },
-                  //   ),
-                  // );
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            AdminMenuBottomBarPage()),
-                    ModalRoute.withName('/home'),
-                  );
-                  Fluttertoast.showToast(
-                      msg: "Successfully delete task ",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 12.0);
-                } else {
-                  Fluttertoast.showToast(
-                      msg: "Failed delete task ",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 12.0);
-                  print("gagal");
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+    return showCustAlertDouble(
+        height: 280,
+        context: context,
+        title: "Delete Task",
+        // buttonString: "OK",
+        onSubmitOk: () async {
+          showLoadingProgress(context);
+          bool res = await GetHelper().deleteTask(widget.id);
+          if (res) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AdminMenuBottomBarPage()),
+              ModalRoute.withName('/home'),
+            );
+            Fluttertoast.showToast(
+                msg: "Successfully delete task ",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black54,
+                textColor: Colors.white,
+                fontSize: 12.0);
+          } else {
+            Fluttertoast.showToast(
+                msg: "Failed delete task ",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black54,
+                textColor: Colors.white,
+                fontSize: 12.0);
+            print("gagal");
+          }
+        },
+        onSubmitCancel: () {
+          Navigator.of(context).pop();
+        },
+        detailContent: "Are you sure you want delete this task ?",
+        pathLottie: "warning");
   }
 }

@@ -22,6 +22,9 @@ void main() async {
   //   // statusBarColor: LightColors.mainBlue, // status bar color
   //   // statusBarColor: Colors.red, // status bar color
   // ));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
