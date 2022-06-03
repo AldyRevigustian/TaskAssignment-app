@@ -36,6 +36,9 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
     getDeviceTokenToSendNotification();
 
     // FirebaseMessaging.onBackgroundMessage((message) {

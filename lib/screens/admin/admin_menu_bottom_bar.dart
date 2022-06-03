@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/provider/parent.dart';
 import 'package:flutter_task_planner_app/screens/admin/history_schedule.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
@@ -34,6 +35,9 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
     super.initState();
   }
 
@@ -51,6 +55,9 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
     DateFormat formatter = DateFormat('yyyy-MM-dd');
 
     String formatted = formatter.format(DateTime.now());
