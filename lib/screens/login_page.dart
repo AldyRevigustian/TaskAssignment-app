@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_planner_app/main.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
@@ -25,21 +25,17 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); // the key for the form
-  TextEditingController user =
-      new TextEditingController(); // the controller for the usename that user will put in the text field
-  TextEditingController pass =
-      new TextEditingController(); // the controller for the password that user will put in the text field
 
-  String usern = "";
-  String passwd = "";
-  bool sharedpref = false;
-  bool state = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
+  String email = "";
+  String password = "";
+  bool isLoading = false;
 
   @override
   void initState() {
-    checkSFstring();
     super.initState();
   }
 
@@ -74,75 +70,12 @@ class _LoginPageState extends State<LoginPage> {
     super.didChangeDependencies();
   }
 
-  // login function
-  saveSFstring(String email, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('email', email);
-    prefs.setString('password', password);
-
-    print(
-        "Data email dan password sudah di simpan yaitu => ${prefs.getString('email')}");
-  }
-
-  checkSFstring() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool email = prefs.containsKey('email');
-    bool password = prefs.containsKey('password');
-
-    if (email == true && password == true) {
-      showLoadingProgress(context);
-
-      setState(() {
-        usern = prefs.getString('email');
-        passwd = prefs.getString('password');
-        sharedpref = true;
-      });
-      if (state == true) {
-        showLoadingProgress(context);
-      }
-      Provider.of<Parent>(context, listen: false)
-          .loginParentAndGetInf(usern.toString(), passwd.toString())
-          .then((state) {
-        // pass username and password that user entered
-        if (state == "user") {
-          // if the function returned true
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => UserMenuBottomBarPage()),
-            ModalRoute.withName('/home'),
-          );
-          //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
-        } else if (state == "admin") {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => AdminMenuBottomBarPage()),
-            ModalRoute.withName('/home'),
-          );
-        } else {
-          Navigator.pop(context);
-          setState(() {
-            sharedpref = false;
-          });
-        }
-      });
-      print(
-          "Data email dan password sudah ada di sharedpreference yaitu => ${usern.toString()}");
-    } else {
-      print("No Data sharedpreference bro");
-    }
-  }
-
   showLoadingProgress(BuildContext context) {
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (_) => Center(
-                // Aligns the container to center
                 child: Container(
-              // A simplified version of dialog.
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(8)),
               width: 100.0,
@@ -155,67 +88,53 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login() async {
-    saveSFstring(user.text, pass.text);
     setState(() {
-      state = true;
+      isLoading = true;
     });
+
     if (_formKey.currentState.validate()) {
-      // check if all the conditionsthe we put on validators are right
-      if (state) {
-        showLoadingProgress(context); // show CircularProgressIndicator
+      if (isLoading) {
+        showLoadingProgress(context);
       }
-      // if the radio button on parent then login using parent provider
 
-      if (sharedpref == false) {
-        Provider.of<Parent>(context, listen: false)
-            .loginParentAndGetInf(user.text, pass.text)
-            .then((state) {
-          // pass username and password that user entered
-
-          if (state == "user") {
-            setState(() {
-              state = false;
-            });
-            // if the function returned true
-            // Navigator.of(context)
-            //     .pushReplacementNamed(DashboardMenu.routeName);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => UserMenuBottomBarPage()),
-              ModalRoute.withName('/home'),
-            );
-            //Navigator.of(context).pushNamed(BottomNavScreen.routeName); // go to the Main page for parent
-          } else if (state == "admin") {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => AdminMenuBottomBarPage()),
-              ModalRoute.withName('/home'),
-            );
-          } else {
-            setState(() {
-              state = false;
-            });
-            showCustAlert(
-                height: 300,
-                context: context,
-                title: "Error",
-                buttonString: "OK",
-                onSubmit: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => LoginPage()),
-                    ModalRoute.withName('/login'),
-                  );
-                },
-                detailContent:
-                    "You Entered Wrong Email or password / Phone not connected to Internet",
-                pathLottie: "error");
-          }
-        });
-      }
+      Provider.of<User>(context, listen: false)
+          .loginUser(emailController.text, passwordController.text)
+          .then((state) {
+        if (state == "user") {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => UserMenuBottomBarPage()),
+            ModalRoute.withName('/home'),
+          );
+        } else if (state == "admin") {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => AdminMenuBottomBarPage()),
+            ModalRoute.withName('/home'),
+          );
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          showCustAlert(
+              height: 300,
+              context: context,
+              title: "Error",
+              buttonString: "OK",
+              onSubmit: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              detailContent:
+                  "You Entered Wrong Email or password / Phone not connected to Internet",
+              pathLottie: "error");
+        }
+      });
     }
   }
 
@@ -243,12 +162,12 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 30,
                       ),
-                      Center(
-                        child: Image.asset(
-                          "assets/images/SII.png",
-                          width: 180,
-                        ),
-                      ),
+                      // Center(
+                      //   child: Image.asset(
+                      //     "assets/images/SII.png",
+                      //     width: 180,
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 50,
                       ),
@@ -282,28 +201,16 @@ class _LoginPageState extends State<LoginPage> {
                                   Column(
                                     children: [
                                       TextFormField(
-                                        controller: user,
+                                        controller: emailController,
                                         style: TextStyle(
                                           color: LightColors.lightBlack,
                                         ),
                                         decoration: InputDecoration(
-                                            // contentPadding:
-                                            //     EdgeInsets.only(top: 0),
-                                            // floatingLabelBehavior:
-                                            //     FloatingLabelBehavior.auto,
                                             hintText: "Email",
                                             hintStyle: TextStyle(
                                                 fontFamily: "Montserrat",
                                                 fontSize: 15,
                                                 color: LightColors.lightGrey),
-                                            // label: Text(
-                                            //   "Email",
-                                            //   style: TextStyle(
-                                            //     color:
-                                            //         Color.fromRGBO(14, 69, 84, 1),
-                                            //     fontFamily: "Montserrat",
-                                            //   ),
-                                            // ),
                                             prefixIcon: Container(
                                               width: 0,
                                               alignment: Alignment(-0.10, 0.0),
@@ -349,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                                           color: LightColors.lightBlack,
                                           // fontFamily: "Montserrat",
                                         ),
-                                        controller: pass,
+                                        controller: passwordController,
                                         obscureText: _isObscure,
                                         decoration: InputDecoration(
                                             suffixIcon: IconButton(
@@ -370,29 +277,6 @@ class _LoginPageState extends State<LoginPage> {
                                                 });
                                               },
                                             ),
-                                            // suffixIcon: IconButton(
-                                            //   icon: Icon(
-                                            //     _isObscure
-                                            //         ? SvgIcon('assets/images/icon/regular_show.svg')
-                                            //         : Icons.visibility_off,
-                                            //     color: LightColors.lightGrey,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //     setState(() {
-                                            //       _isObscure = !_isObscure;
-                                            //     });
-                                            //   },
-                                            // )
-                                            // // label: Text(
-                                            //   "Password",
-                                            //   style: TextStyle(
-                                            //       color: Color.fromRGBO(
-                                            //           14, 69, 84, 1),
-                                            //       fontFamily: "Montserrat"),
-                                            // ),
-                                            // alignLabelWithHint: true,
-                                            // floatingLabelBehavior:
-                                            //     FloatingLabelBehavior.auto,
                                             hintText: "Password",
                                             hintStyle: TextStyle(
                                                 fontFamily: "Montserrat",
@@ -445,9 +329,6 @@ class _LoginPageState extends State<LoginPage> {
                               child: Container(
                                   height: 45.0,
                                   width: width,
-                                  decoration: BoxDecoration(
-                                      color: LightColors.mainBlue,
-                                      borderRadius: BorderRadius.circular(8)),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       _login();

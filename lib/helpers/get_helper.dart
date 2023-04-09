@@ -14,20 +14,6 @@ class GetHelper {
   String link = LINKAPI + "api/schedule";
   String linkImage = LINKAPI + "storage/bukti/";
 
-  // Future<List<Task>> fetchTask() async {
-  //   final response = await http.get(Uri.parse(link));
-
-  //   if (response.statusCode == 200) {
-  //     List jsonResponse = json.decode(response.body);
-  //     return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-
-  //     // AdTemplate template = AdTemplate.fromJson(data[0]);
-  //   } else {
-  //     // If the server did not return a 200 OK response,
-  //     // then throw an exception.
-  //     throw Exception('Failed to load Task');
-  //   }
-  // }
 
   Future<List<Task>> fetchTask(String id) async {
     // var data = {

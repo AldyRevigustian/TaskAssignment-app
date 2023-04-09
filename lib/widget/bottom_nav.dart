@@ -48,8 +48,8 @@ class _BottomNavigationDotState extends State<BottomNavigationDot> {
         decoration: BoxDecoration(color: widget.backgroundColor, boxShadow: [
           BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.1),
-              blurRadius: 10,
-              offset: Offset(0, 3))
+              blurRadius: 4,
+              offset: Offset(0, 1))
         ]),
         padding: EdgeInsets.only(top: 15, bottom: 12),
         child: Stack(

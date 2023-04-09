@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
@@ -333,17 +333,17 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                             height: height / 6,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(25),
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15),
                                   topRight: Radius.circular(0)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(0, 0, 0, 0.2),
-                                  offset: Offset(0, 2),
-                                  blurRadius: 4,
-                                  spreadRadius: 0,
-                                ),
-                              ],
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Color.fromRGBO(0, 0, 0, 0.2),
+                              //     offset: Offset(0, 2),
+                              //     blurRadius: 4,
+                              //     spreadRadius: 0,
+                              //   ),
+                              // ],
                               // borderRadius: BorderRadius.only(
                               //     bottomLeft: Radius.circular(20),
                               //     bottomRight: Radius.circular(20)),
@@ -360,51 +360,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // SvgIcon(
-                                      //   'assets/images/calendar_filled.svg',
-                                      //   width: 32,
-                                      //   height: 32,
-                                      //   color: Colors.white,
-                                      // ),
-                                      Icon(
-                                        FluentIcons.calendar_ltr_24_filled,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        formatHari.format(_dateTime == null
-                                                ? DateTime.parse(widget.tanggal)
-                                                : _dateTime) +
-                                            ", ",
-                                        style: TextStyle(
-                                            fontFamily: "Montserrat",
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                            fontSize: 15),
-                                      ),
-                                      Text(
-                                        formatTanggal.format(_dateTime == null
-                                                ? DateTime.parse(widget.tanggal)
-                                                : _dateTime) +
-                                            " " +
-                                            formatTahun.format(_dateTime == null
-                                                ? DateTime.parse(widget.tanggal)
-                                                : _dateTime),
-                                        style: TextStyle(
-                                            fontFamily: "Montserrat",
-                                            color: Colors.white,
-                                            fontSize: 15),
-                                      )
-                                    ],
-                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -434,27 +390,59 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                               });
                             },
                             child: Container(
-                              width: width / 1.8,
+                              width: width / 1.5,
                               height: 50,
                               decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
                                       color: Color.fromRGBO(0, 0, 0, 0.1),
-                                      offset: Offset(0, 2),
+                                      offset: Offset(0, 1),
                                       blurRadius: 4,
                                       spreadRadius: 0,
                                     )
                                   ],
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100)),
-                              child: Center(
-                                  child: Text(
-                                "History Picker",
-                                style: TextStyle(
-                                    color: LightColors.mainBlue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                              )),
+                              child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+
+                                    Icon(
+                                      FluentIcons.calendar_ltr_24_filled,
+                                      color: LightColors.oldBlue,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      formatHari.format(_dateTime == null
+                                              ? DateTime.parse(widget.tanggal)
+                                              : _dateTime) +
+                                          ", ",
+                                      style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w700,
+                                          color: LightColors.oldBlue,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      formatTanggal.format(_dateTime == null
+                                              ? DateTime.parse(widget.tanggal)
+                                              : _dateTime) +
+                                          " " +
+                                          formatTahun.format(_dateTime == null
+                                              ? DateTime.parse(widget.tanggal)
+                                              : _dateTime),
+                                      style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          color: LightColors.oldBlue,
+                                          fontSize: 15),
+                                    )
+                                  ],
+                              ),
                             ),
                           ),
                         ),

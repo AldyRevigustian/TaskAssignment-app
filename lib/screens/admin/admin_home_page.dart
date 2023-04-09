@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
@@ -50,7 +50,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   String parentId;
   String usrId;
   String tokens = "";
-  ParentInf getParentInfo;
+  UserInf getParentInfo;
 
   DateFormat formatHari;
 
@@ -138,7 +138,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
-    getParentInfo = Provider.of<Parent>(context).getParentInf();
+    getParentInfo = Provider.of<User>(context).getUserInf();
     parentName = getParentInfo.name;
     parentAvatar = getParentInfo.avatar;
     parentId = getParentInfo.id.toString();

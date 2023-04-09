@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -45,7 +45,7 @@ class _UserMainPageState extends State<UserMainPage> {
   String parentAvatar;
   String parentId;
   String usrId;
-  ParentInf getParentInfo;
+  UserInf getParentInfo;
 
   DateFormat formatHari;
 
@@ -100,7 +100,7 @@ class _UserMainPageState extends State<UserMainPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
-    getParentInfo = Provider.of<Parent>(context).getParentInf();
+    getParentInfo = Provider.of<User>(context).getUserInf();
     parentName = getParentInfo.name;
     parentAvatar = getParentInfo.avatar;
     parentId = getParentInfo.id.toString();
@@ -556,54 +556,22 @@ class _UserMainPageState extends State<UserMainPage> {
                     height: height / 2.9,
                     child: Stack(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                        //   child: Container(
-                        //     height: height / 3.51,
-                        //     decoration: BoxDecoration(
-                        //       color: Color(0xFFD9F2F9),
-                        //       borderRadius: BorderRadius.only(
-                        //           bottomLeft: Radius.circular(50)),
-                        //     ),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        //   child: Container(
-                        //     height: height / 3.61,
-                        //     decoration: BoxDecoration(
-                        //       color: Color(0xFFAEE5F4),
-                        //       borderRadius: BorderRadius.only(
-                        //           bottomLeft: Radius.circular(50)),
-                        //     ),
-                        //   ),
-                        // ),
                         Align(
                           alignment: Alignment.topCenter,
                           child: Container(
                             height: height / 3.2,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(25),
-                                    bottomRight: Radius.circular(25),
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
                                     topRight: Radius.circular(0)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(0, 0, 0, 0.2),
-                                    offset: Offset(0, 2),
-                                    blurRadius: 4,
-                                    spreadRadius: 0,
-                                  ),
-                                ],
-                                // borderRadius: BorderRadius.only(
-                                //     bottomLeft: Radius.circular(20),
-                                //     bottomRight: Radius.circular(20)),
                                 color: LightColors.mainBlue,
                                 image: DecorationImage(
-                                    opacity: 0.8,
+                                    opacity: 0.5,
                                     image:
                                         AssetImage('assets/images/header.png'),
-                                    fit: BoxFit.fitWidth)),
+                                    fit: BoxFit.fitWidth)
+                                    ),
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -617,7 +585,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                       child: ClipOval(
                                         child: parentAvatar == null
                                             ? Image.asset(
-                                                "assets/images/user.png")
+                                                "assets/images/2.jpg")
                                             : Image.network(
                                                 LINKAPI +
                                                     "storage/pp/" +
@@ -646,37 +614,6 @@ class _UserMainPageState extends State<UserMainPage> {
                                                 },
                                               ),
                                       )),
-
-                                  // Container(
-                                  //   height: 100,
-                                  //   width: 100,
-                                  //   decoration: BoxDecoration(
-                                  //       // shape: BoxShape.circle,
-                                  //       borderRadius:
-                                  //           BorderRadius.circular(100)),
-                                  //   child: Image.network(
-                                  //     LINKAPI + "storage/pp/" + parentAvatar,
-                                  //     fit: BoxFit.cover,
-                                  //     loadingBuilder: (BuildContext context,
-                                  //         Widget child,
-                                  //         ImageChunkEvent loadingProgress) {
-                                  //       if (loadingProgress == null)
-                                  //         return child;
-                                  //       return Center(
-                                  //         child: CircularProgressIndicator(
-                                  //           value: loadingProgress
-                                  //                       .expectedTotalBytes !=
-                                  //                   null
-                                  //               ? loadingProgress
-                                  //                       .cumulativeBytesLoaded /
-                                  //                   loadingProgress
-                                  //                       .expectedTotalBytes
-                                  //               : null,
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // ),
                                   SizedBox(
                                     width: 30,
                                   ),
@@ -689,18 +626,11 @@ class _UserMainPageState extends State<UserMainPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(
-                                              "Hi, ",
-                                              style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.white,
-                                              ),
-                                            ),
                                             Container(
-                                              width: width / 2.5,
+                                              width: width / 2,
                                               child: Text(
                                                 capitalize(parentName),
-                                                // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
+                                                // "sadkoaskdopaskdodsdsdsdpkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     fontSize: 25,
@@ -734,7 +664,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color.fromRGBO(0, 0, 0, 0.1),
-                                    offset: Offset(0, 2),
+                                    offset: Offset(0, 1),
                                     blurRadius: 4,
                                     spreadRadius: 0,
                                   )
@@ -749,7 +679,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                   'assets/images/calendar_filled.svg',
                                   width: 32,
                                   height: 32,
-                                  color: LightColors.oldBlue,
+                                  color: LightColors.mainBlue,
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -758,7 +688,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                   formatHari.format(dateTime) + ", ",
                                   style: TextStyle(
                                       fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 13),
                                 ),
                                 Text(

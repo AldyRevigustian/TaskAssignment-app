@@ -74,24 +74,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
       print('Failed to pick image: $e');
     }
   }
-  // pickImage() async {
-  //   try {
-  //     var image = await ImagePicker()
-  //         .pickImage(source: ImageSource.gallery, imageQuality: 15);
-  //     if (image == null) return;
-
-  //     setState(() {
-  //       imagePath = image.path;
-  //       imageFile = File(image.path);
-  //       imageData = base64Encode(imageFile.readAsBytesSync());
-  //     });
-  //     // print(imageData);
-  //     print(imagePath);
-  //     return imageData;
-  //   } on PlatformException catch (e) {
-  //     print('Failed to pick image: $e');
-  //   }
-  // }
 
   Future pickImageC() async {
     try {
@@ -109,55 +91,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
     }
   }
 
-  // showImage(String image) {
-  //   return Image.memory(
-  //     base64Decode(image),
-  //     width: 100,
-  //     height: 100,
-  //     fit: BoxFit.cover,
-  //   );
-  // }
-  // showImage(File image) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) {
-  //         return UserDetailScreen(
-  //           pathImage: image,
-  //         );
-  //       }));
-  //     },
-  //     child: Hero(
-  //       tag: image.toString() + Random().toString(),
-  //       // child: Image.file(
-  //       //   image,
-  //       //   width: 100,
-  //       //   height: 100,
-  //       //   fit: BoxFit.cover,
-  //       // ),
-  //       child: Image(
-  //         image: Image.file(image),
-  //         width: 100,
-  //         height: 100,
-  //         loadingBuilder: (BuildContext context, Widget child,
-  //             ImageChunkEvent loadingProgress) {
-  //           if (loadingProgress == null) return child;
-  //           return Container(
-  //             width: 100,
-  //             height: 100,
-  //             child: Center(
-  //               child: CircularProgressIndicator(
-  //                 value: loadingProgress.expectedTotalBytes != null
-  //                     ? loadingProgress.cumulativeBytesLoaded /
-  //                         loadingProgress.expectedTotalBytes
-  //                     : null,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
   showImage(File image) {
     return GestureDetector(
       onTap: () {
@@ -171,7 +104,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
         tag: image.toString() + Random().toString(),
         child: Image.file(
           image,
-          width: 100,
           height: 100,
           fit: BoxFit.cover,
         ),
@@ -185,7 +117,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
 
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
-    _descController.text = widget.description;
 
     super.initState();
   }
@@ -302,22 +233,13 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                     //       borderRadius: BorderRadius.circular(7)),
                     // ),
                     Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0, 0),
-                            blurRadius: 4)
-                      ],
-                      borderRadius: BorderRadius.circular(5)),
                   child: TextFormField(
                     autofocus: true,
                     controller: _descController,
                     // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        color:LightColors.lightBlack,
                         fontSize: 14,
                         fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
@@ -326,28 +248,28 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                             ? capitalize(widget.description)
                             : "",
                         hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                            color: LightColors.lightBlack,
                             fontSize: 15,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
+                        // enabledBorder: OutlineInputBorder(
+                        //   borderRadius: BorderRadius.all(Radius.circular(5)),
+                        //   borderSide: BorderSide(
+                        //     color: LightColors.lightBlack,
+                        //   ),
+                        // ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide:
+                              BorderSide(color: LightColors.lightBlack),
                         ),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1))),
+                            borderSide: BorderSide(
+                                color: LightColors.lightBlack,
+                                width: 0.8))
+                                
+                                ),
                   ),
                 )),
           ),
@@ -355,23 +277,29 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
               ? Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 10, right: 20),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      // child: Image.file(
-                      //   image,
-                      //   width: 100,
-                      //   height: 100,
-                      //   fit: BoxFit.cover,
-                      // ),
-                      child: showImage(imageFile),
-                      // child: Image.file(
-                      //   imageFile,
-                      //   width: 100,
-                      //   height: 100,
-                      //   fit: BoxFit.cover,
-                      // ),
-                    ),
+                        borderRadius: BorderRadius.circular(5),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return UserDetailScreen(
+                                pathImage: imageFile,
+                              );
+                            }));
+                          },
+                          child: Hero(
+                            tag: imageFile.toString() + Random().toString(),
+                            child: Image.file(
+                              imageFile,
+                              width: width,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )),
                   ),
                 )
               : Center(),
@@ -389,8 +317,8 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 child: Column(
                   children: <Widget>[
                     Icon(
-                      FluentIcons.dismiss_circle_20_regular,
-                      color: Color.fromRGBO(160, 160, 160, 0.7),
+                      FluentIcons.dismiss_circle_20_filled,
+                      color: Color.fromRGBO(160, 160, 160, 1),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -399,7 +327,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                       'Incomplete',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: Color.fromRGBO(160, 160, 160, 1),
+                          color: LightColors.lightBlack,
                           fontSize: 10),
                     ),
                   ],
@@ -415,8 +343,8 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 child: Column(
                   children: <Widget>[
                     Icon(
-                      FluentIcons.camera_20_regular,
-                      color: Color.fromRGBO(160, 160, 160, 0.7),
+                      FluentIcons.camera_20_filled,
+                      color: Color.fromRGBO(160, 160, 160, 1),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -479,8 +407,8 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 child: Column(
                   children: <Widget>[
                     Icon(
-                      FluentIcons.save_20_regular,
-                      color: Color.fromRGBO(160, 160, 160, 0.7),
+                      FluentIcons.save_20_filled,
+                      color: Color.fromRGBO(160, 160, 160, 1),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),

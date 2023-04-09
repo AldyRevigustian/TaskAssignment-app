@@ -1,4 +1,4 @@
-const String LINKAPI = "http://174.138.23.211:8484/";
+const String LINKAPI = "http://192.168.0.169:8000/";
 // const String LINKAPI = "http://10.0.2.2:8000/";
 
 // Kantor

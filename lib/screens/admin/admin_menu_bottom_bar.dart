@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/admin/history_schedule.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
@@ -31,7 +31,7 @@ class AdminMenuBottomBarPage extends StatefulWidget {
 class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
   String currentPage = 'main';
   String parentId;
-  ParentInf getParentInfo;
+  UserInf getParentInfo;
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
 
     String formatted = formatter.format(DateTime.now());
 
-    getParentInfo = Provider.of<Parent>(context).getParentInf();
+    getParentInfo = Provider.of<User>(context).getUserInf();
     parentId = getParentInfo.id.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
@@ -74,7 +74,6 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
       ),
       "logOut": LoginPage(),
     };
-    // log(parentId + "kntl");
     return Scaffold(
       body: pageView[currentPage],
       bottomNavigationBar: new BottomNavigationDot(
@@ -99,61 +98,6 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
             activeIcon: FluentIcons.sign_out_24_filled,
             icon: FluentIcons.sign_out_24_regular,
             onTap: () {
-              // return showDialog<void>(
-              //   context: context,
-              //   barrierDismissible: false, // user must tap button!
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       // <-- SEE HERE
-              //       title: const Text(
-              //         'Log Out',
-              //         style: TextStyle(fontFamily: "Lato"),
-              //       ),
-              //       content: SingleChildScrollView(
-              //         child: ListBody(
-              //           children: const <Widget>[
-              //             Text(
-              //               "Are you sure you want to log out ?",
-              //               style: TextStyle(
-              //                   fontFamily: "Lato",
-              //                   color: LightColors.lightBlack),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       actions: <Widget>[
-              //         TextButton(
-              //           child: const Text('No'),
-              //           onPressed: () {
-              //             Navigator.of(context).pushAndRemoveUntil(
-              //                 MaterialPageRoute(
-              //                     builder: (context) =>
-              //                         AdminMenuBottomBarPage()),
-              //                 (Route<dynamic> route) => false);
-              //           },
-              //         ),
-              //         TextButton(
-              //           child: const Text('Yes'),
-              //           onPressed: () async {
-              //             removeValuesSharedpref();
-              //             Navigator.of(context).pushAndRemoveUntil(
-              //                 MaterialPageRoute(
-              //                     builder: (context) => LoginPage()),
-              //                 (Route<dynamic> route) => false);
-              //             Fluttertoast.showToast(
-              //                 msg: "Successfully log out ",
-              //                 toastLength: Toast.LENGTH_SHORT,
-              //                 gravity: ToastGravity.BOTTOM,
-              //                 timeInSecForIosWeb: 1,
-              //                 backgroundColor: Colors.black54,
-              //                 textColor: Colors.white,
-              //                 fontSize: 12.0);
-              //           },
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // );
               return showCustAlertDouble(
                   height: 280,
                   context: context,

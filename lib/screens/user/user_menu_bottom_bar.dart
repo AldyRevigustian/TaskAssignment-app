@@ -5,7 +5,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_task_planner_app/provider/parent.dart';
+import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -30,7 +30,7 @@ class UserMenuBottomBarPage extends StatefulWidget {
 class MenuBottomBarState extends State<UserMenuBottomBarPage> {
   String currentPage = 'main';
   String parentId;
-  ParentInf getParentInfo;
+  UserInf getParentInfo;
   String tokens = "";
   String deviceTokenToSendPushNotification = "";
 
@@ -40,12 +40,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
     getDeviceTokenToSendNotification();
-
-    // FirebaseMessaging.onBackgroundMessage((message) {
-    //   LocalNotificationService.createanddisplaynotification(message);
-
-    //   return;
-    // });
 
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
@@ -141,6 +135,8 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
     prefs.remove("username");
     //Remove bool
     prefs.remove("password");
+
+    prefs.remove("token");
   }
 
   @override
@@ -148,14 +144,14 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
-    getParentInfo = Provider.of<Parent>(context).getParentInf();
+    getParentInfo = Provider.of<User>(context).getUserInf();
     parentId = getParentInfo.id.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
       "main": UserMainPage(id: parentId),
       "logOut": LoginPage(),
     };
-    // log(parentId + "kntl");
+
     return Scaffold(
       body: pageView[currentPage],
       bottomNavigationBar: new BottomNavigationDot(
@@ -170,12 +166,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
               onTap: () {
                 changePage("main");
               }),
-          // new BottomNavigationDotItem(
-          //     activeIcon: FluentIcons.history_16_filled,
-          //     icon: FluentIcons.history_16_regular,
-          //     onTap: () {
-          //       changePage("java");
-          //     }),
           new BottomNavigationDotItem(
             activeIcon: FluentIcons.sign_out_24_filled,
             icon: FluentIcons.sign_out_24_regular,
@@ -202,6 +192,8 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
                         fontSize: 12.0);
                   },
                   onSubmitCancel: () {
+                    // Navigator.pop(context);
+                    // changePage('main');
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => UserMenuBottomBarPage()),
