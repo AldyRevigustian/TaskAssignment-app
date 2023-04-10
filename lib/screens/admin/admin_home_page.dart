@@ -114,7 +114,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   List data = List(); //edited line
 
   Future<String> getSWData() async {
-    var res = await http.get(Uri.parse(LINKAPI + "api/dataOb"),
+    var res = await http.get(Uri.parse(URL + "api/dataOb"),
         headers: {"Accept": "application/json"});
     var resBody = json.decode(res.body);
 
@@ -894,7 +894,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                             ? Image.asset(
                                                 "assets/images/admin.png")
                                             : Image.network(
-                                                LINKAPI +
+                                                URL +
                                                     "storage/pp/" +
                                                     parentAvatar,
                                                 fit: BoxFit.cover,

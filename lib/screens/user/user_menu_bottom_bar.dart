@@ -29,8 +29,9 @@ class UserMenuBottomBarPage extends StatefulWidget {
 
 class MenuBottomBarState extends State<UserMenuBottomBarPage> {
   String currentPage = 'main';
-  String parentId;
-  UserInf getParentInfo;
+  String userId;
+  String token;
+  UserInf getUserInfo;
   String tokens = "";
   String deviceTokenToSendPushNotification = "";
 
@@ -64,15 +65,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
           log(message.notification.body);
           log("message.data11 ${message.data}");
           LocalNotificationService.createanddisplaynotification(message);
-          // setState(() {});
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (BuildContext context) {
-          //       return UserMenuBottomBarPage();
-          //     },
-          //   ),
-          // );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -91,14 +83,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
           log(message.notification.body);
           log("message.data22 ${message.data['_id']}");
         }
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (BuildContext context) {
-        //       return UserMenuBottomBarPage();
-        //     },
-        //   ),
-        // );
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -119,7 +103,7 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
       tokens = deviceTokenToSendPushNotification;
     });
     log("Token Value $deviceTokenToSendPushNotification");
-    await GetHelper().registid(parentId, deviceTokenToSendPushNotification);
+    await GetHelper().registid(userId, deviceTokenToSendPushNotification);
     return deviceTokenToSendPushNotification;
   }
 
@@ -131,12 +115,8 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
 
   removeValuesSharedpref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
     prefs.remove("username");
-    //Remove bool
     prefs.remove("password");
-
-    prefs.remove("token");
   }
 
   @override
@@ -144,11 +124,13 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
-    getParentInfo = Provider.of<User>(context).getUserInf();
-    parentId = getParentInfo.id.toString();
+
+    getUserInfo = Provider.of<User>(context).getUserInf();
+    userId = getUserInfo.id.toString();
+    token = getUserInfo.token.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
-      "main": UserMainPage(id: parentId),
+      "main": UserMainPage(id: userId, token: token,),
       "logOut": LoginPage(),
     };
 
@@ -177,7 +159,7 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
                   // buttonString: "OK",
                   onSubmitOk: () async {
                     removeValuesSharedpref();
-                    GetHelper().registid(parentId, "logout");
+                    GetHelper().registid(userId, "logout");
 
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -215,9 +197,7 @@ showLoadingProgress(BuildContext context) {
       barrierDismissible: false,
       context: context,
       builder: (_) => Center(
-              // Aligns the container to center
               child: Container(
-            // A simplified version of dialog.
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(8)),
             width: 100.0,

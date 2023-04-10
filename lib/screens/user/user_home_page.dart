@@ -23,16 +23,14 @@ import 'package:intl/intl.dart';
 import 'userCardExpandActive.dart';
 import 'userCardExpandNon.dart';
 
-// List<Task> listOfDownloadedFile = List();
-// listOfDownloadedFile.add(...);
-
-// var
 
 class UserMainPage extends StatefulWidget {
   final String id;
+  final String token;
   UserMainPage({
     Key key,
     @required this.id,
+    @required this.token,
   }) : super(key: key);
   @override
   State<UserMainPage> createState() => _UserMainPageState();
@@ -45,6 +43,7 @@ class _UserMainPageState extends State<UserMainPage> {
   String parentAvatar;
   String parentId;
   String usrId;
+  String token;
   UserInf getParentInfo;
 
   DateFormat formatHari;
@@ -91,7 +90,7 @@ class _UserMainPageState extends State<UserMainPage> {
   }
 
   void fetchandrefresh() {
-    listTask = GetHelper().fetchTask(widget.id);
+    listTask = GetHelper().fetchTask(widget.id, widget.token);
     setState(() {});
   }
 
@@ -587,7 +586,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                             ? Image.asset(
                                                 "assets/images/2.jpg")
                                             : Image.network(
-                                                LINKAPI +
+                                                URL +
                                                     "storage/pp/" +
                                                     parentAvatar,
                                                 fit: BoxFit.cover,

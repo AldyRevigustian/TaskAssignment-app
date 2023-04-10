@@ -18,7 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
   void _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    bool isSaved = prefs.containsKey('token');
+    bool isSaved = prefs.containsKey('email');
     if (!isSaved) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginPage()),

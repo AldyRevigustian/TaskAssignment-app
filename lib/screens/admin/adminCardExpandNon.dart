@@ -68,7 +68,7 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
         // log("pencet ni gan");
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DetailScreen(
-            pathImage: LINKAPI + "storage/bukti/" + path,
+            pathImage: URL + "storage/bukti/" + path,
           );
         }));
       },
@@ -93,7 +93,7 @@ class _AdminCardExpandNonState extends State<AdminCardExpandNon> {
             //   );
             // }),
             Image.network(
-          LINKAPI + "storage/bukti/" + path,
+          URL + "storage/bukti/" + path,
           width: 100,
           height: 100,
           alignment: Alignment.center,

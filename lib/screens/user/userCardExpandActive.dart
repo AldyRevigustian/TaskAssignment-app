@@ -67,7 +67,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
         imagePath = image.path;
         imageFile = File(image.path);
       });
-      // print(imageData);
       print(imageFile);
       return imageFile;
     } on PlatformException catch (e) {
@@ -139,28 +138,23 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
 
   @override
   Widget build(BuildContext context) {
-    // String title = "Menyapu Lantai";
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.1), blurRadius: 5)
-      ], borderRadius: BorderRadius.circular(10)),
+      ], borderRadius: BorderRadius.circular(8)),
       child: ExpansionTileCard(
         elevation: 0,
-        // shadowColor: Color.fromRGBO(0, 0, 0, ),
         baseColor: Colors.white,
         expandedColor: Colors.white,
         key: widget.idCard,
         leading: Icon(
-          // FluentIcons.checkmark_circle_32_regular,
           iconStatus(widget.status),
           color: colorStatus(widget.status),
           size: 40,
         ),
-        // animateTrailing: true,
         title: Text(
-          // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
           capitalize(widget.title),
           style: TextStyle(
               fontFamily: "Lato",
@@ -171,8 +165,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 0),
           child: Row(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,25 +174,14 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
                         color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Icon(
-                      FluentIcons.clock_12_filled,
-                      size: 12,
-                      color: LightColors.lightBlack.withOpacity(0.6),
-                    ),
-                  ),
                   Text(
-                    DateFormat('kk : mm')
-                        .format(DateTime.parse(widget.created_at)),
+                    DateFormat('kk : mm').format(DateTime.parse(widget.created_at)),
                     style: TextStyle(
                         fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
                         color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
@@ -211,10 +192,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
           ),
         ),
         children: <Widget>[
-          // Divider(
-          //   thickness: 1.0,
-          //   height: 1.0,
-          // ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -223,15 +200,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                   vertical: 3.0,
                 ),
                 child:
-                    // Container(
-                    //   width: width,
-                    //   height: 100,
-                    //   decoration: BoxDecoration(
-                    //       border: Border.all(
-                    //         color: Colors.black,
-                    //       ),
-                    //       borderRadius: BorderRadius.circular(7)),
-                    // ),
+                  
                     Container(
                   child: TextFormField(
                     autofocus: true,
@@ -252,12 +221,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                             fontSize: 15,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        // enabledBorder: OutlineInputBorder(
-                        //   borderRadius: BorderRadius.all(Radius.circular(5)),
-                        //   borderSide: BorderSide(
-                        //     color: LightColors.lightBlack,
-                        //   ),
-                        // ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           borderSide:

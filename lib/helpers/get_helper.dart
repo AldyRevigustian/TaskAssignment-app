@@ -11,39 +11,23 @@ import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:http/http.dart' as http;
 
 class GetHelper {
-  String link = LINKAPI + "api/schedule";
-  String linkImage = LINKAPI + "storage/bukti/";
+  String linkImage = URL + "storage/bukti/";
 
-
-  Future<List<Task>> fetchTask(String id) async {
-    // var data = {
-    //   'user_id': "2",
-    // };
-
-    final response =
-        await http.post(Uri.parse(link), body: {"user_id": id.toString()});
+  Future<List<Task>> fetchTask(String id, String token) async {
+    final response = await http.get(Uri.parse(URL + 'api/task/user/$id'),
+        headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      // print(jsonResponse.map((job) => new Task.fromJson(job)).toList());
+      print(jsonResponse);
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-      // AdTemplate template = AdTemplate.fromJson(data[0]);
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      // throw Exception('Failed to load Task');
-    }
+    } 
   }
 
   Future<List<Task>> getAllTask() async {
-    final response = await http.get(Uri.parse(LINKAPI + "api/dataSchedule"));
+    final response = await http.get(Uri.parse(URL + "api/dataSchedule"));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      log("Masok");
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      // throw Exception('Failed to load Task');
     }
   }
 
@@ -53,8 +37,7 @@ class GetHelper {
     String image,
     String description,
   ) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/update'));
+    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/update'));
     request.fields
         .addAll({'id': id, 'status': status, "task_description": description});
     request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
@@ -73,8 +56,7 @@ class GetHelper {
     String status,
     String description,
   ) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/update'));
+    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/update'));
     request.fields
         .addAll({'id': id, "task_description": description, 'status': status});
     // request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
@@ -118,7 +100,7 @@ class GetHelper {
 
   Future registid(String id, String regis) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/registration'));
+        http.MultipartRequest('POST', Uri.parse(URL + 'api/registration'));
     request.fields.addAll({'id': id, 'registration': regis});
 
     http.StreamedResponse response = await request.send();
@@ -133,7 +115,7 @@ class GetHelper {
   Future postSchedule(
       String id, String title, String description, String date) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/addSchedule'));
+        http.MultipartRequest('POST', Uri.parse(URL + 'api/addSchedule'));
     request.fields.addAll({
       'user_id': id,
       'task_title': title,
@@ -153,8 +135,7 @@ class GetHelper {
   }
 
   Future deleteTask(String id) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse(LINKAPI + 'api/delete'));
+    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/delete'));
     request.fields.addAll({'id': id});
 
     http.StreamedResponse response = await request.send();
@@ -169,7 +150,7 @@ class GetHelper {
   }
 
   Future<List<Task>> history(String date) async {
-    final response = await http.post(Uri.parse(LINKAPI + "api/history"),
+    final response = await http.post(Uri.parse(URL + "api/history"),
         body: {'tanggal': date.toString()});
     // body: {'tanggal': '2022-05-25'});
     if (response.statusCode == 200) {

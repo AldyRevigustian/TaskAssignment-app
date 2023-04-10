@@ -8,18 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserInf {
   final int id;
-  final String email;
   final String name;
-  final String created_at;
+  final String email;
   final String registration;
   final String avatar;
+  final String token;
   UserInf({
     this.id,
     this.email,
     this.name,
-    this.created_at,
     this.registration,
     this.avatar,
+    this.token,
   });
 }
 
@@ -30,11 +30,10 @@ class User with ChangeNotifier {
     return _inf;
   }
 
-  saveSFstring(String email, String password, String token) async {
+  saveSFstring(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', email);
     prefs.setString('password', password);
-    prefs.setString('token', token);
 
     print("Data user sudah di simpan email : ${prefs.getString('email')}");
   }
@@ -47,20 +46,18 @@ class User with ChangeNotifier {
 
   Future loginUser(String user, String pass) async {
     var response;
-    var datauser;
     var data;
     try {
-      response = await http.post(Uri.parse(LINKAPI + "api/login"), body: {
+      response = await http.post(Uri.parse(URL + "api/login"), body: {
         "email": user.trim(),
         "password": pass.trim(),
       });
       if (response.statusCode == 200) {
         data = json.decode(response.body);
-        datauser = data['user'];
-        insertInf(datauser);
-        saveSFstring(user.trim(), pass.trim(), data['token']);
+        insertInf(data);
+        saveSFstring(user.trim(), pass.trim());
 
-        if (datauser['role'] == "user") {
+        if (data['role'] == "user") {
           return "user";
         } else {
           return "admin";
@@ -81,6 +78,7 @@ class User with ChangeNotifier {
       registration:
           (datauser['registration'] == null) ? " " : datauser['registration'],
       avatar: (datauser['photo'] == null) ? null : datauser['poto'],
+      token: datauser['token'],
     );
 
     setUserInf(parentInf);
