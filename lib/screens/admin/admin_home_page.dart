@@ -32,9 +32,11 @@ import 'adminCardExpandNon.dart';
 
 class AdminMainPage extends StatefulWidget {
   final String id;
+  final String token;
   AdminMainPage({
     Key key,
     @required this.id,
+    @required this.token,
   }) : super(key: key);
   @override
   State<AdminMainPage> createState() => _AdminMainPageState();
@@ -76,7 +78,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
-    listTask = GetHelper().getAllTask();
+    listTask = GetHelper().getAllTask(widget.token);
     fetchandrefresh();
     // listTask = GetHelper().fetchTask
     // _refreshProducts(context);
@@ -106,7 +108,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   }
 
   void fetchandrefresh() {
-    listTask = GetHelper().getAllTask();
+    listTask = GetHelper().getAllTask(widget.token);
     getSWData();
     setState(() {});
   }

@@ -30,8 +30,9 @@ class AdminMenuBottomBarPage extends StatefulWidget {
 
 class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
   String currentPage = 'main';
-  String parentId;
-  UserInf getParentInfo;
+  String userId;
+  String userToken;
+  UserInf getUserInfo;
 
   @override
   void initState() {
@@ -62,12 +63,14 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
 
     String formatted = formatter.format(DateTime.now());
 
-    getParentInfo = Provider.of<User>(context).getUserInf();
-    parentId = getParentInfo.id.toString();
+    getUserInfo = Provider.of<User>(context).getUserInf();
+    userId = getUserInfo.id.toString();
+    userToken = getUserInfo.id.toString();
 
     Map<String, Widget> pageView = <String, Widget>{
       "main": AdminMainPage(
-        id: parentId,
+        id: userId,
+        token: userToken,
       ),
       "history": HistorySchedule(
         tanggal: formatted,

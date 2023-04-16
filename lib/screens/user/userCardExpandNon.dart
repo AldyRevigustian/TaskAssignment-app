@@ -21,8 +21,8 @@ class UserCardExpandNon extends StatefulWidget {
   final String status;
   final String title;
   final String description;
-  final String created_at;
-  final String updated_at;
+  final String date;
+  final String token;
   final String image;
   GlobalKey<ExpansionTileCardState> idCard;
 
@@ -31,9 +31,9 @@ class UserCardExpandNon extends StatefulWidget {
     @required this.status,
     @required this.title,
     @required this.description,
-    @required this.created_at,
-    @required this.updated_at,
     @required this.image,
+    @required this.date,
+    @required this.token,
   }) : super(key: key);
 
   @override
@@ -43,32 +43,22 @@ class UserCardExpandNon extends StatefulWidget {
 class _UserCardExpandNonState extends State<UserCardExpandNon> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  // showImage(String image) {
-  //   return Image.memory(
-  //     base64Decode(image),
-  //     width: 100,
-  //     height: 100,
-  //     fit: BoxFit.cover,
-  //   );
-  // }
-
   showImage(String path) {
     return GestureDetector(
       onTap: () {
         // log("pencet ni gan");
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DetailScreen(
-            pathImage: URL + "storage/bukti/" + path,
+            pathImage: URL + path,
           );
         }));
       },
       child: Hero(
         tag: path + Random().toString(),
         child: Image.network(
-          URL + "storage/bukti/" + path,
-          width: 100,
+          URL + path,
+          width: MediaQuery.of(context).size.width,
           height: 100,
-          alignment: Alignment.center,
           fit: BoxFit.cover,
           loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent loadingProgress) {
@@ -92,9 +82,12 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
   }
 
   DateFormat formatTanggal;
+  DateFormat formatJam;
 
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
+    formatJam = DateFormat.Hm('id');
+
     super.initState();
   }
 
@@ -107,7 +100,7 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
   }
 
   iconStatus(String status) {
-    if (status == "Completed") {
+    if (status == "Complete") {
       return FluentIcons.checkmark_circle_32_regular;
     } else if (status == "On Progress") {
       return FluentIcons.error_circle_24_regular;
@@ -117,7 +110,7 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
   }
 
   colorStatus(String colorStatus) {
-    if (colorStatus == "Completed") {
+    if (colorStatus == "Complete") {
       return LightColors.lightGreen;
     } else if (colorStatus == "On Progress") {
       return LightColors.lightYellow;
@@ -130,25 +123,22 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.1), blurRadius: 5)
       ], borderRadius: BorderRadius.circular(10)),
       child: ExpansionTileCard(
         elevation: 0,
-        // shadowColor: Color.fromRGBO(0, 0, 0, ),
         baseColor: Colors.white,
         expandedColor: Colors.white,
         key: widget.idCard,
         leading: Icon(
-          // FluentIcons.checkmark_circle_32_regular,
           iconStatus(widget.status),
           color: colorStatus(widget.status),
           size: 40,
         ),
-        // animateTrailing: true,
         title: Text(
-          // "kkdopaskdopaskdsadasdasdasdasdasdasdasdasdasdasdokasopdkasodkaopskdpoakpokfopkerpofkeoprkfoperkfoperkfopkerofpkerpofkeorpkfeorpkfpoerkfporekfperk",
           capitalize(widget.title),
           style: TextStyle(
               fontFamily: "Lato",
@@ -159,43 +149,30 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 0),
           child: Row(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    formatTanggal.format(DateTime.parse(widget.updated_at)),
+                    formatTanggal.format(DateTime.parse(widget.date)),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
-                        color: (widget.status == "Completed")
-                            ? LightColors.lightGreen.withOpacity(0.7)
-                            : LightColors.lightRed.withOpacity(0.7),
+                        color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Icon(
-                      FluentIcons.clock_12_filled,
-                      size: 12,
-                      color: (widget.status == "Completed")
-                          ? LightColors.lightGreen.withOpacity(0.7)
-                          : LightColors.lightRed.withOpacity(0.7),
-                    ),
-                  ),
+                  Text(' • ',
+                      style: TextStyle(
+                          fontFamily: "Lato",
+                          color: LightColors.lightBlack.withOpacity(0.6),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11)),
                   Text(
-                    DateFormat('kk : mm')
-                        .format(DateTime.parse(widget.updated_at)),
+                    DateFormat('kk : mm').format(DateTime.parse(widget.date)),
                     style: TextStyle(
                         fontFamily: "Lato",
-                        // fontWeight: FontWeight.bold,
-                        color: (widget.status == "Completed")
-                            ? LightColors.lightGreen.withOpacity(0.7)
-                            : LightColors.lightRed.withOpacity(0.7),
+                        color: LightColors.lightBlack.withOpacity(0.6),
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
@@ -205,10 +182,6 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
           ),
         ),
         children: <Widget>[
-          // Divider(
-          //   thickness: 1.0,
-          //   height: 1.0,
-          // ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -216,91 +189,52 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                   horizontal: 20.0,
                   vertical: 3.0,
                 ),
-                child:
-                    // Container(
-                    //   width: width,
-                    //   height: 100,
-                    //   decoration: BoxDecoration(
-                    //       border: Border.all(
-                    //         color: Colors.black,
-                    //       ),
-                    //       borderRadius: BorderRadius.circular(7)),
-                    // ),
-                    Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0, 0),
-                            blurRadius: 4)
-                      ],
-                      borderRadius: BorderRadius.circular(5)),
-                  child: TextField(
+                child: Container(
+                  child: TextFormField(
                     enabled: false,
-                    // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
-                        fontFamily: "Lato",
-                        fontSize: 15,
-                        color: LightColors.lightBlack),
+                        color: LightColors.lightBlack,
+                        fontSize: 14,
+                        fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                         hintText: (widget.description != null)
                             ? capitalize(widget.description)
                             : "",
                         hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                            color: LightColors.lightBlack,
                             fontSize: 15,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1)),
+                            borderSide: BorderSide(
+                                color: LightColors.lightBlack, width: 0.8)),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: LightColors.lightBlack, width: 0.8)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1))),
+                            borderSide: BorderSide(
+                                color: LightColors.lightBlack, width: 0.8))),
                   ),
                 )),
           ),
-
           widget.image != "null"
               ? Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 10, right: 20),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      // child: Image.file(
-                      //   image,
-                      //   width: 100,
-                      //   height: 100,
-                      //   fit: BoxFit.cover,
-                      // ),
                       child: showImage(widget.image),
                     ),
                   ),
                 )
               : Center(),
-
           SizedBox(
             height: 15,
           )

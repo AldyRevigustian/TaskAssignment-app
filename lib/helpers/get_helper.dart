@@ -20,49 +20,39 @@ class GetHelper {
       List jsonResponse = json.decode(response.body);
       print(jsonResponse);
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-    } 
+    }
   }
 
-  Future<List<Task>> getAllTask() async {
-    final response = await http.get(Uri.parse(URL + "api/dataSchedule"));
+  Future<List<Task>> getAllTask(String token) async {
+    final response = await http.get(Uri.parse(URL + "api/task/"),
+        headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
     }
   }
 
-  Future putTaskFinale(
+  Future updateTask(
     String id,
     String status,
     String image,
     String description,
+    String token,
   ) async {
-    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/update'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse(URL + 'api/task/update/'));
+    request.headers.addAll({'Authorization': 'Bearer $token'});
+
     request.fields
         .addAll({'id': id, 'status': status, "task_description": description});
-    request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
+    
+    if (image != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('upload_bukti', image));
     }
-  }
-
-  Future putTaskCancel(
-    String id,
-    String status,
-    String description,
-  ) async {
-    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/update'));
-    request.fields
-        .addAll({'id': id, "task_description": description, 'status': status});
-    // request.files.add(await http.MultipartFile.fromPath('upload_bukti', image));
 
     http.StreamedResponse response = await request.send();
-
+    print(response);
     if (response.statusCode == 200) {
       return true;
     } else {

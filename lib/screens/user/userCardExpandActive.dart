@@ -30,8 +30,8 @@ class UserCardExpandActive extends StatefulWidget {
   final String status;
   final String title;
   final String description;
-  final String created_at;
-  final String updated_at;
+  final String date;
+  final String token;
   GlobalKey<ExpansionTileCardState> idCard;
 
   UserCardExpandActive({
@@ -40,8 +40,8 @@ class UserCardExpandActive extends StatefulWidget {
     @required this.status,
     @required this.title,
     @required this.description,
-    @required this.created_at,
-    @required this.updated_at,
+    @required this.date,
+    @required this.token,
   }) : super(key: key);
 
   @override
@@ -90,32 +90,14 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
     }
   }
 
-  showImage(File image) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UserDetailScreen(
-            pathImage: image,
-          );
-        }));
-      },
-      child: Hero(
-        tag: image.toString() + Random().toString(),
-        child: Image.file(
-          image,
-          height: 100,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
   DateFormat formatTanggal;
+  DateFormat formatJam;
 
   final picker = ImagePicker();
 
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
+    formatJam = DateFormat.Hm('id');
 
     super.initState();
   }
@@ -142,7 +124,10 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
     double height = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(boxShadow: [
-        BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.1), blurRadius: 5)
+        BoxShadow(
+          color: Color.fromRGBO(0, 0, 0, 0.1),
+          blurRadius: 5,
+        )
       ], borderRadius: BorderRadius.circular(8)),
       child: ExpansionTileCard(
         elevation: 0,
@@ -166,27 +151,29 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
           padding: const EdgeInsets.only(top: 0),
           child: Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    formatTanggal.format(DateTime.parse(widget.created_at)),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: "Lato",
-                        color: LightColors.lightBlack.withOpacity(0.6),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11),
-                  ),
-                  Text(
-                    DateFormat('kk : mm').format(DateTime.parse(widget.created_at)),
-                    style: TextStyle(
-                        fontFamily: "Lato",
-                        color: LightColors.lightBlack.withOpacity(0.6),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11),
-                  ),
-                ],
+              Text(
+                formatTanggal.format(DateTime.parse(widget.date)),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: "Lato",
+                    color: LightColors.lightBlack.withOpacity(0.6),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11),
+              ),
+              Text(' • ',
+                  style: TextStyle(
+                      fontFamily: "Lato",
+                      color: LightColors.lightBlack.withOpacity(0.6),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11)),
+              Text(
+                formatJam.format(DateTime.parse(widget.date)),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: "Lato",
+                    color: LightColors.lightBlack.withOpacity(0.6),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11),
               ),
             ],
           ),
@@ -199,16 +186,13 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                   horizontal: 20.0,
                   vertical: 3.0,
                 ),
-                child:
-                  
-                    Container(
+                child: Container(
                   child: TextFormField(
-                    autofocus: true,
+                    // autofocus: true,
                     controller: _descController,
-                    // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
-                        color:LightColors.lightBlack,
+                        color: LightColors.lightBlack,
                         fontSize: 14,
                         fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
@@ -222,17 +206,13 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide:
-                              BorderSide(color: LightColors.lightBlack),
-                        ),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: LightColors.lightBlack, width: 0.8)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack,
-                                width: 0.8))
-                                
-                                ),
+                                color: LightColors.lightBlack, width: 0.8))),
                   ),
                 )),
           ),
@@ -338,35 +318,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                   } else {
                     _showAlertCompleteDialog();
                   }
-                  // print(imageData);
-                  // print(imagePath);
-                  // bool res = await GetHelper().putDio(
-                  //   widget.id,
-                  //   "1",
-                  //   _descController.text,
-                  //   imageData,
-                  // );
-                  // bool res = await GetHelper().putTaskImage(
-                  //     widget.id, "1", _descController.text, imageData);
-                  // bool res = await GetHelper()
-                  //     .putTask(widget.id, "1", _descController.text,);
                 },
-                // onPressed: () async {
-                //   bool res = await GetHelper()
-                //       .putTask(widget.id, "1", _descController.text);
-                //   if (res) {
-                //     Navigator.pushReplacement(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (BuildContext context) {
-                //           return MenuBottomBarPage();
-                //         },
-                //       ),
-                //     );
-                //   } else {
-                //     print("gagal");
-                //   }
-                // },
                 child: Column(
                   children: <Widget>[
                     Icon(
@@ -398,25 +350,18 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
         height: 290,
         context: context,
         title: "Incomplete Task",
-        // buttonString: "OK",
         onSubmitOk: () async {
           showLoadingProgress(context);
           if (imagePath == null) {
-            bool res = await GetHelper().putTaskCancel(
+            bool res = await GetHelper().updateTask(
                 widget.id,
-                "Incompleted",
+                "Incomplete",
+                null,
                 _descController.text == ""
                     ? widget.description
-                    : _descController.text);
+                    : _descController.text,
+                widget.token);
             if (res) {
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (BuildContext context) {
-              //       return UserMenuBottomBarPage();
-              //     },
-              //   ),
-              // );
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -443,22 +388,15 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
               print("gagal");
             }
           } else {
-            bool res = await GetHelper().putTaskFinale(
+            bool res = await GetHelper().updateTask(
                 widget.id,
-                "Incompleted",
+                "Incomplete",
                 imagePath.toString(),
                 _descController.text == ""
                     ? widget.description
-                    : _descController.text);
+                    : _descController.text,
+                widget.token);
             if (res) {
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (BuildContext context) {
-              //       return UserMenuBottomBarPage();
-              //     },
-              //   ),
-              // );
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -494,103 +432,10 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
   }
 
   Future<void> _showAlertCompleteDialog() {
-    // return showDialog<void>(
-    //   context: context,
-    //   barrierDismissible: false, // user must tap button!
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       // <-- SEE HERE
-    //       title: const Text(
-    //         'Complete Task',
-    //         style: TextStyle(fontFamily: "Lato"),
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: ListBody(
-    //           children: const <Widget>[
-    //             Text(
-    //               "Are you sure you will report this task as Completed?",
-    //               style: TextStyle(
-    //                   fontFamily: "Lato", color: LightColors.lightBlack),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       actions: <Widget>[
-    //         TextButton(
-    //           child: const Text('No'),
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //         ),
-    //         TextButton(
-    //           child: const Text('Yes'),
-    //           onPressed: () async {
-    //             if (imagePath == null) {
-    //               Fluttertoast.showToast(
-    //                   msg: "Please add Image",
-    //                   toastLength: Toast.LENGTH_SHORT,
-    //                   gravity: ToastGravity.BOTTOM,
-    //                   timeInSecForIosWeb: 1,
-    //                   backgroundColor: Colors.black54,
-    //                   textColor: Colors.white,
-    //                   fontSize: 12.0);
-    //             } else {
-    //               bool res = await GetHelper().putTaskFinale(
-    //                   widget.id,
-    //                   "Completed",
-    //                   imagePath.toString(),
-    //                   _descController.text == ""
-    //                       ? widget.description
-    //                       : _descController.text);
-
-    //               if (res == true) {
-    //                 // Navigator.pushReplacement(
-    //                 //   context,
-    //                 //   MaterialPageRoute(
-    //                 //     builder: (BuildContext context) {
-    //                 //       return UserMenuBottomBarPage();
-    //                 //     },
-    //                 //   ),
-    //                 // );
-    //                 Navigator.pushAndRemoveUntil(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                       builder: (BuildContext context) =>
-    //                           UserMenuBottomBarPage()),
-    //                   ModalRoute.withName('/home'),
-    //                 );
-    //                 Fluttertoast.showToast(
-    //                     msg: "Success set task as completed",
-    //                     toastLength: Toast.LENGTH_SHORT,
-    //                     gravity: ToastGravity.BOTTOM,
-    //                     timeInSecForIosWeb: 1,
-    //                     backgroundColor: Colors.black54,
-    //                     textColor: Colors.white,
-    //                     fontSize: 12.0);
-    //               } else {
-    //                 Fluttertoast.showToast(
-    //                     msg: "Failed set task as completed",
-    //                     toastLength: Toast.LENGTH_SHORT,
-    //                     gravity: ToastGravity.BOTTOM,
-    //                     timeInSecForIosWeb: 1,
-    //                     backgroundColor: Colors.black54,
-    //                     textColor: Colors.white,
-    //                     fontSize: 12.0);
-    //                 print("gagal");
-    //               }
-    //             }
-    //           },
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
-
     return showCustAlertDouble(
         height: 290,
         context: context,
         title: "Complete Task",
-        // buttonString: "OK",
         onSubmitOk: () async {
           if (imagePath == null) {
             Fluttertoast.showToast(
@@ -603,13 +448,14 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 fontSize: 12.0);
           } else {
             showLoadingProgress(context);
-            bool res = await GetHelper().putTaskFinale(
+            bool res = await GetHelper().updateTask(
                 widget.id,
-                "Completed",
+                "Complete",
                 imagePath.toString(),
                 _descController.text == ""
                     ? widget.description
-                    : _descController.text);
+                    : _descController.text,
+                widget.token);
 
             if (res == true) {
               Navigator.pushAndRemoveUntil(

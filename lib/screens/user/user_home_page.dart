@@ -23,7 +23,6 @@ import 'package:intl/intl.dart';
 import 'userCardExpandActive.dart';
 import 'userCardExpandNon.dart';
 
-
 class UserMainPage extends StatefulWidget {
   final String id;
   final String token;
@@ -131,22 +130,6 @@ class _UserMainPageState extends State<UserMainPage> {
                   color: LightColors.mainBlue.withOpacity(0.5),
                 ),
               ),
-              // SizedBox(
-              //   width: 2,
-              // ),
-              // Container(
-              //   height: height,
-              //   width: 1,
-              //   color: LightColors.mainBlue,
-              // ),
-              // SizedBox(
-              //   width: 2,
-              // ),
-              // Container(
-              //   height: height,
-              //   width: 1,
-              //   color: LightColors.mainBlue,
-              // ),
             ],
           ),
           NotificationListener<OverscrollIndicatorNotification>(
@@ -200,8 +183,6 @@ class _UserMainPageState extends State<UserMainPage> {
                                     ? Container(
                                         height: height / 1.8,
                                         child: Column(
-                                          // crossAxisAlignment:
-                                          //     CrossAxisAlignment.center,
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
@@ -212,19 +193,6 @@ class _UserMainPageState extends State<UserMainPage> {
                                               opacity:
                                                   AlwaysStoppedAnimation(0.3),
                                             ),
-
-                                            // Container(
-                                            //   height: 100,
-                                            //   width: 100,
-                                            //   decoration: BoxDecoration(
-                                            //       image: DecorationImage(
-                                            //           image: AssetImage(
-                                            //               "assets/images/no_task.png"),
-                                            //           opacity: 0.3,
-                                            //           colorFilter: ColorFilter.mode(
-                                            //               Colors.grey,
-                                            //               BlendMode.color))),
-                                            // ),
                                             SizedBox(
                                               height: 15,
                                             ),
@@ -251,15 +219,6 @@ class _UserMainPageState extends State<UserMainPage> {
                                                       Alignment.centerRight,
                                                   height: 40,
                                                   width: 50,
-                                                  // child: Container(
-                                                  //   width: 1,
-                                                  //   height: 1,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.white,
-                                                  //       borderRadius:
-                                                  //           BorderRadius
-                                                  //               .circular(50)),
-                                                  // ),
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         right: 10),
@@ -338,12 +297,11 @@ class _UserMainPageState extends State<UserMainPage> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              created_at: snapshot
+                                                              date: snapshot
                                                                   .data[index]
-                                                                  .created_at,
-                                                              updated_at: snapshot
-                                                                  .data[index]
-                                                                  .updated_at,
+                                                                  .date,
+                                                              token:
+                                                                  widget.token,
                                                             ),
                                                           )
                                                         ],
@@ -394,15 +352,6 @@ class _UserMainPageState extends State<UserMainPage> {
                                                       Alignment.centerRight,
                                                   height: 40,
                                                   width: 50,
-                                                  // child: Container(
-                                                  //   width: 1,
-                                                  //   height: 1,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.white,
-                                                  //       borderRadius:
-                                                  //           BorderRadius
-                                                  //               .circular(50)),
-                                                  // ),
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         right: 10),
@@ -481,15 +430,13 @@ class _UserMainPageState extends State<UserMainPage> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              created_at: snapshot
-                                                                  .data[index]
-                                                                  .created_at,
-                                                              updated_at: snapshot
-                                                                  .data[index]
-                                                                  .updated_at,
                                                               image: snapshot
                                                                   .data[index]
                                                                   .image,
+                                                              date: snapshot
+                                                                  .data[index]
+                                                                  .date,
+                                                              token: widget.token,
                                                             ),
                                                           )
                                                         ],
@@ -569,8 +516,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                     opacity: 0.5,
                                     image:
                                         AssetImage('assets/images/header.png'),
-                                    fit: BoxFit.fitWidth)
-                                    ),
+                                    fit: BoxFit.fitWidth)),
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -583,8 +529,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                       width: 100,
                                       child: ClipOval(
                                         child: parentAvatar == null
-                                            ? Image.asset(
-                                                "assets/images/2.jpg")
+                                            ? Image.asset("assets/images/2.jpg")
                                             : Image.network(
                                                 URL +
                                                     "storage/pp/" +

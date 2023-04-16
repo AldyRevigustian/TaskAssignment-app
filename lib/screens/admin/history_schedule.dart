@@ -291,15 +291,15 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              created_at: snapshot
-                                                                  .data[index]
-                                                                  .created_at,
-                                                              updated_at: snapshot
-                                                                  .data[index]
-                                                                  .updated_at,
+                                                              // created_at: snapshot
+                                                              //     .data[index]
+                                                              //     .created_at,
+                                                              // updated_at: snapshot
+                                                              //     .data[index]
+                                                              //     .updated_at,
                                                               image: snapshot
                                                                   .data[index]
-                                                                  .image,
+                                                                  .image, date: '', token: '',
                                                             ),
                                                           )
                                                         ],

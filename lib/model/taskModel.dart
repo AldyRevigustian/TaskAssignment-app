@@ -6,8 +6,7 @@ class Task {
   final String status;
   final String title;
   final String description;
-  final String created_at;
-  final String updated_at;
+  final String date;
   final String image;
 
   const Task({
@@ -15,9 +14,8 @@ class Task {
     @required this.id,
     @required this.status,
     @required this.title,
-    @required this.created_at,
     @required this.description,
-    @required this.updated_at,
+    @required this.date,
     @required this.image,
   });
 
@@ -28,21 +26,8 @@ class Task {
       status: json['status'],
       title: json['task_title'],
       description: json['task_description'],
-      // created_at: json['created_at'],
-      created_at: json["created_at"],
-      updated_at: json["updated_at"],
+      date: json['assigned_date'],
       image: (json["upload_bukti"] == null) ? "null" : json["upload_bukti"],
     );
-    // return Task(
-    //   // userId: json['userId'],
-    //   id: json['id'],
-    //   status: json['status'],
-    //   title: json['title'],
-    //   description: json['description'],
-    //   // created_at: json['created_at'],
-    //   created_at: json["created_at"],
-    //   update_at: json["update_at"],
-    //   image: json["image"],
-    // );
   }
 }
