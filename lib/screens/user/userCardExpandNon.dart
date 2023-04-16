@@ -42,6 +42,7 @@ class UserCardExpandNon extends StatefulWidget {
 
 class _UserCardExpandNonState extends State<UserCardExpandNon> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+  final _descController = TextEditingController();
 
   showImage(String path) {
     return GestureDetector(
@@ -87,6 +88,7 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
     formatJam = DateFormat.Hm('id');
+    _descController.text = widget.description;
 
     super.initState();
   }
@@ -191,12 +193,13 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                 ),
                 child: Container(
                   child: TextFormField(
-                    enabled: false,
-                    maxLines: 5,
+                    controller: _descController,
+                    readOnly: true,
                     style: TextStyle(
                         color: LightColors.lightBlack,
                         fontSize: 14,
                         fontFamily: "Lato"),
+                    maxLines: 5,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                         hintText: (widget.description != null)
@@ -207,18 +210,26 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                             fontSize: 15,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                         enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack, width: 0.8)),
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack, width: 0.8)),
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack, width: 0.8))),
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8))),
                   ),
                 )),
           ),

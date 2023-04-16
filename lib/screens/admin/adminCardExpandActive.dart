@@ -27,9 +27,9 @@ class AdminCardExpandActive extends StatefulWidget {
   final String status;
   final String title;
   final String description;
-  final String created_at;
-  final String updated_at;
   final String name;
+  final String date;
+  final String token;
   GlobalKey<ExpansionTileCardState> idCard;
 
   AdminCardExpandActive({
@@ -38,9 +38,9 @@ class AdminCardExpandActive extends StatefulWidget {
     @required this.status,
     @required this.title,
     @required this.description,
-    @required this.created_at,
-    @required this.updated_at,
     @required this.name,
+    @required this.date,
+    @required this.token,
   }) : super(key: key);
 
   @override
@@ -56,87 +56,15 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  pickImage() async {
-    try {
-      var image = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 15);
-      if (image == null) return;
-
-      setState(() {
-        imagePath = image.path;
-        imageFile = File(image.path);
-      });
-      // print(imageData);
-      print(imageFile);
-      return imageFile;
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-  // pickImage() async {
-  //   try {
-  //     var image = await ImagePicker()
-  //         .pickImage(source: ImageSource.gallery, imageQuality: 15);
-  //     if (image == null) return;
-
-  //     setState(() {
-  //       imagePath = image.path;
-  //       imageFile = File(image.path);
-  //       imageData = base64Encode(imageFile.readAsBytesSync());
-  //     });
-  //     // print(imageData);
-  //     print(imagePath);
-  //     return imageData;
-  //   } on PlatformException catch (e) {
-  //     print('Failed to pick image: $e');
-  //   }
-  // }
-
-  Future pickImageC() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-
-      if (image == null) return;
-
-      setState(() {
-        imageFile = File(image.path);
-      });
-      imageData = base64Encode(imageFile.readAsBytesSync());
-      return imageData;
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  // showImage(String image) {
-  //   return Image.memory(
-  //     base64Decode(image),
-  //     width: 100,
-  //     height: 100,
-  //     fit: BoxFit.cover,
-  //   );
-  // }
-  showImage(File image) {
-    // return Image.memory(
-    //   base64Decode(image),
-    //   width: 100,
-    //   height: 100,
-    //   fit: BoxFit.cover,
-    // );
-    return Image.file(
-      image,
-      width: 100,
-      height: 100,
-      fit: BoxFit.cover,
-    );
-  }
-
   DateFormat formatTanggal;
+  DateFormat formatJam;
 
   final picker = ImagePicker();
 
   void initState() {
     formatTanggal = DateFormat.MMMMEEEEd('id');
+    formatJam = DateFormat.Hm('id');
+
     _descController.text = widget.description;
 
     super.initState();
@@ -171,12 +99,10 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
       ], borderRadius: BorderRadius.circular(10)),
       child: ExpansionTileCard(
         elevation: 0,
-        // shadowColor: Color.fromRGBO(0, 0, 0, ),
         baseColor: Colors.white,
         expandedColor: Colors.white,
         key: widget.idCard,
         leading: Icon(
-          // FluentIcons.checkmark_circle_32_regular,
           iconStatus(widget.status),
           color: colorStatus(widget.status),
           size: 40,
@@ -194,13 +120,13 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
           ),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 8),
+          padding: const EdgeInsets.only(top: 0, bottom: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                // widget.name,
+                // 'sasasdasd',
                 capitalize(widget.name),
                 style: TextStyle(
                     fontFamily: "Lato",
@@ -215,11 +141,10 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        formatTanggal.format(DateTime.parse(widget.created_at)),
+                        formatTanggal.format(DateTime.parse(widget.date)),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: "Lato",
-                            // fontWeight: FontWeight.bold,
                             color: LightColors.lightBlack.withOpacity(0.6),
                             fontWeight: FontWeight.w600,
                             fontSize: 11),
@@ -233,11 +158,10 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                         ),
                       ),
                       Text(
-                        DateFormat('kk : mm')
-                            .format(DateTime.parse(widget.created_at)),
+                        formatJam.format(DateTime.parse(widget.date)),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: "Lato",
-                            // fontWeight: FontWeight.bold,
                             color: LightColors.lightBlack.withOpacity(0.6),
                             fontWeight: FontWeight.w600,
                             fontSize: 11),
@@ -258,22 +182,12 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                   vertical: 3.0,
                 ),
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0, 0),
-                            blurRadius: 4)
-                      ],
-                      borderRadius: BorderRadius.circular(5)),
                   child: TextFormField(
-                    enabled: false,
+                    readOnly: true,
                     controller: _descController,
-                    // decoration: InputDecoration(border: Border),
                     maxLines: 5,
                     style: TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        color: Color.fromRGBO(0, 0, 0, 0.5),
                         fontSize: 14,
                         fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
@@ -282,48 +196,38 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                             ? capitalize(widget.description)
                             : "",
                         hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
-                            fontSize: 15,
+                            color: Colors.black,
+                            fontSize: 14,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1)),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1))),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8))),
                   ),
                 )),
           ),
           ButtonBar(
-            alignment: MainAxisAlignment.spaceAround,
+            alignment: MainAxisAlignment.center,
             buttonHeight: 20.0,
             buttonMinWidth: 50.0,
             children: <Widget>[
-              FlatButton(
-                onPressed: null,
-                child: Column(
-                  children: <Widget>[],
-                ),
-              ),
               FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
@@ -333,27 +237,20 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
                 child: Column(
                   children: <Widget>[
                     Icon(
-                      FluentIcons.delete_20_regular,
-                      color: LightColors.lightRed.withOpacity(0.7),
-                      // color: Color.fromRGBO(160, 160, 160, 0.7),
+                      FluentIcons.delete_20_filled,
+                      color: LightColors.lightRed,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
                     ),
                     Text(
-                      'Delete Task',
+                      'Delete',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: LightColors.lightRed.withOpacity(0.7),
+                          color: LightColors.lightRed,
                           fontSize: 10),
                     ),
                   ],
-                ),
-              ),
-              FlatButton(
-                onPressed: null,
-                child: Column(
-                  children: <Widget>[],
                 ),
               ),
             ],
@@ -371,7 +268,7 @@ class _AdminCardExpandActiveState extends State<AdminCardExpandActive> {
         // buttonString: "OK",
         onSubmitOk: () async {
           showLoadingProgress(context);
-          bool res = await GetHelper().deleteTask(widget.id);
+          bool res = await GetHelper().deleteTask(widget.id, widget.token);
           if (res) {
             Navigator.pushAndRemoveUntil(
               context,

@@ -18,12 +18,12 @@ class GetHelper {
         headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      print(jsonResponse);
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
     }
   }
 
   Future<List<Task>> getAllTask(String token) async {
+    print(token);
     final response = await http.get(Uri.parse(URL + "api/task/"),
         headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
@@ -45,7 +45,7 @@ class GetHelper {
 
     request.fields
         .addAll({'id': id, 'status': status, "task_description": description});
-    
+
     if (image != null) {
       request.files
           .add(await http.MultipartFile.fromPath('upload_bukti', image));
@@ -57,34 +57,6 @@ class GetHelper {
       return true;
     } else {
       return false;
-    }
-  }
-
-  Future notif(String regis, String title, String body) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization':
-          'key=AAAAX4bqqMs:APA91bGm76Hqu8z_YZfeEtuS7KenY99AG69HKOJwFD6lUDVjPlC6OM8JiSy2BT0DXv8IZFqL6XjfhYiWrr1PY3SUIIg9qhnwcRBzTdJc1b2rafIh_ps2-_RpWeUwOnn7JUWdm-fFfmpE'
-    };
-    var request =
-        http.Request('POST', Uri.parse('https://fcm.googleapis.com/fcm/send'));
-    request.body = json.encode({
-      "registration_ids": [regis],
-      "notification": {
-        "body": body,
-        "title": title,
-        "android_channel_id": "pushnotificationapp",
-        "sound": true
-      }
-    });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
     }
   }
 
@@ -124,17 +96,17 @@ class GetHelper {
     }
   }
 
-  Future deleteTask(String id) async {
-    var request = http.MultipartRequest('POST', Uri.parse(URL + 'api/delete'));
+  Future deleteTask(String id, String token) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse(URL + 'api/task/delete'));
     request.fields.addAll({'id': id});
+    request.headers.addAll({'Authorization': 'Bearer $token'});
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      // print(await response.stream.bytesToString());
       return true;
     } else {
-      // print(response.reasonPhrase);
       return false;
     }
   }

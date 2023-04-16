@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Task {
-  final String user_id;
+  final String user;
   final String id;
   final String status;
   final String title;
@@ -10,7 +10,7 @@ class Task {
   final String image;
 
   const Task({
-    @required this.user_id,
+    @required this.user,
     @required this.id,
     @required this.status,
     @required this.title,
@@ -21,7 +21,7 @@ class Task {
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
-      user_id: json['user_id'].toString(),
+      user: json['user'].toString(),
       id: json['id'].toString(),
       status: json['status'],
       title: json['task_title'],

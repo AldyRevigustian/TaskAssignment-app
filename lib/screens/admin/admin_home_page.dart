@@ -1,34 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ui';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
-import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
-import 'package:flutter_task_planner_app/widget/loading_alert.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
 import 'adminCardExpandActive.dart';
 import 'adminCardExpandNon.dart';
-
-// List<Task> listOfDownloadedFile = List();
-// listOfDownloadedFile.add(...);
-
-// var
 
 class AdminMainPage extends StatefulWidget {
   final String id;
@@ -89,9 +78,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
     showDialog(
         context: context,
         builder: (_) => Center(
-                // Aligns the container to center
                 child: Container(
-              // A simplified version of dialog.
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(8)),
               width: 100.0,
@@ -205,11 +192,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                // Padding(
-                                //   padding:
-                                //       const EdgeInsets.only(left: 8, right: 8),
-                                //   child: Text("Select Employee"),
-                                // ),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       top: 10, left: 8, right: 8),
@@ -242,8 +224,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                       label: Text(
                                         "Assign To",
                                       ),
-                                      // hintText: "Assign To",
-                                      // hint: Text(),
                                     ),
                                     items: data.map((item) {
                                       return new DropdownMenuItem(
@@ -275,30 +255,16 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                   child: TextFormField(
                                     minLines: 1,
                                     maxLines: 3,
-
-                                    // decoration:
-                                    //     InputDecoration(label: Text("Title"), ),
                                     decoration: InputDecoration(
-                                      // border: OutlineInputBorder(
-                                      //     borderSide: BorderSide(
-                                      //         color: LightColors.lightBlack
-                                      //             .withOpacity(0.5))),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                         color:
                                             LightColors.mainBlue.withOpacity(1),
                                       )),
-                                      // disabledBorder: UnderlineInputBorder(
-                                      //     borderSide: BorderSide(width: 0.3)),
                                       label: Text("Task Title"),
-                                      // hintText: "Assign To",
-                                      // hint: Text(),
                                     ),
                                     enabled:
                                         (_mySelection == null) ? false : true,
-                                    // (_mySelection)
-                                    // enabled: ,
-
                                     controller: title,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -358,16 +324,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                   desc.text,
                                                   formatted);
                                           if (res) {
-                                            GetHelper().notif(
-                                                _mySelection
-                                                    .split(" ")[1]
-                                                    .trim(),
-                                                "You have a new task, " +
-                                                    _mySelection
-                                                        .split(" ")[2]
-                                                        .trim() +
-                                                    " 📝",
-                                                title.text);
                                             Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(
@@ -394,12 +350,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                 textColor: Colors.white,
                                                 fontSize: 12.0);
                                           }
-
-                                          // title.clear();
-                                          // desc.clear();
-                                          // Navigator.pop(context);
-                                          // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false)
-                                          // _formKey.currentState.save();
                                         }
                                       },
                                     ),
@@ -502,19 +452,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                               opacity:
                                                   AlwaysStoppedAnimation(0.3),
                                             ),
-
-                                            // Container(
-                                            //   height: 100,
-                                            //   width: 100,
-                                            //   decoration: BoxDecoration(
-                                            //       image: DecorationImage(
-                                            //           image: AssetImage(
-                                            //               "assets/images/no_task.png"),
-                                            //           opacity: 0.3,
-                                            //           colorFilter: ColorFilter.mode(
-                                            //               Colors.grey,
-                                            //               BlendMode.color))),
-                                            // ),
                                             SizedBox(
                                               height: 15,
                                             ),
@@ -542,15 +479,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                       Alignment.centerRight,
                                                   height: 40,
                                                   width: 50,
-                                                  // child: Container(
-                                                  //   width: 1,
-                                                  //   height: 1,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.white,
-                                                  //       borderRadius:
-                                                  //           BorderRadius
-                                                  //               .circular(50)),
-                                                  // ),
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         right: 10),
@@ -575,7 +503,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                   width: 20,
                                                 ),
                                                 Text(
-                                                  "All Task",
+                                                  "On Progress",
                                                   style: TextStyle(
                                                       fontFamily: "Lato",
                                                       fontWeight:
@@ -629,15 +557,14 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              created_at: snapshot
-                                                                  .data[index]
-                                                                  .created_at,
-                                                              updated_at: snapshot
-                                                                  .data[index]
-                                                                  .updated_at,
                                                               name: snapshot
                                                                   .data[index]
-                                                                  .user_id,
+                                                                  .user,
+                                                              date: snapshot
+                                                                  .data[index]
+                                                                  .date,
+                                                              token:
+                                                                  widget.token,
                                                             ),
                                                           )
                                                         ],
@@ -688,15 +615,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                       Alignment.centerRight,
                                                   height: 40,
                                                   width: 50,
-                                                  // child: Container(
-                                                  //   width: 1,
-                                                  //   height: 1,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.white,
-                                                  //       borderRadius:
-                                                  //           BorderRadius
-                                                  //               .circular(50)),
-                                                  // ),
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         right: 10),
@@ -754,9 +672,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                           horizontal: 40),
                                                       child: Column(
                                                         children: [
-                                                          // SizedBox(
-                                                          //   height: 10,
-                                                          // ),
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -778,18 +693,17 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              created_at: snapshot
-                                                                  .data[index]
-                                                                  .created_at,
-                                                              updated_at: snapshot
-                                                                  .data[index]
-                                                                  .updated_at,
                                                               image: snapshot
                                                                   .data[index]
                                                                   .image,
                                                               name: snapshot
                                                                   .data[index]
-                                                                  .user_id,
+                                                                  .user,
+                                                              date: snapshot
+                                                                  .data[index]
+                                                                  .date,
+                                                              token:
+                                                                  widget.token,
                                                             ),
                                                           )
                                                         ],

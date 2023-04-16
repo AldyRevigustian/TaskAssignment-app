@@ -193,7 +193,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                     maxLines: 5,
                     style: TextStyle(
                         color: LightColors.lightBlack,
-                        fontSize: 14,
+                        fontSize: 15,
                         fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
@@ -205,14 +205,21 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                             fontSize: 15,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack, width: 0.8)),
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
-                                color: LightColors.lightBlack, width: 0.8))),
+                                color: Colors.black.withOpacity(0.3),
+                                width: 0.8))),
                   ),
                 )),
           ),
@@ -280,7 +287,6 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)),
                 onPressed: () {
-                  // getImage(ImageSource.camera);
                   pickImage();
                 },
                 child: Column(
@@ -296,7 +302,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                       'Camera',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: Color.fromRGBO(160, 160, 160, 1),
+                          color: LightColors.lightBlack,
                           fontSize: 10),
                     ),
                   ],
@@ -332,7 +338,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                       'Complete',
                       style: TextStyle(
                           fontFamily: "Lato",
-                          color: Color.fromRGBO(160, 160, 160, 1),
+                          color: LightColors.lightBlack,
                           fontSize: 10),
                     ),
                   ],
