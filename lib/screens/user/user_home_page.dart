@@ -96,9 +96,6 @@ class _UserMainPageState extends State<UserMainPage> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // log(dateTime);
-    // log(parentName);
-    // log(parentId);
 
     return Scaffold(
       body: Stack(
@@ -523,8 +520,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                             ? Image.asset("assets/images/2.jpg")
                                             : Image.network(
                                                 URL +
-                                                    "storage/pp/" +
-                                                    parentAvatar,
+                                                    parentAvatar.replaceFirst('/', ''),
                                                 fit: BoxFit.cover,
                                                 loadingBuilder:
                                                     (BuildContext context,
@@ -562,7 +558,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                         Row(
                                           children: [
                                             Container(
-                                              width: width / 2,
+                                              width: width / 2.3,
                                               child: Text(
                                                 capitalize(parentName),
                                                 // "sadkoaskdopaskdodsdsdsdpkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
@@ -599,7 +595,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color.fromRGBO(0, 0, 0, 0.1),
-                                    offset: Offset(0, 1),
+                                    offset: Offset(0, 2),
                                     blurRadius: 4,
                                     spreadRadius: 0,
                                   )
@@ -614,7 +610,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                   'assets/images/calendar_filled.svg',
                                   width: 32,
                                   height: 32,
-                                  color: LightColors.mainBlue,
+                                  color: LightColors.oldBlue,
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -623,7 +619,8 @@ class _UserMainPageState extends State<UserMainPage> {
                                   formatHari.format(dateTime) + ", ",
                                   style: TextStyle(
                                       fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.bold,
+                                      color: LightColors.oldBlue,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 13),
                                 ),
                                 Text(

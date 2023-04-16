@@ -160,12 +160,14 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                     fontWeight: FontWeight.w600,
                     fontSize: 11),
               ),
-              Text(' • ',
-                  style: TextStyle(
-                      fontFamily: "Lato",
-                      color: LightColors.lightBlack.withOpacity(0.6),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Icon(
+                  FluentIcons.clock_12_filled,
+                  size: 12,
+                  color: LightColors.lightBlack.withOpacity(0.6),
+                ),
+              ),
               Text(
                 formatJam.format(DateTime.parse(widget.date)),
                 textAlign: TextAlign.center,
@@ -193,7 +195,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                     maxLines: 5,
                     style: TextStyle(
                         color: LightColors.lightBlack,
-                        fontSize: 15,
+                        fontSize: 14,
                         fontFamily: "Lato"),
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
@@ -202,7 +204,7 @@ class _UserCardExpandActiveState extends State<UserCardExpandActive> {
                             : "",
                         hintStyle: TextStyle(
                             color: LightColors.lightBlack,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(

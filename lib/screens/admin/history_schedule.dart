@@ -1,37 +1,23 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
-import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
-import 'package:flutter_task_planner_app/provider/user.dart';
+import 'package:flutter_task_planner_app/screens/admin/adminCardExpandNon.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
-import 'package:flutter_task_planner_app/widget/const.dart';
-import 'package:flutter_task_planner_app/widget/loading_alert.dart';
-import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
 
-import '../user/userCardExpandActive.dart';
 import '../user/userCardExpandNon.dart';
-
-// List<Task> listOfDownloadedFile = List();
-// listOfDownloadedFile.add(...);
-
-// var
 
 class HistorySchedule extends StatefulWidget {
   final String tanggal;
+  final String token;
   HistorySchedule({
     Key key,
     @required this.tanggal,
+    @required this.token,
   }) : super(key: key);
   @override
   State<HistorySchedule> createState() => _HistoryScheduleState();
@@ -43,9 +29,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
   static const String routeName = "/homePage";
 
   DateFormat formatHari;
-
   DateFormat formatTanggal;
-
   DateFormat formatTahun;
 
   DateTime now = DateTime.now();
@@ -60,8 +44,8 @@ class _HistoryScheduleState extends State<HistorySchedule> {
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
     listTask = GetHelper().history(
-        _dateTime == null ? widget.tanggal : formatter.format(_dateTime));
-    // listTask = GetHelper().history(widget.tanggal);
+        _dateTime == null ? widget.tanggal : formatter.format(_dateTime),
+        widget.token);
     fetchandrefresh();
     super.initState();
   }
@@ -70,9 +54,7 @@ class _HistoryScheduleState extends State<HistorySchedule> {
     showDialog(
         context: context,
         builder: (_) => Center(
-                // Aligns the container to center
                 child: Container(
-              // A simplified version of dialog.
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(8)),
               width: 100.0,
@@ -90,14 +72,13 @@ class _HistoryScheduleState extends State<HistorySchedule> {
 
   void fetchandrefresh() {
     listTask = GetHelper().history(
-        _dateTime == null ? widget.tanggal : formatter.format(_dateTime));
+        _dateTime == null ? widget.tanggal : formatter.format(_dateTime),
+        widget.token);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // log(formatter.format(_dateTime) + " PLSS");
-
     log(widget.tanggal + "skrg");
     String formatted = formatter.format(now);
 
@@ -178,8 +159,6 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                     ? Container(
                                         height: height / 1.5,
                                         child: Column(
-                                          // crossAxisAlignment:
-                                          //     CrossAxisAlignment.center,
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
@@ -281,7 +260,10 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                                                     top: 5,
                                                                     bottom: 5),
                                                             child:
-                                                                UserCardExpandNon(
+                                                                AdminCardExpandNon(
+                                                                  id: snapshot
+                                                                  .data[index]
+                                                                  .id,
                                                               status: snapshot
                                                                   .data[index]
                                                                   .status,
@@ -291,15 +273,17 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                                               description: snapshot
                                                                   .data[index]
                                                                   .description,
-                                                              // created_at: snapshot
-                                                              //     .data[index]
-                                                              //     .created_at,
-                                                              // updated_at: snapshot
-                                                              //     .data[index]
-                                                              //     .updated_at,
                                                               image: snapshot
                                                                   .data[index]
-                                                                  .image, date: '', token: '',
+                                                                  .image,
+                                                              date: snapshot
+                                                                  .data[index]
+                                                                  .date,
+                                                              name: snapshot
+                                                                  .data[index]
+                                                                  .user,
+                                                              token:
+                                                                  widget.token,
                                                             ),
                                                           )
                                                         ],
@@ -332,36 +316,22 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                           child: Container(
                             height: height / 6,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  bottomRight: Radius.circular(15),
-                                  topRight: Radius.circular(0)),
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Color.fromRGBO(0, 0, 0, 0.2),
-                              //     offset: Offset(0, 2),
-                              //     blurRadius: 4,
-                              //     spreadRadius: 0,
-                              //   ),
-                              // ],
-                              // borderRadius: BorderRadius.only(
-                              //     bottomLeft: Radius.circular(20),
-                              //     bottomRight: Radius.circular(20)),
-                              color: LightColors.mainBlue,
-                              // image: DecorationImage(
-                              //     opacity: 0.8,
-                              //     image:
-                              //         AssetImage('assets/images/header.png'),
-                              //     fit: BoxFit.fitWidth)
-                            ),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topRight: Radius.circular(0)),
+                                color: LightColors.mainBlue,
+                                image: DecorationImage(
+                                    opacity: 0.3,
+                                    image:
+                                        AssetImage('assets/images/cloud.png'),
+                                    fit: BoxFit.fitWidth)),
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  
-                                ],
+                                children: [],
                               ),
                             ),
                           ),
@@ -375,28 +345,25 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                 initialDate: _dateTime == null
                                     ? DateTime.now()
                                     : _dateTime,
-                                // initialDate: DateTime.now(),
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2200),
                               ).then((date) {
-                                //tambahkan setState dan panggil variabel _dateTime.
                                 setState(() {
                                   _dateTime = date;
                                 });
 
                                 log(_dateTime.toString() + "Rubah");
-                                // setState(() {});
                                 fetchandrefresh();
                               });
                             },
                             child: Container(
-                              width: width / 1.5,
+                              width: width / 1.8,
                               height: 50,
                               decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
                                       color: Color.fromRGBO(0, 0, 0, 0.1),
-                                      offset: Offset(0, 1),
+                                      offset: Offset(0, 2),
                                       blurRadius: 4,
                                       spreadRadius: 0,
                                     )
@@ -404,44 +371,41 @@ class _HistoryScheduleState extends State<HistorySchedule> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100)),
                               child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-
-                                    Icon(
-                                      FluentIcons.calendar_ltr_24_filled,
-                                      color: LightColors.oldBlue,
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      formatHari.format(_dateTime == null
-                                              ? DateTime.parse(widget.tanggal)
-                                              : _dateTime) +
-                                          ", ",
-                                      style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          fontWeight: FontWeight.w700,
-                                          color: LightColors.oldBlue,
-                                          fontSize: 15),
-                                    ),
-                                    Text(
-                                      formatTanggal.format(_dateTime == null
-                                              ? DateTime.parse(widget.tanggal)
-                                              : _dateTime) +
-                                          " " +
-                                          formatTahun.format(_dateTime == null
-                                              ? DateTime.parse(widget.tanggal)
-                                              : _dateTime),
-                                      style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          color: LightColors.oldBlue,
-                                          fontSize: 15),
-                                    )
-                                  ],
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgIcon(
+                                    'assets/images/calendar_filled.svg',
+                                    width: 32,
+                                    height: 32,
+                                    color: LightColors.oldBlue,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    formatHari.format(_dateTime == null
+                                            ? DateTime.parse(widget.tanggal)
+                                            : _dateTime) +
+                                        ", ",
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        color: LightColors.oldBlue,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13),
+                                  ),
+                                  Text(
+                                    formatTanggal.format(_dateTime == null
+                                            ? DateTime.parse(widget.tanggal)
+                                            : _dateTime) +
+                                        " " +
+                                        formatTahun.format(_dateTime == null
+                                            ? DateTime.parse(widget.tanggal)
+                                            : _dateTime),
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat", fontSize: 13),
+                                  )
+                                ],
                               ),
                             ),
                           ),

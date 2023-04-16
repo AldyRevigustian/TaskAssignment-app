@@ -111,18 +111,15 @@ class GetHelper {
     }
   }
 
-  Future<List<Task>> history(String date) async {
-    final response = await http.post(Uri.parse(URL + "api/history"),
-        body: {'tanggal': date.toString()});
-    // body: {'tanggal': '2022-05-25'});
+  Future<List<Task>> history(String date, String token) async {
+    final response = await http.post(Uri.parse(URL + "api/task/history"),
+        body: {'assigned_date': date.toString()},
+        headers: {'Authorization': 'Bearer $token'});
+
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      log("Masok");
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      // throw Exception('Failed to load Task');
     }
   }
 }

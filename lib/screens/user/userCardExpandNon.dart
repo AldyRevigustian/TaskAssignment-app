@@ -164,12 +164,14 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                         fontWeight: FontWeight.w600,
                         fontSize: 11),
                   ),
-                  Text(' • ',
-                      style: TextStyle(
-                          fontFamily: "Lato",
-                          color: LightColors.lightBlack.withOpacity(0.6),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 11)),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Icon(
+                      FluentIcons.clock_12_filled,
+                      size: 12,
+                      color: LightColors.lightBlack.withOpacity(0.6),
+                    ),
+                  ),
                   Text(
                     DateFormat('kk : mm').format(DateTime.parse(widget.date)),
                     style: TextStyle(
@@ -207,10 +209,10 @@ class _UserCardExpandNonState extends State<UserCardExpandNon> {
                             : "",
                         hintStyle: TextStyle(
                             color: LightColors.lightBlack,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontFamily: "Lato"),
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                         enabledBorder: OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide(
                                 color: Colors.black.withOpacity(0.3),

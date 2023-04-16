@@ -77,7 +77,7 @@ class User with ChangeNotifier {
       email: datauser['email'],
       registration:
           (datauser['registration'] == null) ? " " : datauser['registration'],
-      avatar: (datauser['photo'] == null) ? null : datauser['poto'],
+      avatar: (datauser['photo'] == null) ? null : datauser['photo'],
       token: datauser['token'],
     );
 

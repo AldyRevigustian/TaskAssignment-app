@@ -11,10 +11,8 @@ import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/bottom_nav.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 import '../../helpers/get_helper.dart';
 import '../../notificationservice/local_notification_service.dart';

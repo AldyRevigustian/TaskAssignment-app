@@ -68,6 +68,7 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
       ),
       "history": HistorySchedule(
         tanggal: formatted,
+        token: userToken,
       ),
       "logOut": LoginPage(),
     };
@@ -99,7 +100,6 @@ class MenuBottomBarState extends State<AdminMenuBottomBarPage> {
                   height: 280,
                   context: context,
                   title: "Log Out",
-                  // buttonString: "OK",
                   onSubmitOk: () async {
                     showLoadingProgress(context);
                     removeValuesSharedpref();

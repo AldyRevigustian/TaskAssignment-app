@@ -54,10 +54,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
   var dateTime = new DateTime.now();
 
   DateFormat formatter = DateFormat('yyyy-MM-dd');
-  // void getId() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   usrId = prefs.getString('id');
-  // }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
   String deviceTokenToSendPushNotification = "";
@@ -67,10 +63,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
     formatHari = new DateFormat.EEEE('id');
     formatTanggal = DateFormat.MMMMd('id');
     formatTahun = DateFormat.y('id');
+
     listTask = GetHelper().getAllTask(widget.token);
     fetchandrefresh();
-    // listTask = GetHelper().fetchTask
-    // _refreshProducts(context);
     super.initState();
   }
 
@@ -103,10 +98,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
   List data = List(); //edited line
 
   Future<String> getSWData() async {
-    var res = await http.get(Uri.parse(URL + "api/dataOb"),
-        headers: {"Accept": "application/json"});
+    var res = await http.get(Uri.parse(URL + "api/worker"),
+        headers: {'Authorization': 'Bearer' + " " + widget.token});
     var resBody = json.decode(res.body);
-
     setState(() {
       data = resBody;
     });
@@ -119,7 +113,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-
+print(parentAvatar);
     String formatted = formatter.format(now);
 
     TextEditingController title = new TextEditingController();
@@ -775,23 +769,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
                             height: height / 3.2,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(25),
-                                    bottomRight: Radius.circular(25),
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
                                     topRight: Radius.circular(0)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(0, 0, 0, 0.2),
-                                    offset: Offset(0, 2),
-                                    blurRadius: 4,
-                                    spreadRadius: 0,
-                                  ),
-                                ],
-                                // borderRadius: BorderRadius.only(
-                                //     bottomLeft: Radius.circular(20),
-                                //     bottomRight: Radius.circular(20)),
                                 color: LightColors.mainBlue,
                                 image: DecorationImage(
-                                    opacity: 0.8,
+                                    opacity: 0.5,
                                     image: AssetImage(
                                         'assets/images/header_admin.png'),
                                     fit: BoxFit.fitWidth)),
@@ -811,8 +794,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                 "assets/images/admin.png")
                                             : Image.network(
                                                 URL +
-                                                    "storage/pp/" +
-                                                    parentAvatar,
+                                                    parentAvatar.replaceFirst('/', ''),
                                                 fit: BoxFit.cover,
                                                 loadingBuilder:
                                                     (BuildContext context,
@@ -857,7 +839,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                               ),
                                             ),
                                             Container(
-                                              width: width / 2.5,
+                                              width: width / 2.3,
                                               child: Text(
                                                 capitalize(parentName),
                                                 // "sadkoaskdopaskdopkasopdkasopkdoaspkdoaskdopaskdopaskdpkasopdkaspodkasokdopaskdoasdoask",
@@ -918,7 +900,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                   formatHari.format(dateTime) + ", ",
                                   style: TextStyle(
                                       fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w700,
+                                      color: LightColors.oldBlue,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 13),
                                 ),
                                 Text(
