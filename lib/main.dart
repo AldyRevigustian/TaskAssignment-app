@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_task_planner_app/notificationservice/local_notification_service.dart';
+import 'package:flutter_task_planner_app/provider/identity.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/loading_page.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
@@ -46,6 +47,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => User(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => Identity(),
+        ),
       ],
       child: MaterialApp(
         title: 'Task Assignment',
@@ -59,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         routes: {
           UserMenuBottomBarPage.routeName: (ctx) => UserMenuBottomBarPage(),
-          LoginPage.routeName: (ctx) => LoginPage(),
+          // LoginPage.routeName: (ctx) => LoginPage(),
         },
       ),
     );

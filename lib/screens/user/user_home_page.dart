@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
+import 'package:flutter_task_planner_app/provider/identity.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:flutter_task_planner_app/widget/const.dart';
@@ -35,6 +36,8 @@ class _UserMainPageState extends State<UserMainPage> {
   String usrId;
   String token;
   UserInf getParentInfo;
+  IdentityInf getIdentityInfo;
+  String companyName;
 
   DateFormat formatHari;
 
@@ -93,6 +96,8 @@ class _UserMainPageState extends State<UserMainPage> {
     parentName = getParentInfo.name;
     parentAvatar = getParentInfo.avatar;
     parentId = getParentInfo.id.toString();
+    getIdentityInfo = Provider.of<Identity>(context).getIdentityInf();
+    companyName = getIdentityInfo.company_name;
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -424,7 +429,8 @@ class _UserMainPageState extends State<UserMainPage> {
                                                               date: snapshot
                                                                   .data[index]
                                                                   .date,
-                                                              token: widget.token,
+                                                              token:
+                                                                  widget.token,
                                                             ),
                                                           )
                                                         ],
@@ -519,8 +525,7 @@ class _UserMainPageState extends State<UserMainPage> {
                                         child: parentAvatar == null
                                             ? Image.asset("assets/images/2.jpg")
                                             : Image.network(
-                                                URL +
-                                                    parentAvatar.replaceFirst('/', ''),
+                                                URL + parentAvatar,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder:
                                                     (BuildContext context,
@@ -573,10 +578,10 @@ class _UserMainPageState extends State<UserMainPage> {
                                           ],
                                         ),
                                         Text(
-                                          "PT. SOLUSI INTEK INDONESIA",
+                                          companyName,
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 13),
+                                              fontSize: 14),
                                         ),
                                       ],
                                     ),

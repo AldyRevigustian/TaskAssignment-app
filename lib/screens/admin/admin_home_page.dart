@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
+import 'package:flutter_task_planner_app/provider/identity.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_icon/svg_icon.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +44,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
   String usrId;
   String tokens = "";
   UserInf getParentInfo;
+  IdentityInf getIdentityInfo;
+  String companyName;
 
   DateFormat formatHari;
 
@@ -113,7 +117,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-print(parentAvatar);
+    print(parentAvatar);
     String formatted = formatter.format(now);
 
     TextEditingController title = new TextEditingController();
@@ -125,6 +129,8 @@ print(parentAvatar);
     parentName = getParentInfo.name;
     parentAvatar = getParentInfo.avatar;
     parentId = getParentInfo.id.toString();
+    getIdentityInfo = Provider.of<Identity>(context).getIdentityInf();
+    companyName = getIdentityInfo.company_name;
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -144,8 +150,6 @@ print(parentAvatar);
                 builder: (BuildContext context) {
                   return WillPopScope(
                     onWillPop: () {
-                      // print("test");
-                      // log("test");
                       Navigator.pop(context);
                       setState(() {
                         _mySelection = null;
@@ -176,7 +180,7 @@ print(parentAvatar);
                         ),
                         insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(5)),
                         content: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return Form(
@@ -191,7 +195,7 @@ print(parentAvatar);
                                       top: 10, left: 8, right: 8),
                                   child: DropdownButtonFormField(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
+                                        BorderRadius.all(Radius.circular(5)),
 
                                     iconEnabledColor:
                                         LightColors.lightBlack.withOpacity(0.5),
@@ -199,25 +203,48 @@ print(parentAvatar);
                                         ? 'Please fill this field'
                                         : null,
                                     isExpanded: true,
+                                    style: TextStyle(
+                                        color: LightColors.lightBlack,
+                                        fontSize: 15,
+                                        fontFamily: "Lato"),
                                     // label
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.all(20),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          borderSide: BorderSide(
-                                              color: LightColors.lightBlack
-                                                  .withOpacity(0.5))),
                                       enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
                                           borderSide: BorderSide(
-                                            color: LightColors.mainBlue
-                                                .withOpacity(1),
-                                          )),
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              width: 0.8)),
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          borderSide: BorderSide(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              width: 0.8)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          borderSide: BorderSide(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              width: 0.8)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          borderSide: BorderSide(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              width: 0.8)),
                                       label: Text(
                                         "Assign To",
                                       ),
+                                      labelStyle: TextStyle(
+                                          color: LightColors.lightBlack,
+                                          fontSize: 15,
+                                          fontFamily: "Lato"),
                                     ),
                                     items: data.map((item) {
                                       return new DropdownMenuItem(
@@ -233,12 +260,8 @@ print(parentAvatar);
                                     }).toList(),
                                     onChanged: (newVal) {
                                       log(newVal);
-                                      // log(newVal.split(" ")[0]);
-                                      // log(newVal.split(" ")[2]);
                                       setState(() {
                                         _mySelection = newVal;
-                                        // _mySelection = newVal.split(" ")[0];
-                                        // regis = newVal.split(" ")[1];
                                       });
                                     },
                                     value: _mySelection,
@@ -298,8 +321,7 @@ print(parentAvatar);
                                     minWidth: width,
                                     height: 50.0,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(40)),
+                                        borderRadius: BorderRadius.circular(5)),
                                     child: RaisedButton(
                                       color: LightColors.oldBlue,
                                       child: Text(
@@ -348,7 +370,37 @@ print(parentAvatar);
                                       },
                                     ),
                                   ),
-                                )
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    DateTime dateTime =
+                                        await showOmniDateTimePicker(
+                                      context: context,
+                                      type: OmniDateTimePickerType.dateAndTime,
+                                      primaryColor: Colors.cyan,
+                                      backgroundColor: Colors.white,
+                                      calendarTextColor: Colors.black,
+                                      tabTextColor: Colors.black,
+                                      unselectedTabBackgroundColor:
+                                          Colors.white,
+                                      minutesInterval: 10,
+                                      buttonTextColor: Colors.black,
+                                      timeSpinnerTextStyle: const TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                      timeSpinnerHighlightedTextStyle:
+                                          const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 24),
+                                      is24HourMode: true,
+                                      isShowSeconds: false,
+                                      startInitialDate: DateTime.now(),
+                                      borderRadius: const Radius.circular(5),
+                                    );
+
+                                    print("dateTime: $dateTime");
+                                  },
+                                  child: const Text("Show DateTime Picker"),
+                                ),
                               ],
                             ),
                           );
@@ -724,19 +776,6 @@ print(parentAvatar);
                                         height: 100,
                                         opacity: AlwaysStoppedAnimation(0.3),
                                       ),
-
-                                      // Container(
-                                      //   height: 100,
-                                      //   width: 100,
-                                      //   decoration: BoxDecoration(
-                                      //       image: DecorationImage(
-                                      //           image: AssetImage(
-                                      //               "assets/images/no_task.png"),
-                                      //           opacity: 0.3,
-                                      //           colorFilter: ColorFilter.mode(
-                                      //               Colors.grey,
-                                      //               BlendMode.color))),
-                                      // ),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -794,7 +833,7 @@ print(parentAvatar);
                                                 "assets/images/admin.png")
                                             : Image.network(
                                                 URL +
-                                                    parentAvatar.replaceFirst('/', ''),
+                                                    parentAvatar,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder:
                                                     (BuildContext context,
@@ -854,10 +893,10 @@ print(parentAvatar);
                                           ],
                                         ),
                                         Text(
-                                          "PT. SOLUSI INTEK INDONESIA",
+                                          companyName,
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 13),
+                                              fontSize: 14),
                                         ),
                                       ],
                                     ),

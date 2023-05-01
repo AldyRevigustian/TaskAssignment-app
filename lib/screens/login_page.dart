@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_planner_app/main.dart';
+import 'package:flutter_task_planner_app/provider/identity.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/user/user_home_page.dart';
 import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
+import 'package:flutter_task_planner_app/widget/const.dart';
 import 'package:flutter_task_planner_app/widget/loading_alert.dart';
 import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
+  String appLogo;
+  IdentityInf getIdentityInfo;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController = new TextEditingController();
@@ -66,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
           "assets/images/header_admin.png",
         ),
         context);
-    // precacheImage(image2.image, context);
     super.didChangeDependencies();
   }
 
@@ -139,6 +142,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget build(BuildContext context) {
+    getIdentityInfo = Provider.of<Identity>(context).getIdentityInf();
+    appLogo = getIdentityInfo.app_logo;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Color(0xFF8fcdde),
         systemNavigationBarIconBrightness: Brightness.light));
@@ -159,17 +164,10 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      // Center(
-                      //   child: Image.asset(
-                      //     "assets/images/SII.png",
-                      //     width: 180,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: 50,
+                      Image.network(
+                        URL + appLogo,
+                        width: 150,
+                        height: 150,
                       ),
                       Text(
                         "Welcome,",
@@ -188,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
