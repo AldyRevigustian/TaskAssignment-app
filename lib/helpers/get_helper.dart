@@ -74,24 +74,24 @@ class GetHelper {
     }
   }
 
-  Future postSchedule(
-      String id, String title, String description, String date) async {
+  Future postTask(String token, String id, String title, String description,
+      String date) async {
+    print(date);
     var request =
-        http.MultipartRequest('POST', Uri.parse(URL + 'api/addSchedule'));
+        http.MultipartRequest('POST', Uri.parse(URL + 'api/task/add'));
+    request.headers.addAll({'Authorization': 'Bearer $token'});
     request.fields.addAll({
       'user_id': id,
       'task_title': title,
       'task_description': description,
-      'tanggal': date
+      'assigned_date': date
     });
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      // print(await response.stream.bytesToString());
       return true;
     } else {
-      // print(response.reasonPhrase);
       return false;
     }
   }
@@ -119,7 +119,6 @@ class GetHelper {
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((job) => new Task.fromJson(job)).toList();
-    } else {
-    }
+    } else {}
   }
 }

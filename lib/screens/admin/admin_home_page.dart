@@ -57,7 +57,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   var dateTime = new DateTime.now();
 
-  DateFormat formatter = DateFormat('yyyy-MM-dd');
+  DateTime dets;
+  DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm');
+  DateFormat formatterHours = DateFormat('dd/MM/yyyy HH:mm');
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
   String deviceTokenToSendPushNotification = "";
@@ -122,6 +124,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
     TextEditingController title = new TextEditingController();
     TextEditingController desc = new TextEditingController();
+    TextEditingController date = new TextEditingController();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
@@ -165,24 +168,11 @@ class _AdminMainPageState extends State<AdminMainPage> {
                         hoverColor: Colors.transparent,
                       ),
                       child: AlertDialog(
-                        title: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, bottom: 0, top: 10),
-                            child: Text(
-                              "Add Task",
-                              style: TextStyle(
-                                  fontFamily: "Lato",
-                                  fontWeight: FontWeight.bold,
-                                  color: LightColors.lightBlack),
-                            ),
-                          ),
-                        ),
                         insetPadding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5)),
-                        content: StatefulBuilder(builder:
-                            (BuildContext context, StateSetter setState) {
+                        content: StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState) {
                           return Form(
                             key: _formKey,
                             child: Column(
@@ -191,8 +181,57 @@ class _AdminMainPageState extends State<AdminMainPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, left: 8, right: 8),
+                                  padding: EdgeInsets.all(12.0),
+                                  child: SizedBox(
+                                    width: width,
+                                    height: 50,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                      ))),
+                                      onPressed: () async {
+                                        DateTime dateTime =
+                                            await showOmniDateTimePicker(
+                                          context: context,
+                                          type: OmniDateTimePickerType
+                                              .dateAndTime,
+                                          primaryColor: Colors.cyan,
+                                          backgroundColor: Colors.white,
+                                          calendarTextColor: Colors.black,
+                                          tabTextColor: Colors.black,
+                                          unselectedTabBackgroundColor:
+                                              Colors.white,
+                                          minutesInterval: 10,
+                                          buttonTextColor: Colors.black,
+                                          timeSpinnerTextStyle: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18),
+                                          timeSpinnerHighlightedTextStyle:
+                                              const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 24),
+                                          is24HourMode: true,
+                                          isShowSeconds: false,
+                                          startInitialDate: DateTime.now(),
+                                          borderRadius:
+                                              const Radius.circular(5),
+                                        );
+                                        setState(() {
+                                          dets = dateTime;
+                                        });
+                                        print("dateTime: $dateTime");
+                                      },
+                                      child: Text(formatterHours
+                                          .format(dets ?? DateTime.now())),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
                                   child: DropdownButtonFormField(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),
@@ -209,42 +248,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                         fontFamily: "Lato"),
                                     // label
                                     decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.all(20),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
+                                      enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              width: 0.8)),
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                          borderSide: BorderSide(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              width: 0.8)),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                          borderSide: BorderSide(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              width: 0.8)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                          borderSide: BorderSide(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              width: 0.8)),
-                                      label: Text(
-                                        "Assign To",
-                                      ),
-                                      labelStyle: TextStyle(
-                                          color: LightColors.lightBlack,
-                                          fontSize: 15,
-                                          fontFamily: "Lato"),
+                                        color:
+                                            LightColors.mainBlue.withOpacity(1),
+                                      )),
+                                      label: Text("Assign To"),
                                     ),
                                     items: data.map((item) {
                                       return new DropdownMenuItem(
@@ -330,15 +339,13 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                       ),
                                       onPressed: () async {
                                         if (_formKey.currentState.validate()) {
-                                          log(formatted);
-                                          bool res = await GetHelper()
-                                              .postSchedule(
-                                                  _mySelection
-                                                      .split(" ")[0]
-                                                      .trim(),
-                                                  title.text,
-                                                  desc.text,
-                                                  formatted);
+                                          bool res = await GetHelper().postTask(
+                                              widget.token,
+                                              _mySelection.split(" ")[0].trim(),
+                                              title.text,
+                                              desc.text,
+                                              DateFormat("yyyy-MM-dd HH:mm")
+                                                  .format(dets ?? DateTime.now()));
                                           if (res) {
                                             Navigator.pushAndRemoveUntil(
                                               context,
@@ -370,36 +377,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                       },
                                     ),
                                   ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    DateTime dateTime =
-                                        await showOmniDateTimePicker(
-                                      context: context,
-                                      type: OmniDateTimePickerType.dateAndTime,
-                                      primaryColor: Colors.cyan,
-                                      backgroundColor: Colors.white,
-                                      calendarTextColor: Colors.black,
-                                      tabTextColor: Colors.black,
-                                      unselectedTabBackgroundColor:
-                                          Colors.white,
-                                      minutesInterval: 10,
-                                      buttonTextColor: Colors.black,
-                                      timeSpinnerTextStyle: const TextStyle(
-                                          color: Colors.black, fontSize: 18),
-                                      timeSpinnerHighlightedTextStyle:
-                                          const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 24),
-                                      is24HourMode: true,
-                                      isShowSeconds: false,
-                                      startInitialDate: DateTime.now(),
-                                      borderRadius: const Radius.circular(5),
-                                    );
-
-                                    print("dateTime: $dateTime");
-                                  },
-                                  child: const Text("Show DateTime Picker"),
                                 ),
                               ],
                             ),
@@ -832,8 +809,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                             ? Image.asset(
                                                 "assets/images/admin.png")
                                             : Image.network(
-                                                URL +
-                                                    parentAvatar,
+                                                URL + parentAvatar,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder:
                                                     (BuildContext context,
