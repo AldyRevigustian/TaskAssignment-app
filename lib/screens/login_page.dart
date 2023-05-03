@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -164,10 +165,20 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.network(
-                        URL + appLogo,
-                        width: 150,
+                      // Image.network(
+                      //   URL + appLogo,
+                      //   width: 150,
+                      //   height: 150,
+                      // ),
+                      CachedNetworkImage(
+                        imageUrl: URL + appLogo,
                         height: 150,
+                        width: 150,
+                        placeholder: (context, url) => SpinKitWave(
+                          color: LightColors.mainBlue.withOpacity(0.5),
+                          size: 25.0,
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                       Text(
                         "Welcome,",

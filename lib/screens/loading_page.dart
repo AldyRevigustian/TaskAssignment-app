@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_task_planner_app/helpers/get_helper.dart';
 import 'package:flutter_task_planner_app/provider/identity.dart';
 import 'package:flutter_task_planner_app/provider/user.dart';
 import 'package:flutter_task_planner_app/screens/admin/admin_menu_bottom_bar.dart';
 import 'package:flutter_task_planner_app/screens/login_page.dart';
 import 'package:flutter_task_planner_app/screens/user/user_menu_bottom_bar.dart';
+import 'package:flutter_task_planner_app/theme/colors/light_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,17 +19,10 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  void _loadIdentity() async {
+  void _loadFirst() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool isSaved = prefs.containsKey('app_name');
 
     Provider.of<Identity>(context, listen: false).getIdentity();
-    print(prefs.getString('app_logo'));
-  }
-
-  void _loadUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool isSaved = prefs.containsKey('email');
     if (!isSaved) {
@@ -66,8 +61,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   void initState() {
-    _loadIdentity();
-    _loadUserInfo();
+    _loadFirst();
     super.initState();
   }
 
@@ -77,7 +71,12 @@ class _LoadingPageState extends State<LoadingPage> {
       backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [],
+        children: [
+          SpinKitWave(
+            color: LightColors.mainBlue.withOpacity(0.5),
+            size: 25.0,
+          ),
+        ],
       ),
     );
   }

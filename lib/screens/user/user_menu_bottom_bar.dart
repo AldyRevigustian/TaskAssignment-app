@@ -44,7 +44,6 @@ class MenuBottomBarState extends State<UserMenuBottomBarPage> {
       (message) {
         log("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
-          log("New OII");
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
